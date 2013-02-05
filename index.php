@@ -1,3 +1,32 @@
-		<?php include_once "dynamic_containers/container_includes.php"?>
+<html>
+<head>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+		$.get(	"bac/load_container.php", 
+				{ page:"index", container:"mainbody" }, 
+				function(data)
+				{
+					$('#content').html(data);
+				}
+		);
+	
+	/*
+	$.ajax({
+		url:"bac/load_container.php",
+		timeout:1000,
+		data: { page:"index", container:"mainbody" }
+	}).done(function(data){
+		$('#content').html(data);
+	});
+	*/
+	
+})
+</script>
+</head>
+<body>
+	<div id="content">
 		
-<?php echo load_container('mainbody');//'environment', 'mainbody')?>
+	</div>
+</body>
+</html>

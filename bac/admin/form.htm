@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<script type="text/javascript" src="js/setupform.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<link rel="stylesheet" href="styles/styles.css" />
+		<style>
+		#pagelist li
+		{
+			list-style-type: none;
+		}
+		
+			#newpagebutton
+			{
+				
+				background-color: green;
+				border: 1px solid black;
+
+			}
+			#newcontainerbutton
+			{
+				background-color: green;
+				border: 1px solid black;
+			}
+			.button
+			{
+				display:inline;
+				padding-left: 3px;
+				padding-right: 3px;
+			}
+			
+			.delete
+			{
+				
+			}
+			
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				/*
+				 * We do the following when deleting an item:
+				 *  - find the parent cell
+				 * 	- find the parent row
+				 * 	- remove the parent row
+				 */
+				$('.delete').on(function(){
+					
+					var parent = $(this).parent().parent();
+					parent.remove();
+					
+				});
+				
+				$('#newpagebutton').click(function(){
+					var parent = $(this).parent().parent();
+					parent.append("<tr><td class=\"newpagetext\"><input type=\"text\" id=\"newpagetext\" value=\"Add page...\"><div id=\"newpagebutton\" class=\"button\">Add</div></td><td></td><td></td></tr>");
+					
+				});
+				
+				$('#newcontainerbutton').click(function(){
+					
+				});
+				
+				
+				
+			});
+			
+		</script>
+	</head>
+	<body>
+		<p>
+			Welcome to BarelyACMS! This script will help you configure the first time setup of your BAC managed content.
+			There are only two steps required - that you set up an administrative password, and that you define the page
+			and content container structure of your site. The containers you define here will be accessible by the admin
+			user. 
+		</p>
+		
+		<form action="self" method="post">
+			<input type="password" id="adminpass" name="adminpass"> <br />
+			<input type="password" id="adminpassc" name="adminpassc"> <br />
+			<hr>
+			<br />
+			<p>
+				<h2>Define pages</h2>
+				Define the page structure of your website below. For each page, you can add any number of containers. These
+				containers are the atomic building blocks of a page. They should represent user-editable content that is present
+				on the page. For example: a description, tagline, phone number or any text content held inside a DIV.
+			</p>
+			<br />
+			<div id="pagecontrol">
+				<ul id="pagelist">
+					<li id="newpage"><input type="text" id="newpagetext" /> <div id="newpagebutton" class="button add">Add</div></li>
+				</ul>	
+			</div>
+			<input type="submit" id="submitbutton" name="submitbutton" value="Finish Setup">
+		</form>
+	</body>
+</html>
