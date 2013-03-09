@@ -22,7 +22,7 @@ if(!isset($_SESSION['UID']))
 		{
 			session_start();
 			$_SESSION['UID'] = $_POST['loginu'];
-			header("Location: " .get_absolute_uri('admin_home.php'));
+			header("Location: " .get_absolute_uri('index.php'));
 		} else {
 			header("Location: " . get_absolute_uri('login.php?m=Bad Password'));
 			die();
@@ -51,7 +51,7 @@ EOM;
 } else {
 	//they're logged in, why are they back at the login page?
 	//get back to home!
-	header("Location: " .get_absolute_uri('admin_home.php'));
+	header("Location: " .get_absolute_uri('index.php'));
 }
   
 ?>	

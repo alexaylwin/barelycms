@@ -21,7 +21,12 @@ class Site
 	 */
 	public function getPage($pageid)
 	{
-		return $this->pagelist[$pageid];
+		if(isset($this->pagelist[$pageid]))
+		{
+			return $this->pagelist[$pageid];
+		} else {
+			return;
+		}
 	}
 	
 	public function getAllPages()

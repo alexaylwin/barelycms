@@ -13,4 +13,13 @@ function get_home_directory()
 	
 	return $dir;
 }
+
+function throw_error($message, $backpage)
+{
+	//redirect to error page
+	$_SESSION['m'] = $message;
+	$_SESSION['bp'] = get_absolute_uri($backpage);
+	
+	header("Location: " . get_absolute_uri("error.php"));
+}
 ?>

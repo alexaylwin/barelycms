@@ -15,6 +15,11 @@ class Page
 		return $this->pageid;
 	}
 	
+	public function hasContainers()
+	{
+		return (count($this->containerlist) > 0);
+	}
+	
 	/**
 	 * This returns the container with the given 
 	 * cotnainer id or null if it doesn't exist
