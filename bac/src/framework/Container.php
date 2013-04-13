@@ -29,10 +29,11 @@ class Container
 		//and the container id.
 		$fullname = explode('.', $page_path);
 		$pagename = $fullname[0];
+		$pagename = strtolower($pagename);
+		$container_id = strtolower($container_id);
 		//$filename = '../container_content/pages/' . $pagename . '/' . $container_id . '.incl';
 		$filename = Constants::GET_PAGES_DIRECTORY() . '/' . $pagename . '/' . $container_id . '.incl';
 		$this->filename = $filename;
-		
 		
 		$container_value = $io->readFile($filename);
 		$this->value = $container_value;
@@ -45,10 +46,7 @@ class Container
 		$io = new FileIO();
 		$io->writeFile($this->filename, $new_value);
 	}
-	
-	
+		
 }
-
-
 
 ?>

@@ -2,7 +2,7 @@
 class Site
 {
 	private $siteid;
-	private $pagelist;
+	private $pagelist = array();
 	
 	public function __construct($site)
 	{
@@ -21,10 +21,15 @@ class Site
 	 */
 	public function getPage($pageid)
 	{
-		if(isset($this->pagelist[$pageid]))
+		try
 		{
-			return $this->pagelist[$pageid];
-		} else {
+			if(isset($this->pagelist[$pageid]))
+			{
+				return $this->pagelist[$pageid];
+			} else {
+				return;
+			}
+		} catch (Exception $e) {
 			return;
 		}
 	}
@@ -43,6 +48,8 @@ class Site
 	{
 		//$pages = scandir('../container_content/pages');
 		$pages = scandir(Constants::GET_PAGES_DIRECTORY());//. '/container_content/pages');
+		
+		//These are the . and .. directories
 		unset($pages[0]);
 		unset($pages[1]);
 		//print_r($pages);
@@ -52,6 +59,59 @@ class Site
 			$new_page = new Page($pageid);
 			$this->pagelist[$pageid] = $new_page;
 		}
+	}
+	
+	/**
+	 * Adds a new page with name pageid. This checks first to see if the page
+	 * exists. If not, it creates the directory and adds the page to this site.
+	 */
+	public function addPage($pageid)
+	{
+		if(!isset($this->pagelist[$pageid]))
+		{
+		
+		$path = Constants::GET_PAGES_DIRECTORY() . "/" . $pageid;
+		if (!file_exists($path)) {
+			//It doesn't exist, so create the directory
+			$res = mkdir($path);
+			if (!$res) 
+			{
+				//error while trying to make the directory
+				return false;
+			}
+		} elseif (file_exists($path) && !is_dir($path)) {
+			//error, path exists and is not a directory
+			return false;
+		}		
+		
+			$new_page = new Page($pageid);
+			$this->pagelist[$pageid] = $new_page;
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	/**
+	 * Deletes the page from this site as well as the directory and any
+	 * containers below it.
+	 */
+	public function removePage($pageid)
+	{
+				if(isset($this->pagelist[$pageid]))
+				{
+				$path = Constants::GET_PAGES_DIRECTORY() . "/" . $pageid;
+				$res = rmdir($path);
+				if (!$res) {
+					return false;
+				}
+				unset($this->pagelist[$pageid]);
+				return true;
+				} else {
+					return false;
+				}
+		
 	}
 }
 ?>

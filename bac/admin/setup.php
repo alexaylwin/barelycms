@@ -131,6 +131,7 @@ EOM;
 		$pagelist = $site -> getAllPages();
 		$containerarray = array();
 		$pagearray = array();
+		
 		foreach ($pagelist as $page) {
 			if ($page -> hasContainers()) {
 				$containerlist = $page -> getAllContainers();
@@ -166,19 +167,9 @@ EOM;
 			}
 
 			//If the directory exists, we don't want to overwrite it
+			//This adds the page
 			$pagearray[$pagename] = true;
-			$path = $pagesdir . "/" . $pagename;
-			if (!file_exists($path)) {
-				//It doesn't exist, so create the directory
-				$res = mkdir($path);
-				if (!$res) {
-					//error while trying to make the directory
-					continue;
-				}
-			} elseif (file_exists($path) && !is_dir($path)) {
-				//error, path exists and is not a directory
-				continue;
-			}
+			$site->addPage($pagename);
 
 			//Set up some default container text
 			$containertext = "";
@@ -190,26 +181,13 @@ EOM;
 				if ($container == null || $container == "") {
 					continue;
 				}
-
 				//Don't delete this container!
 				if (isset($containerarray[$pagename][$container])) {
 					$containerarray[$pagename][$container] = true;
 				}
 
 				//make a path
-				$path = $pagesdir . "/" . $pagename . "/" . $container . ".incl";
-
-				//if it doesn't exist, we can make it
-				if (!file_exists($path)) {
-					$fhandlew = fopen($path, 'w');
-					$res = fwrite($fhandlew, $containertext);
-					if (!$res) {
-						//error
-						echo "error creating container";
-					}
-				} else {
-					//file exists, don't overwrite
-				}
+				$site->getPage($pagename)->addContainer($container);
 			}
 		}
 
@@ -218,26 +196,16 @@ EOM;
 			foreach ($containerlist as $container => $exists) {
 				$path = $page . "/" . $pagename;
 				if (!$exists) {
-					//delete this container
-					$path = $pagesdir . "/" . $pagename . "/" . $container . ".incl";
-					$res = unlink($path);
-					if (!$res) {
-						//couldn't delete
-						echo "couldn't delete: " . $path;
-					}
+					$site->getPage($pagename)->removeContainer($container);
 				}
 			}
 		}
 
+		//Now delete all the pages
 		foreach ($pagearray as $pagename => $exists) {
 			$path = $pagesdir . "/" . $pagename;
 			if (!$exists) {
-				$res = rmdir($path);
-				if (!$res) {
-					//couldn't delete
-					echo "couldn't delete: " . $path;
-				}
-
+				$site->removePage($pagename);
 			}
 		}
 

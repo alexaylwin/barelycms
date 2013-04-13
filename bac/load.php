@@ -6,7 +6,6 @@ function load_container($pagename, $container) {
 
 		$page = $site -> getPage($pagename);
 		if ($page) {
-
 			$container = $page -> getContainer($container);
 			if ($container) {
 				return $container -> getValue();

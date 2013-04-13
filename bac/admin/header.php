@@ -10,7 +10,7 @@
 	<div class="container-fluid">
 	   	<div class="navbar navbar-fixed-top navbar-inverse" id="header">
  			<div class="navbar-inner text-center" id="menubar">
-    			<a class="brand pull-left" href="index.php" id="titlebar">BAC</a>
+    			<a class="brand pull-left" href="index.php" id="titlebar"><img src="images/logo-100.gif" style="width: 20px; height:20px;"/>BAC</a>
    				<ul class="nav">
 					<li><a href="index.php">Home</a></li>
 					<li><a href="pages.php">Pages</a></li>
