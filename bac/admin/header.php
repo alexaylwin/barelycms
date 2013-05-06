@@ -20,7 +20,7 @@
    				<div id="logout" class="pull-right">
 					<a href="Http://<?php echo $_SERVER['HTTP_HOST']?>"><i class="icon-off invisible"></i> <?php echo $_SERVER['HTTP_HOST']?> <br /></a>
 					<a href="logout.php"><i class="icon-off icon-white"></i> Logout</a>
-   			</div>
+   				</div>
    			</div>
     	</div>
 		<div class="row-fluid">

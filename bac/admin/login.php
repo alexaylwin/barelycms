@@ -57,7 +57,7 @@ if (!isset($_SESSION['UID'])) {
 <body>
 	<div class="container-fluid">
  <div class="row">
-            <div class="span6 center">
+            <div class="span12">
 <form action="login.php" method="post" id="loginform" class="form-horizontal">
 	<div class="control-group">
 		<div class="controls">
@@ -65,13 +65,15 @@ if (!isset($_SESSION['UID'])) {
 		</div>
 	</div>
 	<div class="control-group">
+		<label class="control-label" for"loginu">Username:</label>
 		<div class="controls">
-			<input type="text" value="" name="loginu"/> <br />
+			<input type="text" value="" name="loginu" id="loginu"/> <br />
 		</div>
 	</div>
 	<div class="control-group">
+		<label class="control-label" for"loginp">Password:</label>
 		<div class="controls">
-			<input type="password" name="loginp"/> <br />
+			<input type="password" name="loginp" id="loginp"/> <br />
 		</div>
 	</div>
 	<div class="control-group">

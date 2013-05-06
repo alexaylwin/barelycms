@@ -13,6 +13,7 @@ $site = FrameworkController::loadsite();
 $page = $site -> getPage($pageid);
 $container = $page -> getContainer($containerid);
 $text = $container -> getValue();
+$displaymessage = "none";
 
 /**
  * If we have the post value, this means update the container.
@@ -20,6 +21,8 @@ $text = $container -> getValue();
 if (isset($_POST['container_content'])) {
 	$container -> setValue($_POST['container_content']);
 	$text = $container -> getValue();
+	$message = "Container content saved.";
+	$displaymessage = "block";
 }
 ?>
 
@@ -72,7 +75,10 @@ include 'header.php';
 	To edit the container content, use the textbox below and hit 'Update container'. The changes will take effect immediately.
 	If you would like to preview your changes before you submit them, make your changes then hit the 'Preview' button.
 </p>
-
+<div class="alert alert-success" style="display:<?php echo $displaymessage; ?>;">
+	<?php echo $message; ?>
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+</div>
 <form id="containerform" action="edit.php?page=<?php echo $pageid; ?>&container=<?php echo $containerid; ?>" method="post">
 	<textarea id="container_content" cols=50 rows=10 name="container_content" class="tinymce"><?php echo $text; ?></textarea>
 	<br />
