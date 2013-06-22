@@ -61,7 +61,7 @@
 						<li>
 							<strong>Run</strong> the setup page, by navigating to that directory from a web browser.
 							<br />
-							<p class="details">In the previous example, this would be done by going to http://<i>yourwebsite.com</i>/bac</p>
+							<p class="details">In the previous example, this would be done by going to http://<i>yourwebsite.com</i>/bac/admin/setup.php</p>
 						</li>
 						<li>
 							Follow the on-screen setup to configure an administrative password and website map.

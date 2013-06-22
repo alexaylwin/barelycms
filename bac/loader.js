@@ -66,8 +66,6 @@ $(document).ready(function(){
 		
 		
 	}
-
 	scan_document();
-	
 });
 

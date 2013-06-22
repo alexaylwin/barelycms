@@ -9,8 +9,9 @@
 		<!-- Style sheet -->
 		<link href="styles/splash.css" rel="stylesheet" media="screen" />
 		<link href="styles/framework.css" rel="stylesheet" media="screen" />
-		<!-- BAC loader -->
+		<!-- BAC loader 
 		<script type="text/javascript" src="bac/loader.js"></script>
+		-->
 	</head>
 	
 	<body data-bac-page="Index">
@@ -40,25 +41,25 @@
 		</div>
 		<div class="container">
 			<div class="row title text-right">
-				<div class="row-inner">
+				<div class="row-inner" data-bac-id="title">
 					<div id="title1">BarelyACMS</div>
 					<div id="title2">Does one thing. <br /> Manages Content.</div>
 				</div>
 			</div>
 			<div class="row" id="flavor">
 				<div class="row-inner">
-					<div id="flavor1">
+					<div id="flavor1" data-bac-id="flavor1">
 						BarelyACMS makes two promises. It will manage the #$%! out of your content.
 						<br>
 						<strong>And it won't get in the way.</strong>
 					</div>
-					<div id="flavor2">
+					<div id="flavor2" data-bac-id="flavor2">
 							It won't hold your hand. It won't integrate your social media or give you prebuilt themes or templates.
 					</div>
 				</div>
 			</div>
 			<div class="row" id="freedom">
-				<div class="row-inner">
+				<div class="row-inner" data-bac-id="freedom">
 					What BarelyACMS gives you is
 					<div id="freedom1">Template Freedom</div>
 					<div id="freedom2">
