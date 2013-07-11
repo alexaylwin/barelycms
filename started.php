@@ -109,9 +109,9 @@
 							What are 'containers' and 'pages'?
 							<p class="details">
 								<strong>Containers</strong> are the atomic pieces of content that make up your website.
-								For example, an introduction paragraph on a home page, or an answer to a question in an
+								For example, an introductory paragraph on a home page, or an answer to a question in an
 								FAQ section would be a container. <br /><br />
-								You can also make a container a piece of content you consistently reuse, like a footer,
+								You can also make a container a piece of content you frequently reuse, like a footer,
 								navigation bar or menu items.
 								<br /><br />
 								<strong>Pages</strong> are buckets that hold containers. You can define a page, and use 

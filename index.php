@@ -87,9 +87,9 @@
 						<div class="principle-title">
 							Lightweight
 						</div>
-						<div class="principle-image">
+						<img class="principle-image" src="img/plane.jpg">
 							
-						</div>
+						</img>
 						<div class="principle-caption">
 							Database free, flexible and trivial to install
 						</div>
@@ -99,32 +99,33 @@
 						<div class="principle-title">
 							Template-Free
 						</div>
-						<div class="principle-image">
+						<img class="principle-image" src="img/plane.jpg">
 							
-						</div>
+						</img>
 						<div class="principle-caption">
 							Use any markup you want to design your site, then include content management as an afterthought.
 						</div>
 					</div>
-					
+				</div>
+				<div class="row-inner">
 					<div class="principle-container principle-left">
 						<div class="principle-title">
 							Thin Client
 						</div>
-						<div class="principle-image">
+						<img class="principle-image" src="img/plane.jpg">
 							
-						</div>
+						</img>
 						<div class="principle-caption">
 							Make any element on a page editable with one attribute, an AJAX call or a single line of PHP.
 						</div>
 					</div>
 					<div class="principle-container principle-right">
 						<div class="principle-title">
-							Content, Not Presentation
+							Content Focused
 						</div>
-						<div class="principle-image">
+						<img class="principle-image" src="img/plane.jpg">
 							
-						</div>
+						</img>
 						<div class="principle-caption">
 							Features like content versioning and rich text editing help with managing content, not forcing a presentation
 						</div>

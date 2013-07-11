@@ -1,5 +1,5 @@
 #!/bin/bash
 if [ "$1" = "clean" ]; then
-	rm -rf /z/Code/www/barelycms/*
+	rm -rf /C/wamp/www/barelyacms*
 fi
-cp /z/Code/Aptana/barelycms/* /z/Code/www/barelycms/  -f -R -v -u
+cp /c/Users/A/Documents/GitHub/barelycms/* /c/wamp/www/barelyacms  -f -R -v -u

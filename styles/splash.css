@@ -41,7 +41,7 @@
  */
 #flavor
 {
-	padding-top: 55px;
+	padding: 55px 0;
 	background-color:#e14949;
 	text-align: left;
 }
@@ -64,7 +64,7 @@
  */
 #freedom
 {
-	
+	padding: 55px 0;
 }
 
 #freedom1
@@ -89,9 +89,9 @@
 	background-color: #57A957;
 	color: #000000;
 	width: 49%;
-	height: 75px;
+	height: 1.6em;
 	border:none;
-	font-size: 36px;
+	font-size: 1em;
 }
 
 /**
@@ -126,10 +126,10 @@
 {
 	margin-left: auto;
 	margin-right: auto;
-	width: 150px;
-	height: 150px;
-	background:url("../img/plane.jpg");
-	background-size:100%;
+	max-width: 150px;
+	height: auto;
+	display:block;
+	/*background:url("../img/plane.jpg");*/
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
