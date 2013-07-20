@@ -23,7 +23,7 @@
 //Run loader.js after the DOM is completely loaded
 $(document).ready(function(){
 	
-	function load_content(page, container)
+	function bac_load_content(page, container)
 	{
 /*
 		$.get(	"bac/load.php", { page:page, container:container })
@@ -54,7 +54,7 @@ $(document).ready(function(){
 	 * Iterates through all the data-bac-id attributes and loads the
 	 * content for each one
 	 */
-	function scan_document()
+	function bac_scan_document()
 	{
 		//For each element with bac-id
         $('*[data-bac-id]').each(function(i) {
@@ -66,6 +66,6 @@ $(document).ready(function(){
 		
 		
 	}
-	scan_document();
+	bacscan_document();
 });
 

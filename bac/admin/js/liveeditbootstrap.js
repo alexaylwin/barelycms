@@ -6,6 +6,7 @@ $(document).ready(function()
         $('#targetpage').contents().find('body').before('<script type="text/javascript">window.bac_jspath="'+jspath+'"</script>')
 		$('#targetpage').contents().find('body').before('<script type="text/javascript" src="'+jspath+'jquery.min.js"></script>');
         $('#targetpage').contents().find('body').before('<script type="text/javascript" src="'+jspath+'tiny_mce/tiny_mce.js"></script>');
-        $('#targetpage').contents().find('body').before('<script type="text/javascript" src="'+jspath+'liveedit.js"></script>');		
+        $('#targetpage').contents().find('body').before('<script type="text/javascript" src="'+jspath+'liveedit.js"></script>');
 	});
+
 });

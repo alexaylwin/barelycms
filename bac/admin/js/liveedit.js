@@ -4,6 +4,8 @@ $(document).ready(function()
 	
 	function create_editor(page, container)
 	{
+		//$(this) refers to the clicked element,
+		//which is the overlay
 		console.log(page + "-" + container);
 		editor = $('<div class="liveeditor_container"><textarea id="liveeditor-'+page+'-'+container+'" name="liveeditor" class="tinymce liveeditor"></textarea></div>');
 		// editor.attr('style', $(this).attr('style'));
@@ -28,6 +30,12 @@ $(document).ready(function()
 	
 	function apply_overlay(element)
 	{
+		/*
+		 * This should be changed to create a full sized div
+		 * positioned absolutely on top of the target element,
+		 * with a transparent background and a fully opaque 
+		 * foreground.
+		 */
 		overlaydiv = $("<div>");
 		overlaydiv.html('Edit');
 		overlaydiv.css("opacity", "1.0");
@@ -40,21 +48,23 @@ $(document).ready(function()
 	}
 	
 	function editclick(e)
-	{
-		// for(i = 0; i < editors.length; i++)
-		// {
-			// editor = editors[i];
-			// if(editor.find)
-		// }
-		
+	{		
 		editor = editors[e.data[1]];
 		console.log(editor);
 		console.log(e.data[0]);
+		//we shouldn't be replacing the iframe div with this, but instead
+		//replace the overlay div or create a new one with the same position.
 		$(e.data[0]).replaceWith(editor);
+		// targetElementXPos = $(e.data[0]).x();
+		// targetElementYPos = $(e.data[0]).top();
+		// editor.left(targetElementXPos);
+		// editor.top(targetElementYPos);
+		// editor.css("position", "absolute");
+		// $("#bac-editoverlay").append(editor);
 		
 		editor.tinymce({
 			// Location of TinyMCE script
-			script_url : window.bac_jspath + '/tiny_mce/tiny_mce.js"',
+			script_url : window.bac_jspath + '/tiny_mce/tiny_mce.js',
 
 			setup : function(ed) {
 				ed.onSaveContent.add(function(ed, o) {
@@ -100,9 +110,10 @@ $(document).ready(function()
             //For each container, put a hidden element over top of it.
             create_editor(page, container);
             $(this).click([this, editorcounter], editclick);
-            $(this).mouseover(editmouseover);
-            $(this).mouseout(editmouseout);
+            //$(this).mouseover(editmouseover);
+            //$(this).mouseout(editmouseout);
             apply_overlay($(this));
+            editorcounter++;
         });
 	}
 	
