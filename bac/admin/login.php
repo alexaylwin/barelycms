@@ -9,12 +9,10 @@ include_once ('../src/util.php');
 if (!isset($_SESSION['UID'])) {
 	//If the form is submitted, then check the username and password
 	if (isset($_POST['loginp']) && isset($_POST['loginu'])) {
-		//$file = fopen('../admin/lock/lock.z', 'r');
-		//$hashpwd = fread($file, filesize('../admin/lock/lock.z'));
 		$u = $_POST['loginu'];
 		$p = $_POST['loginp'];
 		$p = sha1($p);
-		include_once ('../admin/lock/cred.php');
+		include_once ('../admin/config/cred.php');
 
 		//this would be some hash function
 		if ($p == $password && $u == $username) {

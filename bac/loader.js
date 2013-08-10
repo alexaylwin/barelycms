@@ -60,12 +60,12 @@ $(document).ready(function(){
         $('*[data-bac-id]').each(function(i) {
             page = $(this).closest('*[data-bac-page]').attr('data-bac-page');
             container = $(this).attr('data-bac-id');
-            content = load_content(page, container)
+            content = bac_load_content(page, container)
             $(this).html(content);
         }); 
 		
 		
 	}
-	bacscan_document();
+	bac_scan_document(); 
 });
 

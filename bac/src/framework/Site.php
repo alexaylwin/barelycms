@@ -47,16 +47,19 @@ class Site
 	public function loadAllPages()
 	{
 		//$pages = scandir('../container_content/pages');
-		$pages = scandir(Constants::GET_PAGES_DIRECTORY());//. '/container_content/pages');
+		$pages = scandir(Constants::GET_PAGES_DIRECTORY());
+		$io = new FileIO();
+	
 		
 		//These are the . and .. directories
 		unset($pages[0]);
 		unset($pages[1]);
 		//print_r($pages);
-		
+				
 		foreach($pages as $pageid)
 		{
-			$new_page = new Page($pageid);
+			$pageconfig = $io->readFile(Constants::GET_PAGES_DIRECTORY() . '/' . $pageid . '/.bacproperties');
+			$new_page = new Page($pageconfig);
 			$this->pagelist[$pageid] = $new_page;
 		}
 	}
@@ -65,32 +68,38 @@ class Site
 	 * Adds a new page with name pageid. This checks first to see if the page
 	 * exists. If not, it creates the directory and adds the page to this site.
 	 */
-	public function addPage($pageid)
+	public function addPage($pageid, $liveurl = '')
 	{
+		$io = new FileIO();
 		if(!isset($this->pagelist[$pageid]))
 		{
 		
-		$path = Constants::GET_PAGES_DIRECTORY() . "/" . $pageid;
-		if (!file_exists($path)) {
-			//It doesn't exist, so create the directory
-			$res = mkdir($path);
-			if (!$res) 
-			{
-				//error while trying to make the directory
+			$path = Constants::GET_PAGES_DIRECTORY() . "/" . $pageid;
+			if (!file_exists($path)) {
+				//It doesn't exist, so create the directory
+				$res = mkdir($path);
+				if (!$res) 
+				{
+					//error while trying to make the directory
+					return false;
+				} else {
+					$config = "id:" . $pageid . "|liveurl:" . $liveurl;
+					if(!file_exists($path . "/.bacproperties"))
+					{
+						$io->writeFile($path . "/.bacproperties", $config);
+					}
+					$new_page = new Page($config);
+					$this->pagelist[$pageid] = $new_page;
+					return true;
+				}
+			} elseif (file_exists($path) && !is_dir($path)) {
+				//error, path exists and is not a directory
 				return false;
 			}
-		} elseif (file_exists($path) && !is_dir($path)) {
-			//error, path exists and is not a directory
-			return false;
-		}		
-		
-			$new_page = new Page($pageid);
-			$this->pagelist[$pageid] = $new_page;
-			return true;
+			
 		} else {
 			return false;
 		}
-		
 	}
 	
 	/**
@@ -99,19 +108,18 @@ class Site
 	 */
 	public function removePage($pageid)
 	{
-				if(isset($this->pagelist[$pageid]))
-				{
-				$path = Constants::GET_PAGES_DIRECTORY() . "/" . $pageid;
-				$res = rmdir($path);
-				if (!$res) {
-					return false;
-				}
-				unset($this->pagelist[$pageid]);
-				return true;
-				} else {
-					return false;
-				}
-		
+		if(isset($this->pagelist[$pageid]))
+		{
+			$path = Constants::GET_PAGES_DIRECTORY() . "/" . $pageid;
+			$res = rmdir($path);
+			if (!$res) {
+				return false;
+			}
+			unset($this->pagelist[$pageid]);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 ?>

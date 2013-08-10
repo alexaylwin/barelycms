@@ -18,6 +18,10 @@ class FileIO
 			return '';
 		}
 		//'../container_content/pages/' . $page . '/' . $container;
+		// if(!file_exists($path))
+		// {
+			// return '';
+		// }
 		$filelength = filesize($path);
 		if($filelength == 0)
 		{

@@ -9,12 +9,12 @@
 		<!-- Style sheet -->
 		<link href="styles/splash.css" rel="stylesheet" media="screen" />
 		<link href="styles/framework.css" rel="stylesheet" media="screen" />
-		<!-- BAC loader 
+		<!-- BAC loader -->
 		<script type="text/javascript" src="bac/loader.js"></script>
-		-->
+		
 	</head>
 	
-	<body data-bac-page="Index">
+	<body data-bac-page="index">
 		<div class="navbar">
 			<div class="navbar-inner" id="menubar">
 				<ul class="nav">

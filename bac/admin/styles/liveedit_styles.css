@@ -1,21 +1,36 @@
-#edit-toolbar
+#bac-edit-toolbar
 {
 	line-height:40px;
 	width: 100%;
 	background: #333333;
 	border: 1px solid black;
 	color: #ffffff;
-	display:block;
+	display:none;
 	z-index:9999;
 	
 }
 
-#targetpage
+#bac-targetpage
 {
 	display:block;	
 	width:100%; 
 	height:100%; 
 	/*z-index:-9999;*/
+}
+
+#bac-mouseover
+{
+	background-color:#222222;
+	opacity: 0.5;
+	display:none;
+	z-index:9999;
+	right: 0;
+	bottom: 0;
+}
+
+#bac-postform
+{
+	display:none;
 }
 body {
 	overflow:hidden;

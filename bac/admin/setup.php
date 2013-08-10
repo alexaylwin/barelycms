@@ -70,7 +70,7 @@ function build_sitemap_string() {
 
 //Check to see if this is the first run,
 //if cred exists, then we have run before
-$path = '../admin/lock/cred.php';
+$path = '../admin/config/cred.php';
 if (file_exists($path)) {
 	$notfirst = true;
 	include ('auth.php');
@@ -88,7 +88,7 @@ if (isset($_POST['submitted'])) {
 			$newuser = 'admin';
 
 			//change the password
-			$path = '../admin/lock/cred.php';
+			$path = '../admin/config/cred.php';
 			if ($notfirst) {
 				include_once ($path);
 
@@ -203,7 +203,9 @@ EOM;
 
 		//Now delete all the pages
 		foreach ($pagearray as $pagename => $exists) {
+			
 			$path = $pagesdir . "/" . $pagename;
+			echo "removing:" . $path;
 			if (!$exists) {
 				$site->removePage($pagename);
 			}

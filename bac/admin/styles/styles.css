@@ -22,6 +22,12 @@ a:hover {
 	color: #838fff;
 }
 
+a.icon
+{
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
 #content {
 
 	margin-left: 40px;
