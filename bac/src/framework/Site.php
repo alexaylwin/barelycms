@@ -10,6 +10,16 @@ class Site
 		$this->loadAllPages();
 	}
 	
+	public function hasPage($pageid)
+	{
+		if(isset($this->pagelist[$pageid]))
+		{
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public function getSiteId()
 	{
 		return $this->siteid;
@@ -83,7 +93,7 @@ class Site
 					//error while trying to make the directory
 					return false;
 				} else {
-					$config = "id:" . $pageid . "|liveurl:" . $liveurl;
+					$config = "id:" . rawurlencode($pageid) . "|liveurl:" . rawurlencode($liveurl);
 					if(!file_exists($path . "/.bacproperties"))
 					{
 						$io->writeFile($path . "/.bacproperties", $config);

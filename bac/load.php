@@ -1,19 +1,23 @@
 <?php
-include_once ('src/framework/classloader.php');
+include_once __DIR__ . '/src/framework/classloader.php';
 function load_container($pagename, $container) {
 	$site = FrameworkController::loadsite();
 	if ($site) {
-
-		$page = $site -> getPage($pagename);
-		if ($page) {
-			$container = $page -> getContainer($container);
-			if ($container) {
-				return $container -> getValue();
+		if($site->hasPage($pagename))
+		{
+			$page = $site -> getPage($pagename);
+			if ($page) {
+				if($page->hasContainer($container))
+				{
+					$container = $page -> getContainer($container);
+					if ($container) {
+						return $container -> getValue();
+					}
+				}
 			}
 		}
 	}
 	//echo $container->getValue();
-
 }
 
 if (isset($_GET['page']) && isset($_GET['container'])) {

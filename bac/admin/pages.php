@@ -1,42 +1,25 @@
 <?php
-include 'auth.php';
-include '../src/framework/classloader.php';
-include 'scripts/pages_cbs.php';
-
-$site = FrameworkController::loadsite();
-$pagelist = $site -> getAllPages();
-
-$maxcontainers = 0;
-foreach($pagelist as $page)
-{
-	$containerlist = $page->getAllContainers();
-	if(count($containerlist) > $maxcontainers)
-	{
-		$maxcontainers = count($containerlist);
-	}
-}
-
-include 'header.php';
-?>
-<script type="text/javascript">
-	function pageModal(pageid)
-	{
-		$('#pagemodal').modal();
-		$('#pagename').text(pageid);
-		$('#pageid').val(pageid);
-	}
+/**
+ * This sets up the authentication and queries the CBS for view data
+ */
+	include 'auth.php';
+	require __DIR__ . '/scripts/pages_cbs.php';
 	
-</script>
-<h4>Pages</h4>
-<p>
-Please select the container that you'd like to edit:
-</p>
-<ul class="inline" id="pagelist">
-	<?php
+	$cbs = new PagesCBS();
+	$data = $cbs->handleView();
+	$pagelist = $data['pagelist'];
+	$maxcontainers = $data['maxcontainers'];
+	
+	$list = '';
+	
+	//Build the page/containers form
+	//This is very tightly coupled to the presentation of the list (classes etc.)
+	//so it stays in the view
 	foreach ($pagelist as $page) {
-		echo '<li>';
-		echo '<h5>' . $page->getPageId() . '<a class="icon" onclick="javascript:pageModal(\''. $page->getPageId() . '\');"><i class="icon-align-justify icon-white"></i></a><a class="icon" ><i class="icon-edit icon-white"></i></a></h5>';
-		echo '<ul class="unstyled">';
+		$list = $list . '<li>';
+		$list = $list . '<h5>' . $page->getPageId() . '<a class="icon" onclick="javascript:pageModal(\''. $page->getPageId() . '\', \''. $page->getLiveUrl() . '\');"><i class="icon-align-justify icon-white"></i></a>'
+						. '<a href="liveedit.php?page=' . $page->getLiveUrl() . '" class="icon" ><i class="icon-edit icon-white"></i></a></h5>';
+		$list = $list . '<ul class="unstyled">';
 		$i = 0;
 		if($page->hasContainers())
 		{
@@ -44,19 +27,55 @@ Please select the container that you'd like to edit:
 		
 		foreach($containerlist as $container)
 		{
-			echo '<li> <a href="edit.php?container=' . $container->getContainerId() . '&page='.$page->getPageId().'"> ' . $container->getContainerId() . ' <i class="icon-edit icon-white"></i></a></li>';
+			$list = $list . '<li> <a href="edit.php?container=' . $container->getContainerId() . '&page='.$page->getPageId().'"> ' . $container->getContainerId() . ' <i class="icon-edit icon-white"></i></a></li>';
 			$i++;
 		}
 		}
 		for($i = $i; $i < $maxcontainers; $i++)
 		{
-			echo '<li>&nbsp;</li>';
+			$list = $list . '<li>&nbsp;</li>';
 		}
-		echo '</ul>';
-		echo '</li>';
+		$list = $list . '</ul>';
+		$list = $list . '</li>';
 	}
 	
-	?>
+?>
+
+<?php
+include 'header.php';
+?>
+<script type="text/javascript">
+	function pageModal(pageid, pageurl)
+	{
+		$('#pagemodal').modal();
+		$('#pagename').text(pageid);
+		$('#pageid').val(pageid);
+		$('#pageurl').val(pageurl);
+	}
+$(document).ready(function(){
+	$("#save").click(function(){
+		var formdata = $("#pageproperties").serialize();
+		$.post("scripts/pages_cbs.php?a=1", 
+				formdata, 
+				function(data)
+				{
+					if(data == 1)
+					{
+						alert("Properties saved");
+					} else {
+						alert("Properties could not be saved");
+					}
+				});
+	});
+});
+
+</script>
+<h4>Pages</h4>
+<p>
+Please select the container that you'd like to edit:
+</p>
+<ul class="inline" id="pagelist">
+	<?php echo $list ?>
 </ul>
 
 <p>
@@ -73,15 +92,15 @@ Please select the container that you'd like to edit:
 	<div class="modal-body">
 		<p>
 			<form id="pageproperties">
-				Name: <span id="pagename"></span><br />
-				<label class="control-label" for"pageurl">Page Live Edit URL: </label><input type="text" id="pageurl" />
-				<input type="hidden" id="pageid" />
+				Page Name: <span id="pagename"></span><br />
+				<span class="control-label">Page Live Edit URL: </span> <input type="text" id="pageurl" name="pageurl" />
+				<input type="hidden" id="pageid" name="pageid"/>
 			</form>
 		</p>
 	</div>
 	<div class="modal-footer">
-		<a href="#" class="btn" id="cancel" data-dismiss="modal" aria-hidden="true">Cancel</a>
-		<a href="#" class="btn btn-primary" id="continue">Save</a>
+		<a href="#" class="btn" id="cancel" data-dismiss="modal" aria-hidden="true">Close</a>
+		<a href="#" class="btn btn-primary" id="save">Save</a>
 	</div>
 </div>
 <?php

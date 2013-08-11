@@ -20,7 +20,7 @@ if($page->canLiveEdit())
 {
 	$liveurl = $page->getLiveUrl();
 	$livelink = <<<EOM
-LiveEdit this page: <a href="liveedit.php?page={$liveurl}">{$liveurl}</a> 
+You can also Live Edit this page: <a href="liveedit.php?page={$liveurl}">{$liveurl}</a> 
 <br />
 EOM;
 }
@@ -47,17 +47,20 @@ include 'header.php';
 	});
 
 </script>
-<h4>Edit Container</h4>
-<?php echo $livelink ?>
+<h4>Edit Container - <?php echo $pageid; ?> - <?php echo $containerid; ?></h4>
 <div class="alert alert-success" style="display:<?php echo $displaymessage; ?>;">
 	<?php echo $message; ?>
 	<button type="button" class="close" data-dismiss="alert">&times;</button>
 </div>
 <form id="containerform" action="edit.php?page=<?php echo $pageid; ?>&container=<?php echo $containerid; ?>" method="post">
 	<textarea id="container_content" cols=50 rows=10 name="container_content"><?php echo $text; ?></textarea>
-	<br />
-	<br />
-	<button id="submit" class="btn btn-custom">Save Changes</button>
+	<div>
+		<br />
+		<?php echo $livelink ?>
+		<br />
+		<button type="submit" id="submit" class="btn btn-custom pull-right">Save Changes</button>
+		<a href="pages.php"><button id="back" class="btn" type="button">Back</button></a>
+	</div>
 </form>
 <?php
 include 'footer.php';

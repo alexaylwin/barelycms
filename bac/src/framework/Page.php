@@ -27,8 +27,14 @@ class Page {
 	public function getPageId() {
 		return $this -> pageid;
 	}
+	
+	public function hasContainer($containerid)
+	{
+		return isset($this->containerlist[$containerid]);
+	}
 
-	public function hasContainers() {
+	public function hasContainers() 
+	{
 		return (count($this -> containerlist) > 0);
 	}
 
@@ -121,6 +127,11 @@ class Page {
 		}
 	}
 	
+	public function setLiveUrl($liveurl)
+	{
+		$this->liveurl = $liveurl;
+	}
+	
 	private function parseConfig($configstring)
 	{
 		$config;
@@ -132,13 +143,21 @@ class Page {
 			$kvp = explode(":", $entry);
 			if(!empty($kvp[0]))
 			{
-				$config[$kvp[0]] = $kvp[1];
+				$config[$kvp[0]] = rawurldecode($kvp[1]);
 			}			
 		}
 		return $config;
 	}
 	
-	
-
+	public function writeConfig()
+	{
+		$io = new FileIO();
+		$config = "id:" . rawurlencode($this->pageid) . "|liveurl:" . rawurlencode($this->liveurl);
+		
+		$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->pageid . "/.bacproperties";
+		$io->writeFile($path, $config);
+		
+		return true;	
+	}
 }
 ?>

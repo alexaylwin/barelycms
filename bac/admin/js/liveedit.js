@@ -111,7 +111,7 @@ $(document).ready(function()
            // apply_overlay($(this));
             editorcounter++;
             
-            var e = CKEDITOR.inline(this);
+            var e = CKEDITOR.inline(this, {customConfig: 'config_liveedit.js'});
             var ed = {containerid: container, pageid: page, editorid: e.id};
             editors.push(ed);
         });
