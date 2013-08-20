@@ -27,7 +27,6 @@ $(document).ready(function()
 	//investigation is required to stop the flicker.	
 	function editmouseover(e)
 	{
-		console.log($(this).attr('id') + ' MOUSEOVER');
 		//Move the overlay div to directly on top of the current div,
 		//redimension it to match this div's dimensions, and show it.
 		//$(this).addClass('bac-hoveroverlay');
@@ -35,7 +34,6 @@ $(document).ready(function()
 		 mouseover.css('display', 'block').css('position', 'absolute');
 		// mouseover.css($(this).offset());
 		
-		console.log('scrollTop: ' + $('#bac-targetpage').contents().scrollTop());
 		mouseover.position({
 			my: 'left top-'+$('#bac-targetpage').contents().scrollTop(),
 			at: 'left top',
@@ -44,8 +42,6 @@ $(document).ready(function()
 		});
 		 mouseover.width($(this).outerWidth());
 		 mouseover.height($(this).outerHeight());
-		 console.log("target: (" + $(this).position().top + "," + $(this).position().left + ")");
-		 console.log("over: (" + mouseover.position().top + "," + mouseover.position().left + ")");
 		 e.stopPropagation();
 		
 	}
@@ -89,8 +85,6 @@ $(document).ready(function()
 		
 		//data[0] - iFrame target element
 		//data[1] - editor
-		console.log(e.data[1]);
-		console.log(e.data[0]);
 		$(this).removeClass('bac-hoveroverlay');
 		
 	}

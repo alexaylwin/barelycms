@@ -205,7 +205,6 @@ EOM;
 		foreach ($pagearray as $pagename => $exists) {
 			
 			$path = $pagesdir . "/" . $pagename;
-			echo "removing:" . $path;
 			if (!$exists) {
 				$site->removePage($pagename);
 			}

@@ -1,0 +1,65 @@
+/*****************************
+ * CONTENT PAGE STYLES
+ *****************************/
+body
+{
+	background-color: #EEEEEE;
+}
+
+.title
+{
+	padding-top: 20px;
+}
+
+.container
+{
+	font-size: 18px;
+	font-family: Droid sans, sans-serif;
+	font-weight: 400;
+	line-height: 20px;
+
+}
+
+.container ul
+{
+	text-decoration:none;
+	list-style:none;
+}
+
+h1
+{
+	font-family: 'Cuprum', sans-serif;
+	font-size: 24px;
+	font-weight: 700;
+}
+
+#steps ul li
+{
+	padding-bottom: 20px;
+}
+
+#steps a:visited
+{
+	color: blue;
+}
+
+code
+{
+	font-size: 16px;
+	line-height:16px;
+	background-color:#D9D9D9;
+	display:inline-block;
+	margin-right:auto;
+	margin-left:auto;
+}
+table.data
+{
+	margin-top:10px;
+	margin-left:20px;
+	font-size:15px;
+}
+table.data td, table.data th
+{
+	padding-right: 20px;
+	
+}

@@ -4,8 +4,8 @@ requirements, and doesn't need any special design in order to fit inside a websi
 editable!
 
 Revision History:
-Version 0.1a - Basic rich text editing and site map editing
-Version 0.2a - Live (inline) page editing, better rich text editing (CKEditor!)
+- Version 0.1a - Basic rich text editing and site map editing
+- Version 0.2a - Live (inline) page editing, better rich text editing (CKEditor!)
 
 Roadmapped Features:
 - Blog post plugin
@@ -15,6 +15,7 @@ Roadmapped Features:
 - Improve Live Edit interface (BAC sticky toolbar, container overlays)
 - Revision history, allow limited roll-back
 - Improved pages interface
+- Export/backup content (downloadable zip)
 
 Nebulous Features:
 - Expand what is 'content':

@@ -49,7 +49,7 @@ class Constants
 		}
 		//echo $ret;
 		
-		return trim($ret, '/');
+		return $ret;//trim($ret, '/');
 	}
 }
 

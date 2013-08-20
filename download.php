@@ -1,54 +1,48 @@
-<html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-		<!-- jQuery, Bootstrap and Google fonts -->
-		<script type="text/javascript" src="jquery.min.js"></script>
-		<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Cuprum:400,700' rel='stylesheet' type='text/css'>
-		<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-		<!-- Style sheet -->
-		<link href="styles/framework.css" rel="stylesheet" media="screen" />
-		<link href="styles/content.css" rel="stylesheet" media="screen" />
-		<!-- BAC loader -->
-		<script type="text/javascript" src="bac/loader.js"></script>
-	</head>
-
-	<body>
-		<div class="navbar">
-			<div class="navbar-inner" id="menubar">
-				<ul class="nav">
-					<li>
-						<a href="index.php">Home</a>
-					</li>
-					<li>
-						<a href="download.php">Download</a>
-					</li>
-					<li>
-						<a href="started.php">Getting Started</a>
-					</li>
-					<li>
-						<a href="support.php">Documentation/Support</a>
-					</li>
-					<li>
-						<a href="try.php">Demo</a>
-					</li>
-					<li>
-						<a href="about.php">About</a>
-					</li>
-				</ul>
-			</div>
-		</div>
+<?php include 'header.php' ?>
 		<div class="container">
 			<div class="row title text-left title" >
 				<div class="row-inner">
-					Download
+					Download BarelyACMS
 				</div>
 			</div>
-			<div class="row text-left" id="steps">
+			<div class="row text-left" id="download">
 				<div class="row-inner">
-					<a href="bac.zip">Get it here!</a>
+					<h1>Current Version</h1>
+					<p class="details">
+						BarelyACMS is current in <em>alpha</em> testing. The latest 'stable'
+						version is <b>0.2a</b>:
+						<br />
+						<a href="releases/bac-0.2a.zip">Download BAC here (v0.2a)</a>
+						<br />
+						After downloading, read the <a href="started.php">getting started</a> page for instructions
+						on how to get BAC up and running. <br /><i>(Spoiler: you just copy it onto your website, that's it)</i>
+					</p>
+					<h1>Revision History</h1>
+					<p class="details">
+						Here you can download archived versions of BAC:
+						<table class="data">
+							<tr>
+								<th>Date</th>
+								<th>Revision</th>
+								<th>Notes</th>
+							</tr>
+							<tr>
+								<td>20/08/2013</td>
+								<td><a href="releases/bac-0.2a.zip">0.2a</a></td>
+								<td>First release to bacms.ca for public testing</td>
+							</tr>
+						</table>
+					</p>
+					<h1>Source</h1>
+					<p class="details">
+						The BAC source code is available on GitHub. Feel free to pull and modify it. 
+						This code isn't versioned into releases, so you'll be working with whatever the current revision is.
+						It may not be stable.<br />
+						<a href="http://github.com/alexaylwin/barelycms">Download the latest BAC source here</a>
+					</p>
 				</div>
 			</div>
 		</div>
+<?php include 'footer.php' ?>
 	</body>
 </html>

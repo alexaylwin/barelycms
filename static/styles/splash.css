@@ -1,0 +1,174 @@
+/********************
+ * SPLASH PAGE STYLES
+ ********************/
+
+.container
+{
+	font-size: 30px;
+	font-weight: 600;
+}
+
+.row
+{
+	padding-top: 20px;
+}
+
+
+/*
+ * Title
+ */
+.title
+{
+	background-color:#38393b;
+	color:#d7d7d7;
+	padding-bottom: 45px;
+}
+
+.title #title1
+{
+	font-size: 48px;
+	font-family:'Droid Sans', sans-serif;
+	margin-bottom: 10px;
+}
+
+.title #title2
+{
+	font-size: 30px;
+}
+
+/**
+ * 	Flavor
+ */
+#flavor
+{
+	padding: 55px 0;
+	background-color:#e14949;
+	text-align: left;
+}
+
+#flavor #flavor1
+{
+	width: 450px;
+	margin-bottom: 75px;
+}
+
+#flavor #flavor2
+{
+	width: 350px;
+	margin-left: auto;
+	margin-right: 0;	
+}
+
+/**
+ * Freedom
+ */
+#freedom
+{
+	padding: 55px 0;
+}
+
+#freedom1
+{
+	font-size: 48px;
+	font-weight: bold;
+	margin-top: 20px;
+	margin-bottom: 50px;
+}
+
+/**
+ * 	Get
+ */
+#get
+{
+	margin-top: 5px;
+	margin-bottom: 5px;	
+}
+
+#get button
+{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fdfdfd), color-stop(1, #eaeaea) );
+	background:-moz-linear-gradient( center top, #fdfdfd 5%, #eaeaea 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdfdfd', endColorstr='#eaeaea');
+	background-color:#ffffff;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#666666;
+	font-family:arial;
+	font-size:27px;
+	font-weight:bold;
+	padding:10px 41px;
+	text-decoration:none;
+}
+#get button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eaeaea), color-stop(1, #fdfdfd) );
+	background:-moz-linear-gradient( center top, #eaeaea 5%, #fdfdfd 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#eaeaea', endColorstr='#fdfdfd');
+	background-color:#f6f6f6;
+	cursor:pointer;
+	cursor:hand;
+}
+#get button:active {
+	position:relative;
+	top:1px;
+}
+
+/**
+ * 	Princples
+ */
+
+#principles 
+{
+	padding-top: 50px;
+/*	margin-top: 80px;*/
+	background-color: #679ED2;
+}
+#principles1
+{
+	margin-bottom: 35px;
+}
+
+.principle-container
+{
+	width: 48%;
+	height: 300px;
+	display:inline-block;
+	vertical-align: top;
+}
+
+.principle-title
+{
+	
+}
+
+.principle-image
+{
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 150px;
+	height: auto;
+	display:block;
+	/*background:url("../img/plane.jpg");*/
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.principle-caption
+{
+	font-size:16px;
+	
+}
+
+.principle-left
+{
+
+}
+
+.principle-right
+{
+
+}
+
+
