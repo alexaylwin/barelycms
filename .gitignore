@@ -4,6 +4,18 @@
 deploy.sh
 jquery.1.4.2.sdocml
 bugs.txt
+releases/
+static/
+about.php
+.project
+download.php
+footer.php
+header.php
+index.php
+jquery.min.js
+started.php
+support.php
+try.php
 
 #################
 ## Eclipse
