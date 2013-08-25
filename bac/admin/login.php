@@ -4,30 +4,32 @@ include_once ('../src/util.php');
 
 /*
  * this is the login form, it provides a secure way to access the application. it relies on the
- * lock.z file, which holds a hashed version of the password.
+ * cred.php file, which holds a hashed version of the password.
  */
+$message = '';
 if (!isset($_SESSION['UID'])) {
 	//If the form is submitted, then check the username and password
 	if (isset($_POST['loginp']) && isset($_POST['loginu'])) {
 		$u = $_POST['loginu'];
 		$p = $_POST['loginp'];
 		$p = sha1($p);
-		include_once ('../admin/config/cred.php');
+		//need to check if this exists first
+		if(file_exists('../admin/config/cred.php'))
+		{
+			include_once ('../admin/config/cred.php');
 
-		//this would be some hash function
-		if ($p == $password && $u == $username) {
-			session_start();
-			$_SESSION['UID'] = $_POST['loginu'];
-			header("Location: " . get_absolute_uri('index.php'));
+			//this would be some hash function
+			if ($p == $password && $u == $username) {
+				session_start();
+				$_SESSION['UID'] = $_POST['loginu'];
+				header("Location: " . get_absolute_uri('index.php'));
+			} else {
+				$message = "Please try again";
+			}
 		} else {
-			header("Location: " . get_absolute_uri('login.php?m=Bad Password'));
-			die();
+			$message = "Please try again";
 		}
 
-	}
-	$message = '';
-	if (isset($_GET['m'])) {
-		$message = htmlspecialchars($_GET['m']);
 	}
 } else {
 	//they're logged in, why are they back at the login page?
@@ -50,36 +52,45 @@ if (!isset($_SESSION['UID'])) {
 				margin: 0 auto;
 				text-align: center;
 			}
+			.control-group
+			{
+				margin-left:-160px;
+			}
 		</style>
 </head>	
 <body>
 	<div class="container-fluid">
- <div class="row">
-            <div class="span12">
-<form action="login.php" method="post" id="loginform" class="form-horizontal">
-	<div class="control-group">
-		<div class="controls">
-			<span style="color:red;"><?php echo $message; ?></span><br />
+ 		<div class="row" style="text-align:center;width:100%; margin:0; padding:0;">
+            <div class="span12" style="display:inline-block; width:100%; margin:0; padding:0;">
+				<div style="display: inline-block">
+					<img src="images/logo-200.gif" style="width:75px; height:75px;"/>
+					<form action="login.php" method="post" id="loginform" class="form-horizontal" style="text-align:center">
+						<div class="control-group">
+							<div class="controls">
+								<span style="color:red;"><?php echo $message; ?></span><br />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for"loginu">Username:</label>
+							<div class="controls">
+								<input type="text" value="" name="loginu" id="loginu"/> <br />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for"loginp">Password:</label>
+							<div class="controls">
+								<input type="password" name="loginp" id="loginp"/> <br />
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="controls">
+								<button class="btn btn-custom" id="login" type="submit">Login</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for"loginu">Username:</label>
-		<div class="controls">
-			<input type="text" value="" name="loginu" id="loginu"/> <br />
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for"loginp">Password:</label>
-		<div class="controls">
-			<input type="password" name="loginp" id="loginp"/> <br />
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="controls">
-			<button class="btn btn-custom" id="login" type="submit">Login</button>
-		</div>
-	</div>
-</div></div></div>
-</form>
 </body>
 </html>	

@@ -6,7 +6,7 @@
 	require __DIR__ . '/scripts/pages_cbs.php';
 	
 	$cbs = new PagesCBS();
-	$data = $cbs->handleView();
+	$data = $cbs->handleView(0);
 	$pagelist = $data['pagelist'];
 	$maxcontainers = $data['maxcontainers'];
 	
@@ -51,6 +51,11 @@ include 'header.php';
 		$('#pagename').text(pageid);
 		$('#pageid').val(pageid);
 		$('#pageurl').val(pageurl);
+		$(document).keypress(function(e){
+  			if (e.which == 13){
+   		    	$("#save").click();
+    		}
+		});
 	}
 $(document).ready(function(){
 	$("#save").click(function(){

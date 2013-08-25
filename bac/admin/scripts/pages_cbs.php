@@ -6,7 +6,7 @@ require_once __DIR__. '/../../src/framework/classloader.php';
  */
 class PagesCBS extends CodeBehindScript
 {
-	function handleView()
+	function handleView($data)
 	{
 		$site = FrameworkController::loadsite();
 		$pagelist = $site -> getAllPages();
@@ -21,9 +21,9 @@ class PagesCBS extends CodeBehindScript
 			}
 		}
 
-		$data['pagelist'] = $pagelist;
-		$data['maxcontainers'] = $maxcontainers;
-		return $data;
+		$ret['pagelist'] = $pagelist;
+		$ret['maxcontainers'] = $maxcontainers;
+		return $ret;
 	}
 	
 	function handlePost($data)

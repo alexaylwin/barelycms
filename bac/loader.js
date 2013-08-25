@@ -19,53 +19,54 @@
  * element with the data-bac-id attribute. It decides on the page based on the closest 
  * data-bac-page, and uses ajax to query the load.php script.
  */
-
-//Run loader.js after the DOM is completely loaded
-$(document).ready(function(){
-	
-	function bac_load_content(page, container)
-	{
-/*
-		$.get(	"bac/load.php", { page:page, container:container })
-			.success(
-				function(data, status, xhr)
-				{
-					alert(data);
-					return data;
-				}
-		);
-*/
-		ret = "a";
-		$.ajax("bac/load.php",
-			{	async: false,
-				success: 
-					function(data, status, xhr)
-					{
-						ret = data;		
-					},
-				data:{ page:page, container:container },
-				dataType: "html"
-			});
-		return ret;		
-
-	}
-	
-	/*
-	 * Iterates through all the data-bac-id attributes and loads the
-	 * content for each one
-	 */
-	function bac_scan_document()
-	{
-		//For each element with bac-id
-        $('*[data-bac-id]').each(function(i) {
-            page = $(this).closest('*[data-bac-page]').attr('data-bac-page');
-            container = $(this).attr('data-bac-id');
-            content = bac_load_content(page, container)
-            $(this).html(content);
-        }); 
+function load()
+{
+	//Run loader.js after the DOM is completely loaded
+	$(document).ready(function(){
 		
+		function bac_load_content(page, container)
+		{
+			ret = "a";
+			$.ajax("bac/load.php",
+				{	async: false,
+					success: 
+						function(data, status, xhr)
+						{
+							ret = data;		
+						},
+					data:{ page:page, container:container },
+					dataType: "html"
+				});
+			return ret;
+		}
 		
-	}
-	bac_scan_document(); 
-});
+		/*
+		 * Iterates through all the data-bac-id attributes and loads the
+		 * content for each one
+		 */
+		function bac_scan_document()
+		{
+			//For each element with bac-id
+	        $('*[data-bac-id]').each(function(i) {
+	            page = $(this).closest('*[data-bac-page]').attr('data-bac-page');
+	            container = $(this).attr('data-bac-id');
+	            content = bac_load_content(page, container)
+	            $(this).html(content);
+	        }); 
+			
+			
+		}
+		bac_scan_document(); 
+	});
+}
 
+if(typeof jQuery=='undefined') {
+    var headTag = document.getElementsByTagName("head")[0];
+    var jq = document.createElement('script');
+    jq.type = 'text/javascript';
+    jq.src = 'jquery.min.js';
+    jq.onload = load;
+    headTag.appendChild(jq);
+} else {
+     load();
+}

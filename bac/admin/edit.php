@@ -1,38 +1,43 @@
 <?php
 include 'auth.php';
-include '../src/framework/classloader.php';
+require __DIR__ . '/scripts/edit_cbs.php';
 
-if (!isset($_GET['container']) || !isset($_GET['page'])) {
-	throw_error("container or page does not exist.", get_absolute_uri("listcontainers.php"));
-}
+//Initialize the CBS class
+$editcbs = new EditCBS();
 
-$containerid = $_GET['container'];
-$pageid = $_GET['page'];
+//Set up the message variables
+$displaymessage = 'none';
+$messageclass = 'alert-success';
+$message = "Container content saved.";
 
-$site = FrameworkController::loadsite();
-$page = $site -> getPage($pageid);
-$container = $page -> getContainer($containerid);
-$text = $container -> getValue();
-$displaymessage = "none";
-
-$livelink = '';
-if($page->canLiveEdit())
-{
-	$liveurl = $page->getLiveUrl();
-	$livelink = <<<EOM
-You can also Live Edit this page: <a href="liveedit.php?page={$liveurl}">{$liveurl}</a> 
-<br />
-EOM;
-}
-
-/**
- * If we have the post value, this means update the container.
- */
+//If we're coming from a post, handle a post
 if (isset($_POST['container_content'])) {
-	$container -> setValue($_POST['container_content']);
-	$text = $container -> getValue();
-	$message = "Container content saved.";
-	$displaymessage = "block";
+	$postSuccess = $editcbs->handlePost($_POST);
+	if($postSuccess)
+	{
+		$displaymessage = 'block';
+	} else {
+		$message = "Container content could not be saved";
+		$messageclass = 'alert-failure';
+		$displaymessage = 'block';
+	}
+}
+
+//Now get the normal view
+$data = $editcbs->handleView($_GET);
+if(isset($data['error']))
+{
+	throw_error('No container was found with that ID', "pages.php");
+}
+
+//If we have a live link url, set up the link
+$livelink = '';
+if(isset($data['liveurl']))
+{
+	$livelink = <<<EOM
+	You can also Live Edit this page: <a href="liveedit.php?page={$liveurl}">{$liveurl}</a> 
+	 <br />
+EOM;
 }
 ?>
 
@@ -47,13 +52,15 @@ include 'header.php';
 	});
 
 </script>
-<h4>Edit Container - <?php echo $pageid; ?> - <?php echo $containerid; ?></h4>
-<div class="alert alert-success" style="display:<?php echo $displaymessage; ?>;">
+<h4>Edit Container - <?php echo $data['pageid']; ?> - <?php echo $data['containerid']; ?></h4>
+<div class="alert <?php echo $messageclass?>" style="display:<?php echo $displaymessage; ?>;">
 	<?php echo $message; ?>
 	<button type="button" class="close" data-dismiss="alert">&times;</button>
 </div>
-<form id="containerform" action="edit.php?page=<?php echo $pageid; ?>&container=<?php echo $containerid; ?>" method="post">
-	<textarea id="container_content" cols=50 rows=10 name="container_content"><?php echo $text; ?></textarea>
+<form id="containerform" action="edit.php?container=<?php echo $data['containerid']; ?>&page=<?php echo $data['pageid']; ?>" method="post">
+	<textarea id="container_content" cols=50 rows=10 name="container_content"><?php echo $data['text']; ?></textarea>
+	<input type="hidden" name="container" value="<?php echo $data['containerid']; ?>" />
+	<input type="hidden" name="page" value="<?php echo $data['pageid']; ?>" />
 	<div>
 		<br />
 		<?php echo $livelink ?>
