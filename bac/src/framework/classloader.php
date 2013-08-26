@@ -5,5 +5,5 @@
 	include_once 'Page.php';
 	include_once 'Site.php';
 	include_once 'Constants.php';
-	include_once 'CodeBehindScript.php';
+	include_once 'RequestHandler.php';
 ?>

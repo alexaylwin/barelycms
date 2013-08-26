@@ -4,19 +4,19 @@ require_once __DIR__. '/../../src/framework/classloader.php';
 /**
  * Pages code behind file. This script is for the Page view. 
  */
-class EditCBS extends CodeBehindScript
+class EditHandler extends RequestHandler
 {
 	
-	function handleView($data)
+	protected function handleGet()
 	{
-		if(empty($data['container']) || empty($data['page']))
+		if(empty($this->get['container']) || empty($this->get['page']))
 		{
 			$ret['error'] = 'nocontainer';
 			return $ret;
 		}
 		
-		$containerid = $data['container'];
-		$pageid = $data['page'];
+		$containerid = $this->get['container'];
+		$pageid = $this->get['page'];
 		
 		$site = FrameworkController::loadsite();
 		$page = $site -> getPage($pageid);
@@ -34,25 +34,27 @@ class EditCBS extends CodeBehindScript
 		return $ret;
 	}
 	
-	function handlePost($data)
+	protected function handlePost()
 	{
-		if(!empty($data['container_content']) && !empty($data['container']) && !empty($data['page']))
+		if(!empty($this->post['container_content']) && !empty($this->post['container']) && !empty($this->post['page']))
 		{
 			
-			$containerid = $data['container'];
-			$pageid = $data['page'];
+			$containerid = $this->post['container'];
+			$pageid = $this->post['page'];
 			$site = FrameworkController::loadsite();
 			$page = $site -> getPage($pageid);
 			$container = $page -> getContainer($containerid);
-			$container -> setValue($data['container_content']);
+			$container -> setValue($this->post['container_content']);
 			$text = $container -> getValue();
-			return 1;
+			$ret['postSuccess'] = true;
+			return $ret;
 		} else {
-			return 0;
+			$ret['postSuccess'] = false;
+			return $ret;
 		}
 	}
 	
-	function handleAjax($data)
+	protected function handleAjax()
 	{
 		
 	}

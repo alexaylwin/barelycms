@@ -4,9 +4,10 @@ require_once __DIR__. '/../../src/framework/classloader.php';
 /**
  * Pages code behind file. This script is for the Page view. 
  */
-class PagesCBS extends CodeBehindScript
+class PagesHandler extends RequestHandler
 {
-	function handleView($data)
+	
+	protected function handleGet()
 	{
 		$site = FrameworkController::loadsite();
 		$pagelist = $site -> getAllPages();
@@ -26,35 +27,37 @@ class PagesCBS extends CodeBehindScript
 		return $ret;
 	}
 	
-	function handlePost($data)
+	protected function handlePost()
 	{
 		
 	}
 	
-	function handleAjax($data)
+	protected function handleAjax()
 	{
-		$ret = false;
-		if(isset($data['pageurl']) && isset($data['pageid']))
+		$data = false;
+		if(isset($this->post['pageurl']) && isset($this->post['pageid']))
 		{
-			if(!empty($data['pageurl']))
+			if(!empty($this->post['pageurl']))
 			{
 				$site = FrameworkController::loadsite();
-				$page = $site->getPage($data['pageid']);
-				$page->setLiveUrl($data['pageurl']);
-				$ret = $page->writeConfig();
+				$page = $site->getPage($this->post['pageid']);
+				$page->setLiveUrl($this->post['pageurl']);
+				$data = $page->writeConfig();
 			}
 		}
+		$ret['ajax'] = true;
+		$ret['data'] = $data;
 		return $ret;
 	}
 }
 
 //A handler for ajax requests to the code behind script
-if(isset($_GET['a'])){
-	if($_SERVER['REQUEST_METHOD'] == 'POST' && $_GET['a']=='1')
-	{
-		$cbs = new PagesCBS();
-		echo $cbs->handleAjax($_POST);
-	}
-}
+// if(isset($_GET['a'])){
+	// if($_SERVER['REQUEST_METHOD'] == 'POST' && $_GET['a']=='1')
+	// {
+		// $cbs = new PagesCBS();
+		// echo $cbs->handleAjax($_POST);
+	// }
+// }
 
 ?>

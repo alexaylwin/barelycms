@@ -1,41 +1,40 @@
 <?php
 include 'auth.php';
-require __DIR__ . '/scripts/edit_cbs.php';
+require __DIR__ . '/handlers/EditHandler.php';
 
 //Initialize the CBS class
-$editcbs = new EditCBS();
+$requestHandler = new EditHandler();
 
-//Set up the message variables
-$displaymessage = 'none';
-$messageclass = 'alert-success';
-$message = "Container content saved.";
+$data = $requestHandler->handleRequest($_POST, $_GET);
 
-//If we're coming from a post, handle a post
-if (isset($_POST['container_content'])) {
-	$postSuccess = $editcbs->handlePost($_POST);
-	if($postSuccess)
-	{
-		$displaymessage = 'block';
-	} else {
-		$message = "Container content could not be saved";
-		$messageclass = 'alert-failure';
-		$displaymessage = 'block';
-	}
-}
-
-//Now get the normal view
-$data = $editcbs->handleView($_GET);
 if(isset($data['error']))
 {
 	throw_error('No container was found with that ID', "pages.php");
 }
 
-//If we have a live link url, set up the link
+//Set up the message variables
+$displaymessage = 'none';
+$messageclass = 'alert-success';
+$message = "Container content saved.";
 $livelink = '';
+
+if(!empty($data['postSuccess']))
+{
+	if($data['postSuccess'])
+	{
+		$displaymessage = 'block';
+	}	else {
+		$message = "Container content could not be saved";
+		$messageclass = 'alert-failure';
+		$displaymessage = 'block';
+	}
+} 
+
+//If we have a live link url, set up the link
 if(isset($data['liveurl']))
 {
 	$livelink = <<<EOM
-	You can also Live Edit this page: <a href="liveedit.php?page={$liveurl}">{$liveurl}</a> 
+	You can also Live Edit this page: <a href="liveedit.php?page={$data['liveurl']}">{$data['liveurl']}</a> 
 	 <br />
 EOM;
 }

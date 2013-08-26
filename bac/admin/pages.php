@@ -3,10 +3,17 @@
  * This sets up the authentication and queries the CBS for view data
  */
 	include 'auth.php';
-	require __DIR__ . '/scripts/pages_cbs.php';
+	require __DIR__ . '/handlers/PagesHandler.php';
 	
-	$cbs = new PagesCBS();
-	$data = $cbs->handleView(0);
+	$requestHandler = new pagesHandler();
+	$data = $requestHandler->handleRequest($_POST, $_GET);
+	
+	if(isset($data['ajax']))
+	{
+		echo $data['data'];
+		die();
+	}
+	
 	$pagelist = $data['pagelist'];
 	$maxcontainers = $data['maxcontainers'];
 	
@@ -60,7 +67,7 @@ include 'header.php';
 $(document).ready(function(){
 	$("#save").click(function(){
 		var formdata = $("#pageproperties").serialize();
-		$.post("scripts/pages_cbs.php?a=1", 
+		$.post("pages.php?a=1", 
 				formdata, 
 				function(data)
 				{
