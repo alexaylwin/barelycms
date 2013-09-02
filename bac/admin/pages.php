@@ -10,7 +10,7 @@
 	
 	if(isset($data['ajax']))
 	{
-		echo $data['data'];
+		echo json_encode($data['data']);
 		die();
 	}
 	
@@ -24,19 +24,23 @@
 	//so it stays in the view
 	foreach ($pagelist as $page) {
 		$list = $list . '<li>';
-		$list = $list . '<h5>' . $page->getPageId() . '<a class="icon" onclick="javascript:pageModal(\''. $page->getPageId() . '\', \''. $page->getLiveUrl() . '\');"><i class="icon-align-justify icon-white"></i></a>'
-						. '<a href="liveedit.php?page=' . $page->getLiveUrl() . '" class="icon" ><i class="icon-edit icon-white"></i></a></h5>';
+		$list = $list . '<h5 id="'. $page->getPageId() .'">' . 
+						$page->getPageId() . 
+						'<a class="icon properties" onclick="javascript:pageModal(\''. $page->getPageId() . '\', \''. $page->getLiveUrl() . '\');">'.
+						'<i class="icon-align-justify icon-white"></i>'.
+						'</a>' .
+						'<a href="liveedit.php?page=' . $page->getLiveUrl() . '" class="icon liveurl" ><i class="icon-edit icon-white"></i></a></h5>';
 		$list = $list . '<ul class="unstyled">';
 		$i = 0;
 		if($page->hasContainers())
 		{
-		$containerlist = $page->getAllContainers();
-		
-		foreach($containerlist as $container)
-		{
-			$list = $list . '<li> <a href="edit.php?container=' . $container->getContainerId() . '&page='.$page->getPageId().'"> ' . $container->getContainerId() . ' <i class="icon-edit icon-white"></i></a></li>';
-			$i++;
-		}
+			$containerlist = $page->getAllContainers();
+			
+			foreach($containerlist as $container)
+			{
+				$list = $list . '<li> <a href="edit.php?container=' . $container->getContainerId() . '&page='.$page->getPageId().'"> ' . $container->getContainerId() . ' <i class="icon-edit icon-white"></i></a></li>';
+				$i++;
+			}
 		}
 		for($i = $i; $i < $maxcontainers; $i++)
 		{
@@ -58,6 +62,7 @@ include 'header.php';
 		$('#pagename').text(pageid);
 		$('#pageid').val(pageid);
 		$('#pageurl').val(pageurl);
+		$("#modal-message").css("display", "none");
 		$(document).keypress(function(e){
   			if (e.which == 13){
    		    	$("#save").click();
@@ -71,13 +76,21 @@ $(document).ready(function(){
 				formdata, 
 				function(data)
 				{
-					if(data == 1)
+					var result = JSON.parse(data)
+					if(result.success == 1)
 					{
-						alert("Properties saved");
+						$("#" + result.pageId + " > .liveurl").attr("href", "liveedit.php?page=" + result.liveUrl);
+						$("#modal-message").css("display", "block");
+						$("#modal-message-body").html("Properties saved");
 					} else {
-						alert("Properties could not be saved");
+						$("#modal-message").removeClass("alert-success");
+						$("#modal-message").addClass("alert-error");
+						$("#modal-message-body").html("Properties could not be saved");
+						$("#modal-message").css("display", "block");
 					}
-				});
+				}
+		);
+		
 	});
 });
 
@@ -102,6 +115,10 @@ Please select the container that you'd like to edit:
 		<h3>Edit Page Properties</h3>
 	</div>
 	<div class="modal-body">
+		<div id="modal-message" class="alert alert-success" style="display:none;">
+			<span id="modal-message-body"></span>
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+		</div>
 		<p>
 			<form id="pageproperties">
 				Page Name: <span id="pagename"></span><br />

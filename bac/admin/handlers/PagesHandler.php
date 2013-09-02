@@ -42,7 +42,9 @@ class PagesHandler extends RequestHandler
 				$site = FrameworkController::loadsite();
 				$page = $site->getPage($this->post['pageid']);
 				$page->setLiveUrl($this->post['pageurl']);
-				$data = $page->writeConfig();
+				$data['success'] = $page->writeConfig();
+				$data['liveUrl'] = $page->getLiveUrl();
+				$data['pageId'] = $page->getPageId();
 			}
 		}
 		$ret['ajax'] = true;
@@ -50,14 +52,4 @@ class PagesHandler extends RequestHandler
 		return $ret;
 	}
 }
-
-//A handler for ajax requests to the code behind script
-// if(isset($_GET['a'])){
-	// if($_SERVER['REQUEST_METHOD'] == 'POST' && $_GET['a']=='1')
-	// {
-		// $cbs = new PagesCBS();
-		// echo $cbs->handleAjax($_POST);
-	// }
-// }
-
 ?>
