@@ -9,26 +9,37 @@ class EditHandler extends RequestHandler
 	
 	protected function handleGet()
 	{
-		if(empty($this->get['container']) || empty($this->get['page']))
+		if(empty($this->get['block']) || empty($this->get['bucket']))
 		{
-			$ret['error'] = 'nocontainer';
+			$ret['error'] = 'noblock';
 			return $ret;
 		}
-		
-		$containerid = $this->get['container'];
-		$pageid = $this->get['page'];
-		
 		$site = FrameworkController::loadsite();
-		$page = $site -> getPage($pageid);
-		$container = $page -> getContainer($containerid);
 		
-		$ret['text'] = $container -> getValue();
-		$ret['pageid'] = $pageid;
-		$ret['containerid'] = $containerid;
+		$blockid = $this->get['block'];
+		$bucketid = $this->get['bucket'];
 		
-		if($page->canLiveEdit())
+		if($site->hasBucket($bucketid))
 		{
-			$ret['liveurl'] = $page->getLiveUrl();
+			$bucket = $site -> getBucket($bucketid);	
+		} else {
+			$ret['error'] = 'noblock';
+			return;
+		}
+		
+		if($bucket->hasBlock($blockid))
+		{
+			$block = $bucket -> getBlock($blockid);
+		} else {
+			$ret['error'] = 'noblock';
+		}
+		$ret['text'] = $block -> getValue();
+		$ret['bucketid'] = $bucketid;
+		$ret['blockid'] = $blockid;
+		
+		if($bucket->canLiveEdit())
+		{
+			$ret['liveurl'] = $bucket->getLiveUrl();
 		}
 		
 		return $ret;
@@ -36,16 +47,16 @@ class EditHandler extends RequestHandler
 	
 	protected function handlePost()
 	{
-		if(!empty($this->post['container_content']) && !empty($this->post['container']) && !empty($this->post['page']))
+		if(!empty($this->post['block_content']) && !empty($this->post['block']) && !empty($this->post['bucket']))
 		{
 			
-			$containerid = $this->post['container'];
-			$pageid = $this->post['page'];
+			$blockid = $this->post['block'];
+			$bucketid = $this->post['bucket'];
 			$site = FrameworkController::loadsite();
-			$page = $site -> getPage($pageid);
-			$container = $page -> getContainer($containerid);
-			$container -> setValue($this->post['container_content']);
-			$text = $container -> getValue();
+			$bucket = $site -> getBucket($bucketid);
+			$block = $bucket -> getBlock($blockid);
+			$block -> setValue($this->post['block_content']);
+			$text = $block -> getValue();
 			$ret['postSuccess'] = true;
 			return $ret;
 		} else {
@@ -61,11 +72,11 @@ class EditHandler extends RequestHandler
 	
 }
 
-//A handler for ajax requests to the code behind script
-if(isset($_GET['a'])){
-	if($_SERVER['REQUEST_METHOD'] == 'POST' && $_GET['a']=='1')
-	{
-		$cbs = new EditCBS();
-		echo $cbs->handleAjax($_POST);
-	}
-}
+// //A handler for ajax requests to the code behind script
+// if(isset($_GET['a'])){
+	// if($_SERVER['REQUEST_METHOD'] == 'POST' && $_GET['a']=='1')
+	// {
+		// $cbs = new EditCBS();
+		// echo $cbs->handleAjax($_POST);
+	// }
+// }

@@ -3,9 +3,9 @@
  * This sets up the authentication and queries the CBS for view data
  */
 	include 'auth.php';
-	require __DIR__ . '/handlers/PagesHandler.php';
+	require __DIR__ . '/handlers/BucketsHandler.php';
 	
-	$requestHandler = new pagesHandler();
+	$requestHandler = new bucketsHandler();
 	$data = $requestHandler->handleRequest($_POST, $_GET);
 	
 	if(isset($data['ajax']))
@@ -14,35 +14,35 @@
 		die();
 	}
 	
-	$pagelist = $data['pagelist'];
-	$maxcontainers = $data['maxcontainers'];
+	$bucketlist = $data['bucketlist'];
+	$maxblocks = $data['maxblocks'];
 	
 	$list = '';
 	
-	//Build the page/containers form
+	//Build the bucket/block form
 	//This is very tightly coupled to the presentation of the list (classes etc.)
 	//so it stays in the view
-	foreach ($pagelist as $page) {
+	foreach ($bucketlist as $bucket) {
 		$list = $list . '<li>';
-		$list = $list . '<h5 id="'. $page->getPageId() .'">' . 
-						$page->getPageId() . 
-						'<a class="icon properties" onclick="javascript:pageModal(\''. $page->getPageId() . '\', \''. $page->getLiveUrl() . '\');">'.
+		$list = $list . '<h5 id="'. $bucket->getBucketId() .'">' . 
+						$bucket->getBucketId() . 
+						'<a class="icon properties" onclick="javascript:bucketModal(\''. $bucket->getBucketId() . '\', \''. $bucket->getLiveUrl() . '\');">'.
 						'<i class="icon-align-justify icon-white"></i>'.
 						'</a>' .
-						'<a href="liveedit.php?page=' . $page->getLiveUrl() . '" class="icon liveurl" ><i class="icon-edit icon-white"></i></a></h5>';
+						'<a href="liveedit.php?page=' . $bucket->getLiveUrl() . '" class="icon liveurl" ><i class="icon-edit icon-white"></i></a></h5>';
 		$list = $list . '<ul class="unstyled">';
 		$i = 0;
-		if($page->hasContainers())
+		if($bucket->hasBlocks())
 		{
-			$containerlist = $page->getAllContainers();
+			$blocklist = $bucket->getAllBlocks();
 			
-			foreach($containerlist as $container)
+			foreach($blocklist as $block)
 			{
-				$list = $list . '<li> <a href="edit.php?container=' . $container->getContainerId() . '&page='.$page->getPageId().'"> ' . $container->getContainerId() . ' <i class="icon-edit icon-white"></i></a></li>';
+				$list = $list . '<li> <a href="edit.php?block=' . $block->getBlockId() . '&bucket='.$bucket->getBucketId().'"> ' . $block->getBlockId() . ' <i class="icon-edit icon-white"></i></a></li>';
 				$i++;
 			}
 		}
-		for($i = $i; $i < $maxcontainers; $i++)
+		for($i = $i; $i < $maxblocks; $i++)
 		{
 			$list = $list . '<li>&nbsp;</li>';
 		}
@@ -56,11 +56,11 @@
 include 'header.php';
 ?>
 <script type="text/javascript">
-	function pageModal(pageid, pageurl)
+	function bucketModal(bucketid, pageurl)
 	{
-		$('#pagemodal').modal();
-		$('#pagename').text(pageid);
-		$('#pageid').val(pageid);
+		$('#bucketmodal').modal();
+		$('#bucketname').text(bucketid);
+		$('#bucketid').val(bucketid);
 		$('#pageurl').val(pageurl);
 		$("#modal-message").css("display", "none");
 		$(document).keypress(function(e){
@@ -71,15 +71,15 @@ include 'header.php';
 	}
 $(document).ready(function(){
 	$("#save").click(function(){
-		var formdata = $("#pageproperties").serialize();
-		$.post("pages.php?a=1", 
+		var formdata = $("#bucketproperties").serialize();
+		$.post("buckets.php?a=1", 
 				formdata, 
 				function(data)
 				{
 					var result = JSON.parse(data)
 					if(result.success == 1)
 					{
-						$("#" + result.pageId + " > .liveurl").attr("href", "liveedit.php?page=" + result.liveUrl);
+						$("#" + result.bucketId + " > .liveurl").attr("href", "liveedit.php?page=" + result.liveUrl);
 						$("#modal-message").css("display", "block");
 						$("#modal-message-body").html("Properties saved");
 					} else {
@@ -95,24 +95,24 @@ $(document).ready(function(){
 });
 
 </script>
-<h4>Pages</h4>
+<h4>Buckets</h4>
 <p>
-Please select the container that you'd like to edit:
+Please select the block that you'd like to edit:
 </p>
-<ul class="inline" id="pagelist">
+<ul class="inline" id="bucketlist">
 	<?php echo $list ?>
 </ul>
 
 <p>
-	To add a page or a container, go to the <a href="setup.php">setup page</a> to edit your sitemap.
+	To add a bucket or a block, go to the <a href="setup.php">setup page</a> to edit your sitemap.
 </p>
 
-<div id="pagemodal" class="modal hide fade">
+<div id="bucketmodal" class="modal hide fade">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 		&times;
 		</button>
-		<h3>Edit Page Properties</h3>
+		<h3>Edit Bucket Properties</h3>
 	</div>
 	<div class="modal-body">
 		<div id="modal-message" class="alert alert-success" style="display:none;">
@@ -120,10 +120,10 @@ Please select the container that you'd like to edit:
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 		</div>
 		<p>
-			<form id="pageproperties">
-				Page Name: <span id="pagename"></span><br />
+			<form id="bucketproperties">
+				Bucket Name: <span id="bucketname"></span><br />
 				<span class="control-label">Page Live Edit URL: </span> <input type="text" id="pageurl" name="pageurl" />
-				<input type="hidden" id="pageid" name="pageid"/>
+				<input type="hidden" id="bucketid" name="bucketid"/>
 			</form>
 		</p>
 	</div>

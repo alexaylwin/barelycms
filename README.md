@@ -8,10 +8,11 @@ editable!
 Revision History:
 - Version 0.1a - Basic rich text editing and site map editing
 - Version 0.2a - Live (inline) page editing, better rich text editing (CKEditor!)
+- Version 0.3a - Now using blocks/buckets instead of pages/containers
 
 Roadmapped Features:
 - Blog post plugin
-- n-depth pages (page within page..)
+- n-depth buckets (buckets within buckets..)
 - Internationalization
 - Architectural update to make codebase plug-in friendlier
 - Improve Live Edit interface (BAC sticky toolbar, container overlays)
@@ -20,9 +21,7 @@ Roadmapped Features:
 - Export/backup content (downloadable zip)
 
 Nebulous Features:
-- Expand what is 'content':
+- Expand what is considered content:
 	- Static content code files (CSS, JS, full HTML pages)
 	- Static content binary files (images)
-- Rework terminology - block/bucket, file/folder, atom/molecule, page/container is not obvious
-	- Reflect in source code as well, to avoid incongruity
 

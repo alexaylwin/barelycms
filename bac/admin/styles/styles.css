@@ -135,11 +135,11 @@ h1 {
 /**
  * 	List pages styles
  */
-#pagelist {
+#bucketlist {
 	margin-left: 10px;
 }
 
-#pagelist li {
+#bucketlist li {
 	margin-right: 20px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -153,13 +153,13 @@ h1 {
 	padding-top: 6px;
 }
 
-#pagelist li > h5 {
+#bucketlist li > h5 {
 	margin-bottom: 3px;
 	margin-top: 0px;
 	text-decoration: underline;
 }
 
-#pagelist li > ul > li {
+#bucketlist li > ul > li {
 	margin: 0;
 	border: none;
 	-webkit-border-radius: 0;
@@ -199,17 +199,17 @@ h1 {
 	margin: 0px;
 	padding-left: 8px;
 	font-size: 1.21em;
-}
+}d
 
 #controllist li {
 	padding-bottom: 4px;
 }
 
-.containerrow {
+.blockrow {
 	padding-left: 25px;
 }
 
-.pagerow {
+.bucketrow {
 
 }
 

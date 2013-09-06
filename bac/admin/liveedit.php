@@ -27,21 +27,21 @@
 </html>
 
 <?php
-	} else if(isset($_POST['containercontent']) && isset($_POST['containerid']) && isset($_POST['pageid'])) {
+	} else if(isset($_POST['blockcontent']) && isset($_POST['blockid']) && isset($_POST['bucketid'])) {
 			
-		$pageid = strtolower($_POST['pageid']);
-		$containerid = strtolower($_POST['containerid']);
-		$containercontent = $_POST['containercontent'];
+		$bucketid = strtolower($_POST['bucketid']);
+		$blockid = strtolower($_POST['blockid']);
+		$blockcontent = $_POST['blockcontent'];
 		
 		$site = FrameworkController::loadsite();
-		$page = $site->getPage($pageid);
+		$bucket = $site->getBucket($bucketid);
 		
-		if($page)
+		if($bucket)
 		{
-			$container = $page -> getContainer($containerid);
-			if($container)
+			$block = $bucket -> getBlock($blockid);
+			if($block)
 			{
-				$container-> setValue($containercontent);
+				$block-> setValue($blockid);
 				echo "1";
 			}
 		}

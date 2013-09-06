@@ -2,17 +2,17 @@
 class Site
 {
 	private $siteid;
-	private $pagelist = array();
+	private $bucketlist = array();
 	
 	public function __construct($site)
 	{
 		$this->siteid = $site;
-		$this->loadAllPages();
+		$this->loadAllBuckets();
 	}
 	
-	public function hasPage($pageid)
+	public function hasBucket($bucketid)
 	{
-		if(isset($this->pagelist[$pageid]))
+		if(isset($this->bucketlist[$bucketid]))
 		{
 			return true;
 		} else {
@@ -29,13 +29,13 @@ class Site
 	 * This returns the container with the given 
 	 * cotnainer id or null if it doesn't exist
 	 */
-	public function getPage($pageid)
+	public function getBucket($bucketid)
 	{
 		try
 		{
-			if(isset($this->pagelist[$pageid]))
+			if(isset($this->bucketlist[$bucketid]))
 			{
-				return $this->pagelist[$pageid];
+				return $this->bucketlist[$bucketid];
 			} else {
 				return;
 			}
@@ -44,33 +44,33 @@ class Site
 		}
 	}
 	
-	public function getAllPages()
+	public function getAllBuckets()
 	{
 		
-		return $this->pagelist;
+		return $this->bucketlist;
 	}
 	
 	/**
 	 * This loads all the pages containers into
 	 * it's container array
 	 */
-	public function loadAllPages()
+	public function loadAllBuckets()
 	{
 		//$pages = scandir('../container_content/pages');
-		$pages = scandir(Constants::GET_PAGES_DIRECTORY());
+		$buckets = scandir(Constants::GET_PAGES_DIRECTORY());
 		$io = new FileIO();
 	
 		
 		//These are the . and .. directories
-		unset($pages[0]);
-		unset($pages[1]);
+		unset($buckets[0]);
+		unset($buckets[1]);
 		//print_r($pages);
 				
-		foreach($pages as $pageid)
+		foreach($buckets as $bucketid)
 		{
-			$pageconfig = $io->readFile(Constants::GET_PAGES_DIRECTORY() . '/' . $pageid . '/.bacproperties');
-			$new_page = new Page($pageconfig);
-			$this->pagelist[$pageid] = $new_page;
+			$bucketconfig = $io->readFile(Constants::GET_PAGES_DIRECTORY() . '/' . $bucketid . '/.bacproperties');
+			$new_bucket = new Bucket($bucketconfig);
+			$this->bucketlist[$bucketid] = $new_bucket;
 		}
 	}
 	
@@ -78,13 +78,13 @@ class Site
 	 * Adds a new page with name pageid. This checks first to see if the page
 	 * exists. If not, it creates the directory and adds the page to this site.
 	 */
-	public function addPage($pageid, $liveurl = '')
+	public function addBucket($bucketid, $liveurl = '')
 	{
 		$io = new FileIO();
-		if(!isset($this->pagelist[$pageid]))
+		if(!isset($this->bucketlist[$bucketid]))
 		{
 		
-			$path = Constants::GET_PAGES_DIRECTORY() . "/" . $pageid;
+			$path = Constants::GET_PAGES_DIRECTORY() . "/" . $bucketid;
 			if (!file_exists($path)) {
 				//It doesn't exist, so create the directory
 				$res = mkdir($path);
@@ -93,13 +93,13 @@ class Site
 					//error while trying to make the directory
 					return false;
 				} else {
-					$config = "id:" . rawurlencode($pageid) . "|liveurl:" . rawurlencode($liveurl);
+					$config = "id:" . rawurlencode($bucketid) . "|liveurl:" . rawurlencode($liveurl);
 					if(!file_exists($path . "/.bacproperties"))
 					{
 						$io->writeFile($path . "/.bacproperties", $config);
 					}
-					$new_page = new Page($config);
-					$this->pagelist[$pageid] = $new_page;
+					$new_bucket= new Bucket($config);
+					$this->bucketlist[$bucketid] = $new_bucket;
 					return true;
 				}
 			} elseif (file_exists($path) && !is_dir($path)) {
@@ -116,16 +116,17 @@ class Site
 	 * Deletes the page from this site as well as the directory and any
 	 * containers below it.
 	 */
-	public function removePage($pageid)
+	public function removeBucket($bucketid)
 	{
-		if(isset($this->pagelist[$pageid]))
+		if(isset($this->bucketlist[$bucketid]))
 		{
-			$path = Constants::GET_PAGES_DIRECTORY() . "/" . $pageid;
-			$res = rmdir($path);
-			if (!$res) {
+			$path = Constants::GET_PAGES_DIRECTORY() . "/" . $bucketid;
+			$io = new FileIO();
+			if(!$io->deleteDirectory($path, true))
+			{
 				return false;
 			}
-			unset($this->pagelist[$pageid]);
+			unset($this->bucketlist[$bucketid]);
 			return true;
 		} else {
 			return false;

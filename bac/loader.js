@@ -24,7 +24,7 @@ function load()
 	//Run loader.js after the DOM is completely loaded
 	$(document).ready(function(){
 		
-		function bac_load_content(page, container)
+		function bac_load_content(bucket, block)
 		{
 			ret = "a";
 			$.ajax("bac/load.php",
@@ -34,7 +34,7 @@ function load()
 						{
 							ret = data;		
 						},
-					data:{ page:page, container:container },
+					data:{ bucket:bucket, block:block },
 					dataType: "html"
 				});
 			return ret;
@@ -47,10 +47,10 @@ function load()
 		function bac_scan_document()
 		{
 			//For each element with bac-id
-	        $('*[data-bac-id]').each(function(i) {
-	            page = $(this).closest('*[data-bac-page]').attr('data-bac-page');
-	            container = $(this).attr('data-bac-id');
-	            content = bac_load_content(page, container)
+	        $('*[data-bac-block]').each(function(i) {
+	            bucket = $(this).closest('*[data-bac-bucket]').attr('data-bac-bucket');
+	            block = $(this).attr('data-bac-block');
+	            content = bac_load_content(bucket, block)
 	            $(this).html(content);
 	        }); 
 			

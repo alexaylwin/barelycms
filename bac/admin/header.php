@@ -16,7 +16,7 @@
     			</a>
    				<ul class="nav">
 					<li><a href="index.php">Home</a></li>
-					<li><a href="pages.php">Pages</a></li>
+					<li><a href="buckets.php">Buckets</a></li>
 					<li><a href="setup.php">Setup</a></li>
 					<li><a href="help.php">Help</a></li>
    				</ul>

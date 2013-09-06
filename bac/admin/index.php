@@ -10,14 +10,14 @@ include 'header.php'
 	Admin Home
 </h4>
 <p>
-	Welcome back to your BAC Administration panel. From here, you can edit your sitemap, update your container content or change
+	Welcome back to your BAC Administration panel. From here, you can edit your sitemap, update your block content or change
 	other administrative settings.
 	<br />
 </p>
 Administrative tasks:
 <ul class="unstyled">
 	<li>
-		<a href="pages.php">Edit a page</a>
+		<a href="buckets.php">View buckets</a>
 	</li>
 	<li>
 		<a href="setup.php">Change administrative settings or edit site map</a>

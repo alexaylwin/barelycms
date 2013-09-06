@@ -51,6 +51,35 @@ class FileIO
 		return $res;
 	}
 	
+	public function deleteFile($path)
+	{
+		$res = unlink($path);
+		return $res;		
+	}
+	
+	public function deleteDirectory($path, $force)
+	{
+		if($force)
+		{
+			$content = scandir($path);
+			unset($content[0]);
+			unset($content[1]);
+
+			//TODO: is there a case where this would fail halfway through? 
+			// there may be a need for a 'safe delete' where files could be
+			// recovered if needed
+			foreach ($content as $file) {
+				$success = $this->deleteFile($path . '/' . $file);
+				if(!$success)
+				{
+					return false;
+				}
+			}
+		}	
+		$res = rmdir($path);
+		return $res;
+	}
+	
 }
 
 ?>

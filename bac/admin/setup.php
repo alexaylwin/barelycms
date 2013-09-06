@@ -1,4 +1,5 @@
 <?php
+//TODO: rewrite this to use a request handler
 /**
  * This is the setup script for the first install. As of 1.0, it only has two
  * user configurable options - admin password and creating the sitemap.
@@ -16,15 +17,6 @@
  * 		at an ajax request, if the file does not exist.
  */
 
-/*
- * We require the user to be logged in to perform setup. This means that
- * the user must log in with the default password, then be logged out
- * and log back in with their secure password to access this script.
- * this ensures that only users with the adm
- * in password can actually
- * access this script.
- * */
-
 include '../src/framework/classloader.php';
 
 //This could be moved into the framework as a site->toString(mode) method
@@ -35,31 +27,31 @@ function build_sitemap_string() {
 	if (!$site)
 		return;
 
-	$pagelist = $site -> getAllPages();
-	if (!$pagelist)
+	$bucketlist = $site -> getAllBuckets();
+	if (!$bucketlist)
 		return;
 
-	$maxcontainers = 0;
-	$firstpage = true;
-	foreach ($pagelist as $page) {
-		if ($firstpage) {
-			$sitemapstring = $sitemapstring . $page -> getPageId() . ":";
+	$maxblocks = 0;
+	$firstbucket = true;
+	foreach ($bucketlist as $bucket) {
+		if ($firstbucket) {
+			$sitemapstring = $sitemapstring . $bucket -> getBucketId() . ":";
 		} else {
-			$sitemapstring = $sitemapstring . '|' . $page -> getPageId() . ":";
+			$sitemapstring = $sitemapstring . '|' . $bucket -> getBucketId() . ":";
 		}
 
-		$firstpage = false;
-		$firstcontainer = true;
+		$firstbucket = false;
+		$firstblock = true;
 
-		$containerlist = $page -> getAllContainers();
-		if ($containerlist) {
-			foreach ($containerlist as $container) {
-				if ($firstcontainer) {
-					$sitemapstring = $sitemapstring . $container -> getContainerId();
+		$blocklist = $bucket -> getAllBlocks();
+		if ($blocklist) {
+			foreach ($blocklist as $block) {
+				if ($firstblock) {
+					$sitemapstring = $sitemapstring . $block -> getBlockId();
 				} else {
-					$sitemapstring = $sitemapstring . ',' . $container -> getContainerId();
+					$sitemapstring = $sitemapstring . ',' . $block -> getBlockId();
 				}
-				$firstcontainer = false;
+				$firstblock = false;
 
 			}
 		}
@@ -128,101 +120,103 @@ EOM;
 
 		//Get the existing site for comparison
 		$site = FrameworkController::loadsite();
-		$pagelist = $site -> getAllPages();
-		$containerarray = array();
-		$pagearray = array();
+		$bucketlist = $site -> getAllBuckets();
+		$blockarray = array();
+		$bucketarray = array();
 		
-		foreach ($pagelist as $page) {
-			if ($page -> hasContainers()) {
-				$containerlist = $page -> getAllContainers();
-				foreach ($containerlist as $container) {
+		foreach ($bucketlist as $bucket) {
+			if ($bucket -> hasBlocks()) {
+				$blocklist = $bucket -> getAllBlocks();
+				foreach ($blocklist as $block) {
 					//We assume that every container will be deleted
-					$containerarray[$page -> getPageId()][$container -> getContainerId()] = false;
+					$blockarray[$bucket -> getBucketId()][$block -> getBlockId()] = false;
 				}
 			}
-			$pagearray[$page -> getPageId()] = false;
+			$bucketarray[$bucket -> getBucketId()] = false;
 		}
 
 		//The string looks like:
 		//page1:container1,container2,container3|page2:container1,container2,container3
 		$sitemap_string = $_POST['sitemap'];
 
-		$pages = explode("|", $sitemap_string);
-		$pagesdir = "../container_content/pages";
+		$buckets = explode("|", $sitemap_string);
+		$bucketsdir = "../container_content/pages";
 
-		for ($i = 0; $i < count($pages); $i++) {
-			if (strlen($pages[$i]) <= 1) {
+		for ($i = 0; $i < count($buckets); $i++) {
+			if (strlen($buckets[$i]) <= 1) {
 				continue;
 			}
 			//Get the pagename and container list
-			$page = explode(":", $pages[$i]);
-			$pagename = $page[0];
-			$containers = $page[1];
-			$containers = explode(",", $containers);
+			$bucket = explode(":", $buckets[$i]);
+			$bucketname = $bucket[0];
+			$blocks = $bucket[1];
+			$blocks = explode(",", $blocks);
 
 			//If we have no page name, then there's nothing to
 			//do here (no blank page names)
-			if ($pagename == null || $pagename == "") {
+			if ($bucketname == null || $bucketname == "") {
 				continue;
 			}
 
 			//If the directory exists, we don't want to overwrite it
 			//This adds the page
-			$pagearray[$pagename] = true;
-			$site->addPage($pagename);
+			$bucketarray[$bucketname] = true;
+			$site->addBucket($bucketname);
 
 			//Set up some default container text
-			$containertext = "";
+			$blocktext = "";
 
-			for ($j = 0; $j < count($containers); $j++) {
-				$container = $containers[$j];
+			for ($j = 0; $j < count($blocks); $j++) {
+				$block = $blocks[$j];
 
 				//If the container name is blank do nothing (no blank container names)
-				if ($container == null || $container == "") {
+				if ($block == null || $block == "") {
 					continue;
 				}
 				//Don't delete this container!
-				if (isset($containerarray[$pagename][$container])) {
-					$containerarray[$pagename][$container] = true;
+				if (isset($blockarray[$bucketname][$block])) {
+					$blockarray[$bucketname][$block] = true;
 				}
-
+-
 				//make a path
-				$site->getPage($pagename)->addContainer($container);
+				$site->getBucket($bucketname)->addBlock($block);
 			}
 		}
 
 		//Now delete all the containers that are still in the array
-		foreach ($containerarray as $pagename => $containerlist) {
-			foreach ($containerlist as $container => $exists) {
-				$path = $page . "/" . $pagename;
+		foreach ($blockarray as $bucketname => $blocklist) {
+			foreach ($blocklist as $block => $exists) {
+				$path = $bucket . "/" . $bucketname;
 				if (!$exists) {
-					$site->getPage($pagename)->removeContainer($container);
+					$site->getBucket($bucketname)->removeBlock($block);
 				}
 			}
 		}
 
 		//Now delete all the pages
-		foreach ($pagearray as $pagename => $exists) {
-			
-			$path = $pagesdir . "/" . $pagename;
+		foreach ($bucketarray as $bucketname => $exists) {
+			$path = $bucketsdir . "/" . $bucketname;
 			if (!$exists) {
-				$site->removePage($pagename);
+				$deleted = $site->removeBucket($bucketname);
 			}
 		}
 
 	} else {
 		//No site map
 	}
-	header("Location: setup.php?m=Settings saved");
+	//header("Location: setup.php?m=Settings saved");
+	if(!$notfirst)
+	{
+		header("Location: login.php");
+	}
+	$message = "Settings saved";
 }
 ?>
 <?php
-if(isset($_GET['m']))
+if($message)
 {
-	$message = $_GET['m'];
 	$displaymessage = "block";
 } else {
-	$message = "";
 	$displaymessage = "none";
 }
 
