@@ -14,14 +14,14 @@ Roadmapped Features:
 - Blog post plugin
 - n-depth buckets (buckets within buckets..)
 - Internationalization
-- Architectural update to make codebase plug-in friendlier
-- Improve Live Edit interface (BAC sticky toolbar, container overlays)
 - Revision history, allow limited roll-back
-- Improved pages interface
 - Export/backup content (downloadable zip)
+- Bucket display order
+- UI Update (Setup and Buckets)
 
 Nebulous Features:
 - Expand what is considered content:
 	- Static content code files (CSS, JS, full HTML pages)
 	- Static content binary files (images)
-
+- Architectural update to make codebase plug-in friendlier
+- Improve Live Edit interface (BAC sticky toolbar, container overlays)

@@ -1,4 +1,7 @@
 /**
+ * TODO: figure out the jquery inclusion stuff. it needs to check for the right version and
+ * use noconflict if the wrong version is found 
+ *
  *	loader.js
  * 
  * This javascript file provides ajax-enabled loading of BAC content onto any HTML page

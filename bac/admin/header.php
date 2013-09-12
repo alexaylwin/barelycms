@@ -11,7 +11,7 @@
 	   	<div class="navbar navbar-fixed-top navbar-inverse" id="header">
  			<div class="navbar-inner text-center" id="menubar">
     			<a class="brand" href="index.php" id="titlebar">
-    				<img src="images/logo-200.gif" style="width: 40px; height:40px;"/>
+    				<img src="images/logo-200.gif"/>
     				BAC
     			</a>
    				<ul class="nav">

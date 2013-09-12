@@ -99,7 +99,7 @@ h1 {
 	display:block;
 	margin-right: 75px;
 	color: #B8B8B8;
-	line-height: 40px;
+	line-height: 30px;
 }
 
 #menubar ul li a {
@@ -115,8 +115,13 @@ h1 {
 
 .nav
 {
-	height:60px;
+	height:50px;
 }
+
+#titlebar img {
+	width:30px; 
+	height:30px;
+} 
 
 /**
  * 	Footer styles

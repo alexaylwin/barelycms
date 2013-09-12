@@ -13,31 +13,21 @@ include 'header.php'
 		it getting in the way of your web design. <br /> <br />
 		
 		<h5>Getting started</h5>
-		To get started, you can go to the <a href="pages.php">Pages page</a> and enter some container content. Then you can include your content anywhere
-		on your website by making a call to <i>/bac/load.php?page=pagename&amp;container=containername</i>. In the examples below, there is a page called 'index'
-		and a container called 'mainbody' on the index page. 
+		To get started, you can go to the <a href="buckets.php">Buckets page</a> and enter some block content.
+		These blocks are used across your site to include the content that you've added. On any page that has
+		a reference to the BAC javascript file, an HTML element that has a bucket and block attribute will be
+		filled with the content you enter here. (Any content that you entered on the page by hand will be replaced.)
+		<br /><br />
+		For example, the following is the HTML code of a page that uses the 'About' block, in the 'Home' bucket.
+		This is used on the index (home) page of a website.
 		<dl class="dl-horizontal">
-			<dt>jQuery Ajax:</dt>
+			<dt>index.html</dt>
 			<dd>
 			<pre style="width:400px;">
-$(document).ready(function() {
-  $.get(  
-    "bac/load.php", 
-    {page:"index", container:"mainbody"}, 
-    function(data){
-        $('#content').html(data);
-    });
-});
+&lt;script src="bac/loader.js" type="javascript"&gt;&lt;/script&gt;
+&lt;div bac-data-bucket="Home" bac-data-block="About"&gt;
+&lt;/div&gt;
 			</pre>
-			</dd>
-			<dt>PHP:</dt>
-			<dd>
-				<pre style="width:400px;">
-&lt;?php
-  include('/bac/load_container.php');
-  echo load_container('index', 'mainbody');
-?&gt;
-				</pre>
 			</dd>
 		</dl>
 	</p>
@@ -49,12 +39,13 @@ $(document).ready(function() {
 			<div id="help0" class="accordion-body collapse">
 				<div class="accordion-inner">
 					<p>
-					BarelyACMS doesn't create website pages for you. Instead, it lets you create virtual 'pages' that serve as boxes to put 'containers' on.
-					These pages are defined on the <a href="setup.php">setup page</a>, in the sitemap section. A container is how BAC organizes its content. You can think of a container as one 'piece' of content, that you can include anywhere on
-					your website. For example, if you have a page 'Contact Us' then you might have the containers 'Address and Phone Number', 'About', 'Map' and so on.
+					BarelyACMS doesn't create website pages for you. Instead, it lets you create virtual pages called buckets to put blocks in.
+					These buckets are defined on the <a href="setup.php">setup page</a>, in the sitemap section. A block is how BAC organizes your content. 
+					You can think of a block as one 'piece' of content, that you can include anywhere on your website. 
+					For example, if you have a bucket 'Contact Us' then you might have the blocks 'Address and Phone Number', 'About', 'Map' and so on.
 					</p>
 					<p>
-					On your website, you would reference these containers using javascript and include the content inside your design, however you want.
+					On your website, you would reference these blocks using HTML attributes and include the content inside your design however you want.
 					</p>
 				</div>
 			</div>
@@ -65,29 +56,23 @@ $(document).ready(function() {
 			</div>
 			<div id="help1" class="accordion-body collapse">
 				<div class="accordion-inner">
-					To edit a container, go to the <a href="pages.php">Pages page</a> and select a container to edit. You can update and save the container
-					using the WYSIWYG editor (or HTML). If you want to define a new page or a new container, go to the <a href="setup.php">setup page</a> and edit
+					To edit a block, go to the <a href="buckets.php">Buckets page</a> and select a block to edit. You can update and save the block
+					using the WYSIWYG editor (or HTML). If you want to define a new bucket or a new block, go to the <a href="setup.php">setup page</a> and edit
 					your site map.
+					<br /><br />
+					You can also use the live editor to edit a block on your real website page. Go to the <a href="buckets.php">Buckets page</a> and
+					click the live edit icon to be taken to a copy of your webpage. Any changes you make on the page will be reflected as soon as you
+					save them!
 				</div>
 			</div>
 		</div>
 		<div class="accordion-group">
 			<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#helpaccordion" href="#help2"> How do I create a new page? </a>
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#helpaccordion" href="#help2"> How do I create a new bucket? </a>
 			</div>
 			<div id="help2" class="accordion-body collapse">
 				<div class="accordion-inner">
-					You can create a new page by going to the <a href="setup.php">setup page</a> and using the sitemap.
-				</div>
-			</div>
-		</div>
-		<div class="accordion-group">
-			<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#helpaccordion" href="#help3"> Who made BarelyACMS? </a>
-			</div>
-			<div id="help3" class="accordion-body collapse">
-				<div class="accordion-inner">
-					BarelyACMS was made by Alex Aylwin, a recent graduate of McMaster University in Software Engineering. You can get a hold of him on <a href="http://www.twitter.com/alexaylwin">Twitter</a> or <a href="http://alexaylwin.campsoc.com">his website.</a>
+					You can create a new bucket by going to the <a href="setup.php">setup page</a> and using the sitemap.
 				</div>
 			</div>
 		</div>
@@ -97,9 +82,7 @@ $(document).ready(function() {
 			</div>
 			<div id="help4" class="accordion-body collapse">
 				<div class="accordion-inner">
-					If you'd like more support, you can check out the github repository at <a href="http://github.com/alexaylwin/barelycms">http://github.com/alexaylwin/barelycms</a> for documentation.
-					<br />
-					Or feel free to email me (Alex!) at <a href="#">alexaylwin@gmail.com</a>
+					Check out <a href="http://bacms.ca">http://bacms.ca</a> for more documentation, support and updates.
 				</div>
 			</div>
 		</div>

@@ -208,5 +208,8 @@
 			});
 
 			parentdiv.append($(addbucket));
-			buildSiteMapList(sitemap);
+			if(sitemap.length > 0)
+			{
+				buildSiteMapList(sitemap);
+			}
 		});

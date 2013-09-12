@@ -11,6 +11,8 @@ class Constants
 	const BAC_DIRECTORY = 'bac';
 	const CONTAINER_DIRECTORY = 'container_content';
 	const PAGES_DIRECTORY = 'pages';
+	const ADMIN_DIRECTORY = 'admin';
+	const CONFIG_DIRECTORY = 'config';
 
 	public static function GET_BAC_DIRECTORY()
 	{
@@ -22,6 +24,12 @@ class Constants
 	{
 		self::getInstallDirectory();
 		return Constants::getInstallDirectory() . '/' .Constants::BAC_DIRECTORY . '/' . Constants::CONTAINER_DIRECTORY . '/' . Constants::PAGES_DIRECTORY;
+	}
+	
+	public static function GET_CONFIG_DIRECTORY()
+	{
+		self::getInstallDirectory();
+		return Constants::getInstallDirectory() . '/' . Constants::BAC_DIRECTORY . '/' . Constants::ADMIN_DIRECTORY . '/' . Constants::CONFIG_DIRECTORY; 
 	}
 	
 	

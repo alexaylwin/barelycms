@@ -17,210 +17,22 @@
  * 		at an ajax request, if the file does not exist.
  */
 
-include '../src/framework/classloader.php';
-
-//This could be moved into the framework as a site->toString(mode) method
-function build_sitemap_string() {
-	$sitemapstring = "";
-
-	$site = FrameworkController::loadsite();
-	if (!$site)
-		return;
-
-	$bucketlist = $site -> getAllBuckets();
-	if (!$bucketlist)
-		return;
-
-	$maxblocks = 0;
-	$firstbucket = true;
-	foreach ($bucketlist as $bucket) {
-		if ($firstbucket) {
-			$sitemapstring = $sitemapstring . $bucket -> getBucketId() . ":";
-		} else {
-			$sitemapstring = $sitemapstring . '|' . $bucket -> getBucketId() . ":";
-		}
-
-		$firstbucket = false;
-		$firstblock = true;
-
-		$blocklist = $bucket -> getAllBlocks();
-		if ($blocklist) {
-			foreach ($blocklist as $block) {
-				if ($firstblock) {
-					$sitemapstring = $sitemapstring . $block -> getBlockId();
-				} else {
-					$sitemapstring = $sitemapstring . ',' . $block -> getBlockId();
-				}
-				$firstblock = false;
-
-			}
-		}
-	}
-
-	return $sitemapstring;
-}
-
-//Check to see if this is the first run,
-//if cred exists, then we have run before
-$path = '../admin/config/cred.php';
-if (file_exists($path)) {
-	$notfirst = true;
-	include ('auth.php');
-} else {
-	$notfirst = false;
-}
-// not secure
-if (isset($_POST['submitted'])) {
-	/**
-	 * This section updates the administration password to the user supplied value
-	 */
-	if (isset($_POST['password'])) {
-		if (isset($_POST['passwordConfirm']) && ($_POST['password'] == $_POST['passwordConfirm'])) {
-			$newpass = sha1($_POST['password']);
-			$newuser = 'admin';
-
-			//change the password
-			$path = '../admin/config/cred.php';
-			if ($notfirst) {
-				include_once ($path);
-
-				$filelength = filesize($path);
-				$fhandler = fopen($path, 'r');
-				$text = fread($fhandler, $filelength);
-				$text = str_replace($password, $newpass, $text);
-			} else {
-				$text = <<<'EOM'
-<?php
-	//default is 'admin' and 'BarelyACMS7'
-	$username = 'admin';
-	$password = '82e8253d257652f1342651a9c17332f0bde60572'; 
-?>
-EOM;
-				$password = '82e8253d257652f1342651a9c17332f0bde60572';
-				$text = str_replace($password, $newpass, $text);
-			}
-			$fhandlew = fopen($path, 'w');
-			$res = fwrite($fhandlew, $text);
-			if (!$res) {
-				header("Location: " . get_absolute_uri('setup.php?m=Settings could not be saved'));
-			}
-		} else {
-			//return 'error, passwords don't match' message
-			header("Location: " . get_absolute_uri('setup.php?m=Passwords do not match'));
-		}
-	} else {
-		//Error, user didn't define a password
-		header("Location: " . get_absolute_uri('setup.php?m=A password must be set'));
-	}
-
-	/*
-	 * This section creates the directories and files for the content containers
-	 */
-	if (isset($_POST['sitemap'])) {
-
-		//Get the existing site for comparison
-		$site = FrameworkController::loadsite();
-		$bucketlist = $site -> getAllBuckets();
-		$blockarray = array();
-		$bucketarray = array();
-		
-		foreach ($bucketlist as $bucket) {
-			if ($bucket -> hasBlocks()) {
-				$blocklist = $bucket -> getAllBlocks();
-				foreach ($blocklist as $block) {
-					//We assume that every container will be deleted
-					$blockarray[$bucket -> getBucketId()][$block -> getBlockId()] = false;
-				}
-			}
-			$bucketarray[$bucket -> getBucketId()] = false;
-		}
-
-		//The string looks like:
-		//page1:container1,container2,container3|page2:container1,container2,container3
-		$sitemap_string = $_POST['sitemap'];
-
-		$buckets = explode("|", $sitemap_string);
-		$bucketsdir = "../container_content/pages";
-
-		for ($i = 0; $i < count($buckets); $i++) {
-			if (strlen($buckets[$i]) <= 1) {
-				continue;
-			}
-			//Get the pagename and container list
-			$bucket = explode(":", $buckets[$i]);
-			$bucketname = $bucket[0];
-			$blocks = $bucket[1];
-			$blocks = explode(",", $blocks);
-
-			//If we have no page name, then there's nothing to
-			//do here (no blank page names)
-			if ($bucketname == null || $bucketname == "") {
-				continue;
-			}
-
-			//If the directory exists, we don't want to overwrite it
-			//This adds the page
-			$bucketarray[$bucketname] = true;
-			$site->addBucket($bucketname);
-
-			//Set up some default container text
-			$blocktext = "";
-
-			for ($j = 0; $j < count($blocks); $j++) {
-				$block = $blocks[$j];
-
-				//If the container name is blank do nothing (no blank container names)
-				if ($block == null || $block == "") {
-					continue;
-				}
-				//Don't delete this container!
-				if (isset($blockarray[$bucketname][$block])) {
-					$blockarray[$bucketname][$block] = true;
-				}
--
-				//make a path
-				$site->getBucket($bucketname)->addBlock($block);
-			}
-		}
-
-		//Now delete all the containers that are still in the array
-		foreach ($blockarray as $bucketname => $blocklist) {
-			foreach ($blocklist as $block => $exists) {
-				$path = $bucket . "/" . $bucketname;
-				if (!$exists) {
-					$site->getBucket($bucketname)->removeBlock($block);
-				}
-			}
-		}
-
-		//Now delete all the pages
-		foreach ($bucketarray as $bucketname => $exists) {
-			$path = $bucketsdir . "/" . $bucketname;
-			if (!$exists) {
-				$deleted = $site->removeBucket($bucketname);
-			}
-		}
-
-	} else {
-		//No site map
-	}
-	//header("Location: setup.php?m=Settings saved");
-	if(!$notfirst)
-	{
-		header("Location: login.php");
-	}
-	$message = "Settings saved";
-}
 ?>
 <?php
-if($message)
+require __DIR__ . '/handlers/SetupHandler.php';
+$requestHandler = new SetupHandler();
+
+$data = $requestHandler->handleRequest($_POST, $_GET);
+
+if(!isset($data['message'])){$data['message'] = "";}
+if($data['message'])
 {
 	$displaymessage = "block";
 } else {
 	$displaymessage = "none";
 }
 
-if($notfirst)
+if($data['notfirst'] == 'true')
 {
 	include 'header.php';
 } else {
@@ -255,7 +67,7 @@ if($notfirst)
 
 	<script type="text/javascript" src="js/setupform.js"></script>	
 					<?php
-					if(!$notfirst)
+					if($data['notfirst'] == 'false')
 					{
 					?>
 					<p>
@@ -278,7 +90,7 @@ if($notfirst)
 					<p>
 						<h4>Setup</h4>
 						<div class="alert alert-success" style="display:<?php echo $displaymessage; ?>;
-"><?php echo $message; ?><button type="button" class="close" data-dismiss="alert">&times;</button></div>
+"><?php echo $data['message']; ?><button type="button" class="close" data-dismiss="alert">&times;</button></div>
 						To set up BAC, set up an administrative password and then define your sitemap.
 					</p>
 					
@@ -314,13 +126,13 @@ if($notfirst)
 							framework of the site (even if its just an index page!).
 						</p>
 						<ul id="controllist" class="unstyled"></ul>
-						<input name="sitemap" id="sitemap" type="hidden" value="<?php echo build_sitemap_string(); ?>"
+						<input name="sitemap" id="sitemap" type="hidden" value="<?php echo $data['sitemap']; ?>"
 />
 <input name="submitted" type="hidden" value="1" />
 <br />
 
 <?php
-if($notfirst)
+if($data['notfirst'] == 'true')
 {
 ?>
 <button class="btn btn-custom" id="save" type="submit">

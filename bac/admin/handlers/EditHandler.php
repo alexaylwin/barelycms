@@ -2,7 +2,7 @@
 require_once __DIR__. '/../../src/framework/classloader.php';
 
 /**
- * Pages code behind file. This script is for the Page view. 
+ * Edit code behind file. This script is for the Page view. 
  */
 class EditHandler extends RequestHandler
 {
