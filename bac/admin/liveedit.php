@@ -28,9 +28,13 @@
 
 <?php
 	} else if(isset($_POST['blockcontent']) && isset($_POST['blockid']) && isset($_POST['bucketid'])) {
+		
+		$bucketid = $_POST['bucketid'];
+		$blockid = $_POST['blockid'];
+
 			
-		$bucketid = strtolower($_POST['bucketid']);
-		$blockid = strtolower($_POST['blockid']);
+		//$bucketid = strtolower($_POST['bucketid']);
+		//$blockid = strtolower($_POST['blockid']);
 		$blockcontent = $_POST['blockcontent'];
 		
 		$site = FrameworkController::loadsite();

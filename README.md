@@ -10,10 +10,15 @@ Revision History:
 - Version 0.2a - Live (inline) page editing, better rich text editing (CKEditor!)
 - Version 0.3a - Now using blocks/buckets instead of pages/containers
 
+In Progress:
+- Add "Get Snippet" feature to get the snippet to include a block on a page
+- Bug fixing and error handling
+- Implement Bucket/Block types
+	- This will include 'blog' types
+
 Roadmapped Features:
 - Blog post plugin
 - n-depth buckets (buckets within buckets..)
-- Internationalization
 - Revision history, allow limited roll-back
 - Export/backup content (downloadable zip)
 - Bucket display order
@@ -25,3 +30,4 @@ Nebulous Features:
 	- Static content binary files (images)
 - Architectural update to make codebase plug-in friendlier
 - Improve Live Edit interface (BAC sticky toolbar, container overlays)
+- Internationalization

@@ -1,4 +1,8 @@
 <?php
+/**
+ * This is the default bucket class, it should be abstract
+ */
+
 class Bucket {
 	private $bucketid;
 	private $blocklist;

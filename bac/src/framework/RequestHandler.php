@@ -2,6 +2,7 @@
 /**
  * The request handler intercepts requests as they come
  * to admin pages. 
+ * TODO: should this be in framework? Isn't it closer to util, as it only deals with the admin panel?
  */
 abstract class RequestHandler
 {

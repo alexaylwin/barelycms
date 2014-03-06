@@ -81,7 +81,7 @@ EOM;
 		}
 	
 		/*
-		 * This section creates the directories and files for the content containers
+		 * This section creates the directories and files for the buckets
 		 */
 		if (isset($this->post['sitemap'])) {
 	

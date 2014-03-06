@@ -1,25 +1,18 @@
 <?php
-/**
- * /**
-  * undocumented class
-  *
-  * @package default
-  * @author  Alex Aylwin
- */
-class Block
+
+class TextBlock extends Block
 {
-	private $value;
-	private $blockid;
-	private $filename;
-	
+
 	public function getValue()
 	{
 		return $this->value;
 	}
 	
-	public function getBlockId()
+	public function setValue($new_value)
 	{
-		return $this->blockid;
+		$this->value = $new_value;
+		$io = new FileIO();
+		$io->writeFile($this->filename, $new_value);
 	}
 	
 	/**
@@ -35,25 +28,15 @@ class Block
 		//and the block id.
 		$fullname = explode('.', $bucket_path);
 		$bucketname = $fullname[0];
-		//Do we need this to be case insensitive?
-		//$bucketname = strtolower($bucketname);
-		//$block_id = strtolower($block_id);
-		//$filename = '../container_content/pages/' . $pagename . '/' . $container_id . '.incl';
+		$bucketname = strtolower($bucketname);
+		$block_id = strtolower($block_id);
 		$filename = Constants::GET_PAGES_DIRECTORY() . '/' . $bucketname . '/' . $block_id . '.incl';
 		$this->filename = $filename;
 		
 		$block_value = $io->readFile($filename);
 		$this->value = $block_value;
 		$this->blockid = $block_id;
-	}
-	
-	public function setValue($new_value)
-	{
-		$this->value = $new_value;
-		$io = new FileIO();
-		$io->writeFile($this->filename, $new_value);
-	}
-		
+	}	
 }
 
 ?>

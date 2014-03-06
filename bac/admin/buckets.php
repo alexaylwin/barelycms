@@ -5,7 +5,7 @@
 	include 'auth.php';
 	require __DIR__ . '/handlers/BucketsHandler.php';
 	
-	$requestHandler = new bucketsHandler();
+	$requestHandler = new BucketsHandler();
 	$data = $requestHandler->handleRequest($_POST, $_GET);
 	
 	if(isset($data['ajax']))
