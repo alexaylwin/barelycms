@@ -1,0 +1,33 @@
+setup:
+	- the whole UI
+		- bucket properties
+		- auto focus for adding blocks/buckets
+	- admin password match verification
+	
+editor (ckeditor):
+	-copy and paste <br /> into non-source view
+		line break shows correctly in the non-source editor view, but 
+		when content is echoed by load.php, <br /> is escaped
+	
+	- rich text vs. source adds a <p> tag
+		when switching to rich text editor mode, ckeditor automatically
+		wraps content in a paragraph element, causing unexpected output
+		from load.php
+	
+loader.js
+	- allow for bucket/block data attribute to be on the same element, ie:
+		<div data-bac-bucket="index" data-bac-block="something"></div>
+
+login/auth:
+	idea: before setup, have setup.php outside of controlled folder
+	after setup, delete the external php file. that way, cred.php can always
+	be there with default credentials?
+
+
+Admin header - make responsive to window width
+
+Live Edit:
+	CKEditor load time
+	BAC overlay/toolbar
+	if no live url defined, don't allow user to edit
+	ajax update pages page
