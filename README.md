@@ -26,7 +26,7 @@ Roadmapped Features:
 
 Nebulous Features:
 - Expand what is considered content:
-	- Static content code files (CSS, JS, full HTML pages)
+	- Static content ascii files (CSS, JS, full HTML pages)
 	- Static content binary files (images)
 - Architectural update to make codebase plug-in friendlier
 - Improve Live Edit interface (BAC sticky toolbar, container overlays)

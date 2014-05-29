@@ -24,7 +24,7 @@ class EditHandler extends RequestHandler
 			$bucket = $site -> getBucket($bucketid);	
 		} else {
 			$ret['error'] = 'noblock';
-			return;
+			return $ret;
 		}
 		
 		if($bucket->hasBlock($blockid))
@@ -32,6 +32,7 @@ class EditHandler extends RequestHandler
 			$block = $bucket -> getBlock($blockid);
 		} else {
 			$ret['error'] = 'noblock';
+			return $ret;
 		}
 		$ret['text'] = $block -> getValue();
 		$ret['bucketid'] = $bucketid;

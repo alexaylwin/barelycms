@@ -11,6 +11,7 @@
  */
 include_once __DIR__ . '/src/framework/classloader.php';
 function load_container($bucketid, $blockid) {
+/*
 	$site = FrameworkController::loadsite();
 	if ($site) {
 		if($site->hasBucket($bucketid))
@@ -27,6 +28,11 @@ function load_container($bucketid, $blockid) {
 			}
 		}
 	}
+	*/
+	$elements[$bucketid] = $blockid;
+	$controller = new FrameworkController();
+	$content = $controller->getContent($elements);
+	return $content;
 }
 
 if (isset($_GET['bucket']) && isset($_GET['block'])) {

@@ -19,11 +19,23 @@
 
 ?>
 <?php
+include_once ('../src/util.php');
+if(auth_exists())
+{
+	include 'auth.php';
+}
 require __DIR__ . '/handlers/SetupHandler.php';
 $requestHandler = new SetupHandler();
 
 $data = $requestHandler->handleRequest($_POST, $_GET);
 
+if(isset($data['redirectToLogin']) && $data['redirectToLogin'] == 'true')
+{
+	header("Location: " . get_absolute_uri("login.php"));
+	die();
+}
+
+$displaymessage = "";
 if(!isset($data['message'])){$data['message'] = "";}
 if($data['message'])
 {
@@ -31,6 +43,19 @@ if($data['message'])
 } else {
 	$displaymessage = "none";
 }
+
+
+$messageclass = 'alert-success';
+if(isset($data['settingsSaved']))
+{
+	if($data['settingsSaved'] == 'true')
+	{
+		$messageclass = "alert-success";
+	} else {
+		$messageclass = "alert-error";
+	}
+}
+
 
 if($data['notfirst'] == 'true')
 {
@@ -89,7 +114,7 @@ if($data['notfirst'] == 'true')
 					?>
 					<p>
 						<h4>Setup</h4>
-						<div class="alert alert-success" style="display:<?php echo $displaymessage; ?>;
+						<div class="alert <?php echo $messageclass; ?>" style="display:<?php echo $displaymessage; ?>;
 "><?php echo $data['message']; ?><button type="button" class="close" data-dismiss="alert">&times;</button></div>
 						To set up BAC, set up an administrative password and then define your sitemap.
 					</p>
@@ -148,26 +173,29 @@ else
 Save Configuration
 </button>
 </form>
+
 <div id="savemodal" class="modal hide fade">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-&times;
-</button>
-<h3>You're done!</h3>
-</div>
-<div class="modal-body">
-<p>
-That's it! When you click 'Continue', you will be taken to the BAC Administrative Panel login page, where you will be asked to log in with the following credentials: <br />
-Username: admin <br />
-Password: <i>User defined</i>
-<br /> <br />
-To change any of these settings, log into the admin panel and go to Setup
-</p>
-</div>
-<div class="modal-footer">
-<a href="#" class="btn" id="cancel" data-dismiss="modal" aria-hidden="true">Cancel</a>
-<a href="#" class="btn btn-primary" id="continue">Continue</a>
-</div>
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			&times;
+		</button>
+		<h3>You're done!</h3>
+	</div>
+	<div class="modal-body">
+		<p>
+			That's it! When you click 'Continue', you will be taken to the BAC Administrative Panel login page, where you will be asked to log in with the following credentials: <br />
+			Username: admin <br />
+			Password: <i>User defined</i>
+			<br /> <br />
+			To change any of these settings, log into the admin panel and go to Setup
+		</p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" id="cancel" data-dismiss="modal" aria-hidden="true">Cancel</a>
+		
+		<? //This posts setupform ?>
+		<a href="#" class="btn btn-primary" id="continue">Continue</a>
+	</div>
 </div>
 
 <?php

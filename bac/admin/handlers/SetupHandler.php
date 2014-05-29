@@ -36,7 +36,19 @@ class SetupHandler extends RequestHandler
 		/**
 		 * This section updates the administration password to the user supplied value
 		 */
-		if (isset($this->post['password'])) {
+		$ret['message'] = 'Settings saved';
+		$ret['settingsSaved'] = 'true';
+		$passwordDefined = true;
+		
+		if($this->auth_exists())
+		{
+			$firstTime = false;
+			$ret['redirectToLogin'] = 'false';
+		} else {
+			$firstTime = true;
+			$ret['redirectToLogin'] = 'true';
+		}
+		if (isset($this->post['password']) && !empty($this->post['password'])) {
 			if (isset($this->post['passwordConfirm']) && ($this->post['password'] == $this->post['passwordConfirm'])) {
 				$newpass = sha1($this->post['password']);
 				$newuser = 'admin';
@@ -66,24 +78,32 @@ EOM;
 				$res = fwrite($fhandlew, $text);
 				if (!$res) {
 					$ret['message'] = "Settings could not be saved";
-					$ret['settingSaved'] = 'false';
+					$ret['settingsSaved'] = 'false';
+					$ret['redirectToLogin'] = 'false';
+					$passwordDefined = false;
 				}
 			} else {
 				//return 'error, passwords don't match' message
 					$ret['message'] = "Passwords do not match";
-					$ret['settingSaved'] = 'false';
+					$ret['settingsSaved'] = 'false';
+					$ret['redirectToLogin'] = 'false';
+					$passwordDefined = false;
 			}
 		} else {
 			//Error, user didn't define a password
-			$ret['message'] = "A password must be specified";
-			$ret['settingSaved'] = 'false';
-			
+			if($firstTime)
+			{
+				$ret['message'] = "A password must be specified";
+				$ret['settingsSaved'] = 'false';
+				$ret['redirectToLogin'] = 'false';
+				$passwordDefined = false;
+			}
 		}
 	
 		/*
 		 * This section creates the directories and files for the buckets
 		 */
-		if (isset($this->post['sitemap'])) {
+		if (isset($this->post['sitemap']) && $passwordDefined) {
 	
 			//Get the existing site for comparison
 			$site = FrameworkController::loadsite();
@@ -171,9 +191,6 @@ EOM;
 		} else {
 			//No site map
 		}
-		//header("Location: setup.php?m=Settings saved");
-		$ret['message'] = 'Settings saved';
-		$ret['settingsSaved'] = 'true';
 		return $ret;
 	}
 	

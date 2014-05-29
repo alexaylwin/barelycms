@@ -1,4 +1,5 @@
 <?php
+include_once ('framework/Constants.php');
 function get_absolute_uri($target)
 {
 	/* Redirect to a different page in the current directory that was requested */
@@ -21,5 +22,15 @@ function throw_error($message, $backpage)
 	$_SESSION['bp'] = get_absolute_uri($backpage);
 	
 	header("Location: " . get_absolute_uri("error.php"));
+}
+
+function auth_exists()
+{
+	$path = Constants::GET_CONFIG_DIRECTORY() . '/cred.php';
+	if (file_exists($path)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 ?>

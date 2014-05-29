@@ -74,7 +74,8 @@ class Bucket {
 			if($blockid != '.bacproperties')
 			{
 				$blockid = explode('.', $blockid);
-				$new_b = new Block($this -> bucketid . '.php', $blockid[0]);
+				//TODO: inspect for block type and call the right constructor
+				$new_b = new TextBlock($this -> bucketid . '.php', $blockid[0]);
 				$this -> blocklist[$blockid[0]] = $new_b;
 			}
 		}
@@ -96,8 +97,8 @@ class Bucket {
 			} else {
 				return false;
 			}
-
-			$this -> blocklist[$blockid] = new Block($this -> bucketid . '.php', $blockid);
+			
+			$this -> blocklist[$blockid] = new TextBlock($this -> bucketid . '.php', $blockid);
 			return true;
 		} else {
 			return false;

@@ -16,7 +16,7 @@ abstract class Block
 	private $blocktype;
 	
 	/**
-	 * Blocks are ultimately linked to a particular file, which holds the block
+	 * Blocks are ultimately linked to a partcular file, which holds the block
 	 * content. This property is the filename that this block represents
 	 */
 	private $filename;

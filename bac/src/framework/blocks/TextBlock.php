@@ -1,6 +1,6 @@
 <?php
 
-class TextBlock extends Block
+class TextBlock extends Block implements Renderable
 {
 
 	public function getValue()
@@ -28,15 +28,20 @@ class TextBlock extends Block
 		//and the block id.
 		$fullname = explode('.', $bucket_path);
 		$bucketname = $fullname[0];
-		$bucketname = strtolower($bucketname);
-		$block_id = strtolower($block_id);
+		$bucketname = $bucketname;
+		$block_id = $block_id;
 		$filename = Constants::GET_PAGES_DIRECTORY() . '/' . $bucketname . '/' . $block_id . '.incl';
 		$this->filename = $filename;
 		
 		$block_value = $io->readFile($filename);
-		$this->value = $block_value;
-		$this->blockid = $block_id;
-	}	
+		$this->setValue($block_value);
+		$this->setBlockId($block_id);
+	}
+	
+	public function render($renderProperties)
+	{
+		return $this->getValue();
+	}
 }
 
 ?>

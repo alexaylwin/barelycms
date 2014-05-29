@@ -35,4 +35,8 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Make dialogs simpler.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+	
+	config.enterMode = CKEDITOR.ENTER_BR;
+	
+	config.allowedContent = true;
 };
