@@ -64,15 +64,18 @@ class SetupHandler extends RequestHandler
 					$text = fread($fhandler, $filelength);
 					$text = str_replace($password, $newpass, $text);
 				} else {
-					$text = <<<'EOM'
+				//If no auth exists previously we need to create a whole new file
+				//this case creates a username and dummy password, which is immediately
+				//replaced by the user's defined password.
+				$text = <<<'EOM'
 	<?php
-		//default is 'admin' and 'BarelyACMS7'
+	
 		$username = 'admin';
-		$password = '82e8253d257652f1342651a9c17332f0bde60572'; 
+		$password = '{$newpass}'; 
 	?>
 EOM;
-					$password = '82e8253d257652f1342651a9c17332f0bde60572';
-					$text = str_replace($password, $newpass, $text);
+//					$password = '82e8253d257652f1342651a9c17332f0bde60572';
+//					$text = str_replace($password, $newpass, $text);
 				}
 				$fhandlew = fopen($path, 'w');
 				$res = fwrite($fhandlew, $text);
@@ -106,7 +109,8 @@ EOM;
 		if (isset($this->post['sitemap']) && $passwordDefined) {
 	
 			//Get the existing site for comparison
-			$site = FrameworkController::loadsite();
+			$framework = new FrameworkController();
+			$site = $framework->getSite();
 			$bucketlist = $site -> getAllBuckets();
 			$blockarray = array();
 			$bucketarray = array();
@@ -201,7 +205,8 @@ EOM;
 	private function build_sitemap_string() {
 		$sitemapstring = "";
 	
-		$site = FrameworkController::loadsite();
+		$framework = new FrameworkController();
+		$site = $framework->getSite();
 		if (!$site)
 			return;
 	

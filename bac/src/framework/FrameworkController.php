@@ -16,6 +16,11 @@ class FrameworkController
 
 	}
 	
+	public function getSite()
+	{
+		return $this->site;
+	}
+	
 	private function renderElement($element)
 	{
 		return $element->render(null);
