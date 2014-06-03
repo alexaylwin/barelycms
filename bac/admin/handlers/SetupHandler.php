@@ -115,11 +115,11 @@ EOM;
 			$blockarray = array();
 			$bucketarray = array();
 			
+			//This loop marks every block and bucket for deletion
 			foreach ($bucketlist as $bucket) {
 				if ($bucket -> hasBlocks()) {
 					$blocklist = $bucket -> getAllBlocks();
 					foreach ($blocklist as $block) {
-						//We assume that every container will be deleted
 						$blockarray[$bucket -> getBucketId()][$block -> getBlockId()] = false;
 					}
 				}
@@ -130,21 +130,22 @@ EOM;
 			//page1:container1,container2,container3|page2:container1,container2,container3
 			$sitemap_string = $this->post['sitemap'];
 	
-			$buckets = explode("|", $sitemap_string);
+		
+			$bucketsArray = explode("|", $sitemap_string);
 			$bucketsdir = Constants::GET_PAGES_DIRECTORY();
 	
-			for ($i = 0; $i < count($buckets); $i++) {
-				if (strlen($buckets[$i]) <= 1) {
+			for ($i = 0; $i < count($bucketsArray); $i++) {
+				if (strlen($bucketsArray[$i]) <= 1) {
 					continue;
 				}
-				//Get the pagename and container list
-				$bucket = explode(":", $buckets[$i]);
-				$bucketname = $bucket[0];
-				$blocks = $bucket[1];
-				$blocks = explode(",", $blocks);
+				//Get the bucket and block list from the bucket string
+				$bucketstring = explode(":", $bucketsArray[$i]);
+				$bucketname = $bucketstring[0];
+				$blockstring = $bucketstring[1];
+				$blockNameArray = explode(",", $blockstring);
 	
-				//If we have no page name, then there's nothing to
-				//do here (no blank page names)
+				//If we have no bucket name, then there's nothing to
+				//do here (no bucket page names)
 				if ($bucketname == null || $bucketname == "") {
 					continue;
 				}
@@ -152,39 +153,39 @@ EOM;
 				//If the directory exists, we don't want to overwrite it
 				//This adds the page
 				$bucketarray[$bucketname] = true;
-				$site->addBucket($bucketname);
+				$result = $site->addBucket($bucketname);
 	
-				//Set up some default container text
 				$blocktext = "";
 	
-				for ($j = 0; $j < count($blocks); $j++) {
-					$block = $blocks[$j];
+				for ($j = 0; $j < count($blockNameArray); $j++) {
+					$blockname = $blockNameArray[$j];
 	
-					//If the container name is blank do nothing (no blank container names)
-					if ($block == null || $block == "") {
+					//If the block name is blank do nothing (no blank bucket names)
+					if ($blockname == null || $blockname == "") {
 						continue;
 					}
-					//Don't delete this container!
-					if (isset($blockarray[$bucketname][$block])) {
-						$blockarray[$bucketname][$block] = true;
+					//Don't delete this block!
+					if (isset($blockarray[$bucketname][$blockname])) {
+						$blockarray[$bucketname][$blockname] = true;
 					}
 	-
 					//make a path
-					$site->getBucket($bucketname)->addBlock($block);
+					//TODO: this needs to use a block factory method
+					$site->getBucket($bucketname)->addBlock(new TextBlock($bucketname, $blockname));
 				}
 			}
 	
-			//Now delete all the containers that are still in the array
+			//Now delete all the blocks that are still in the array as false
 			foreach ($blockarray as $bucketname => $blocklist) {
-				foreach ($blocklist as $block => $exists) {
-					$path = $bucket . "/" . $bucketname;
+				foreach ($blocklist as $blockname => $exists) {
 					if (!$exists) {
-						$site->getBucket($bucketname)->removeBlock($block);
+						$currentbucket = $site->getBucket($bucketname);
+						$result = $currentbucket->removeBlock($blockname);
 					}
 				}
 			}
 	
-			//Now delete all the pages
+			//Now delete the bucket
 			foreach ($bucketarray as $bucketname => $exists) {
 				$path = $bucketsdir . "/" . $bucketname;
 				if (!$exists) {
@@ -241,6 +242,14 @@ EOM;
 		}
 	
 		return $sitemapstring;
+	}
+	
+	/**
+	 * This function parses a sitemap string into an array of bucket and block ids
+	 */
+	private function parse_sitemap_string($sitemap)
+	{
+		
 	}
 	
 }

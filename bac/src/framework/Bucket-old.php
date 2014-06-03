@@ -3,7 +3,7 @@
  * This is the default bucket class, it should be abstract
  */
 
-class Bucket {
+class Bucket_old {
 	private $bucketid;
 	private $blocklist;
 	private $liveurl;
@@ -66,7 +66,6 @@ class Bucket {
 	 */
 	public function loadAllBlocks() {
 		$blocks = scandir(Constants::GET_PAGES_DIRECTORY() . '/' . $this -> bucketid);
-		//print_r($containers);
 		unset($blocks[0]);
 		unset($blocks[1]);
 

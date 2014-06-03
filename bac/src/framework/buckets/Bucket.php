@@ -33,6 +33,8 @@ abstract class Bucket {
 	{
 		$this->config = $this->parseConfig($bucketConfig);
 		$this->applyConfig();
+		$this->bucketid = $this->config['bucketid'];
+		$this->type = $this->config['type'];
 		$this->loadBlocks();
 	}
 	
@@ -46,15 +48,19 @@ abstract class Bucket {
 		return $this->bucketid;
 	}
 	
+	public function hasBlocks(){
+		return ($this->getBlockCount() > 0);
+	}
+	
 	public function getBlockCount()
 	{
 		return (count($this->blocklist));
 	}
 	
 	public function getBlock($blockid)
-	{
+	{	
 		try {
-			$block = $this -> blocklist[$blockid];
+			$block = $this->blocklist[$blockid];
 			return $block;
 		} catch (Exception $e) {
 			return;
@@ -72,40 +78,100 @@ abstract class Bucket {
 		unset($blocks[0]);
 		unset($blocks[1]);
 		
-		foreach ($blocks as $blockid) {
+		foreach ($blocks as $blockid)
 		{
 			if($blockid != '.bacproperties')
 			{
 				$blockid = explode('.', $blockid);
-				loadBlock($blockid);
-				addBlock()
+				$blockid = $blockid[0];
+				$this->loadBlock($blockid);
 			}
 		}
 	}
 	
 	public function addBlock($newblock)
 	{
-		$blocklist[$newblock->getBlockId()] = $newblock;
+		$this->blocklist[$newblock->getBlockId()] = $newblock;
 	}
 
 	public function removeBlock($blockid)
 	{
-		if(isset($blocklist[$blockid]))
+			if(isset($this->blocklist[$blockid]))
+			{
+				//delete this block
+				$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->bucketid . "/" . $blockid . ".incl";
+				$io = new FileIO();
+				if(!$io->deleteFile($path))
+				{
+					return false;
+				}
+				unset($this->blocklist[$blockid]);
+				return true;
+			} else {
+				return false;
+			}
+	}
+	
+	public function parseConfig($configString)
+	{
+		$config;
+		
+		$entries = explode("|", $configString);
+		for($i = 0; $i < sizeof($entries); $i++)
 		{
-			unset($blocklist[$blockid]);
+			$entry = $entries[$i];
+			$kvp = explode(":", $entry);
+			if(!empty($kvp[0]))
+			{
+				$config[$kvp[0]] = rawurldecode($kvp[1]);
+			}			
 		}
+		return $config;
+	}
+	
+	//Use reflection to get the properties that need to be 
+	//written to the configuration
+	public function writeConfig()
+	{
+		$properties = $this->getConfigProperties();
+		
+		//Add the id and type, as these will always be written
+		$properties[] = "bucketid";
+		$properties[] = "type";
+		
+		//Instantiate an instance of ReflectionClass, on the $this class type
+		$reflectionClass = new ReflectionClass(get_class($this));
+		
+		$writestring = '';
+		$first = true;
+		
+		foreach($properties as $prop)
+		{
+			$val = $reflectionClass->getProperty($prop)->getValue($this);
+			if($first)
+			{
+				$writestring = $prop . ":" . rawurlencode($val);
+			} else {
+				$writestring .= "|" . $prop . ":" . rawurlencode($val);
+			}
+		}
+		
+		$io = new FileIO();
+		
+		$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->bucketid . "/.bacproperties";
+		$io->writeFile($path, $writeString);
+		
+		return true;			
 	}
 
 
 	public abstract function createBlock($blockid);
 	
 	public abstract function loadBlock($blockid);
-		
-	protected abstract function parseConfig($configString);
 	
 	protected abstract function applyConfig();
 	
-	protected abstract function writeConfig($configString);
+	protected abstract function getConfigProperties();
 		
 }
 ?>

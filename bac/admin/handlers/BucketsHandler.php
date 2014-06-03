@@ -9,7 +9,8 @@ class BucketsHandler extends RequestHandler
 	
 	protected function handleGet()
 	{
-		$site = FrameworkController::loadsite();
+		$framework = new FrameworkController();
+		$site = $framework->getSite();
 		$bucketlist = $site -> getAllBuckets();
 		
 		$maxblocks = 0;

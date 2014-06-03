@@ -14,7 +14,8 @@ class EditHandler extends RequestHandler
 			$ret['error'] = 'noblock';
 			return $ret;
 		}
-		$site = FrameworkController::loadsite();
+		$framework = new FrameworkController();
+		$site = $framework->getSite();
 		
 		$blockid = $this->get['block'];
 		$bucketid = $this->get['bucket'];
@@ -53,7 +54,8 @@ class EditHandler extends RequestHandler
 			
 			$blockid = $this->post['block'];
 			$bucketid = $this->post['bucket'];
-			$site = FrameworkController::loadsite();
+			$framework = new FrameworkController();
+			$site = $framework->getSite();
 			$bucket = $site -> getBucket($bucketid);
 			$block = $bucket -> getBlock($blockid);
 			$block -> setValue($this->post['block_content']);

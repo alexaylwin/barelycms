@@ -4,8 +4,9 @@
 	This class implements a bucket for holding text blocks.
 
 **/
-public class TextBucket extends Bucket
+class TextBucket extends Bucket
 {
+	private $liveurl;
 	
 	//This creates a new block from a block id
 	public function createBlock($blockid)
@@ -19,30 +20,53 @@ public class TextBucket extends Bucket
 	{
 		if(!empty($blockid))
 		{
-			$blockid = explode('.', $blockid);
-			//TODO: inspect for block type and call the right constructor
-			$new_b = new TextBlock($this -> bucketid, $blockid[0]);
-			$this -> blocklist[$blockid[0]] = $new_b;
-		}			
+			//TODO: inspect for block type and call the right constructor\
+			$new_b = new TextBlock($this->getBucketId(), $blockid);
+			$this->addBlock($new_b);
+		}
 
-	}
-		
-	//This parses the bucket config for bucket specific configuration
-	protected function parseConfig($configString)
-	{
-		
 	}
 	
 	//This is called from the constructor, to apply configuration properties
 	protected function applyConfig()
 	{
+		if(isset($this->config['bucketid']))
+		{
+			$this -> bucketid = $this->config['bucketid'];
+		}
+		if(isset($this->config['liveurl']))
+		{
+			$this -> liveurl = $this->config['liveurl'];
+		}
 		
 	}
 	
-	//This saves the configuration
-	protected function writeConfig($configString)
+	protected function getConfigProperties()
 	{
-		
+		return array(
+			"liveurl"
+		);	
+	}
+	
+	public function canLiveEdit()
+	{
+		if(!empty($this->liveurl))
+		{
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	public function getLiveUrl()
+	{
+		return $this->liveurl;
+	}
+	
+	public function setLiveUrl($liveurl)
+	{
+		$this->liveurl = $liveurl;
 	}
 	
 }
