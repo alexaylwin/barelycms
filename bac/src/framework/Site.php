@@ -70,7 +70,7 @@ class Site
 			$bucketconfig = $io->readFile(Constants::GET_PAGES_DIRECTORY() . '/' . $bucketid . '/.bacproperties');
 			
 			$bucketFactory = new BucketFactory();
-			$new_bucket = $bucketFactory->buildBucket($bucketconfig);
+			$new_bucket = $bucketFactory->build($bucketconfig);
 			
 			$this->bucketlist[$bucketid] = $new_bucket;
 		}
@@ -103,7 +103,7 @@ class Site
 						$io->writeFile($path . "/.bacproperties", $config);
 					}
 					$bucketFactory = new BucketFactory();
-					$new_bucket = $bucketFactory->buildBucket($config);
+					$new_bucket = $bucketFactory->build($config);
 					
 					$this->bucketlist[$bucketid] = $new_bucket;
 					return true;

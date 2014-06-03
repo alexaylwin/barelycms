@@ -12,16 +12,16 @@
  */
 class BucketFactory
 {
-	public function buildBucket($bucketconfig)
+	public function build($configString)
 	{
-		$type = $this->getBucketType($bucketconfig);
+		$type = $this->getBucketType($configString);
 		if($type == NULL){
 			return;
 		}
 		
 		switch ($type){
 			case "Text":
-				return new TextBucket($bucketconfig);
+				return $this->buildTextBucket($configString);
 				break;
 			default:
 				break;
@@ -30,9 +30,9 @@ class BucketFactory
 	}
 	
 	//TODO: this is copied from Bucket->parseConfig
-	private function getBucketType($bucketconfig)
+	private function getBucketType($configString)
 	{
-		$entries = explode("|", $bucketconfig);
+		$entries = explode("|", $configString);
 		for($i = 0; $i < sizeof($entries); $i++)
 		{
 			$entry = $entries[$i];
@@ -49,7 +49,11 @@ class BucketFactory
 		} else {
 			return null;
 		}
-		
+	}
+	
+	private function buildTextBucket($configString)
+	{
+		return new TextBucket($configString);
 	}
 }
 

@@ -67,11 +67,11 @@ class SetupHandler extends RequestHandler
 				//If no auth exists previously we need to create a whole new file
 				//this case creates a username and dummy password, which is immediately
 				//replaced by the user's defined password.
-				$text = <<<'EOM'
+				$text = <<<EOM
 	<?php
 	
-		$username = 'admin';
-		$password = '{$newpass}'; 
+		\$username = 'admin';
+		\$password = '{$newpass}'; 
 	?>
 EOM;
 //					$password = '82e8253d257652f1342651a9c17332f0bde60572';
@@ -168,10 +168,11 @@ EOM;
 					if (isset($blockarray[$bucketname][$blockname])) {
 						$blockarray[$bucketname][$blockname] = true;
 					}
-	-
+	
 					//make a path
-					//TODO: this needs to use a block factory method
-					$site->getBucket($bucketname)->addBlock(new TextBlock($bucketname, $blockname));
+					//TODO: this needs to be refactored, we aren't creating a new block every time, only loading
+					//blocks that exist.
+					$site->getBucket($bucketname)->createBlock($blockname);
 				}
 			}
 	

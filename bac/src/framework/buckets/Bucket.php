@@ -17,17 +17,17 @@
 
 abstract class Bucket {
 	
-	private $bucketid;
+	protected $bucketid;
 	
-	private $blocklist;
+	protected $blocklist;
 	
 	/**
 	 * The config object contains meta data about the bucket in KVPs as
 	 * defined by the bucket type.
 	 */
-	private $config;
+	protected $config;
 	
-	private $type;
+	protected $type;
 	
 	public function __construct($bucketConfig)
 	{
@@ -78,15 +78,24 @@ abstract class Bucket {
 		unset($blocks[0]);
 		unset($blocks[1]);
 		
-		foreach ($blocks as $blockid)
+		foreach ($blocks as $blockfile)
 		{
-			if($blockid != '.bacproperties')
+			if($blockfile != '.bacproperties')
 			{
-				$blockid = explode('.', $blockid);
-				$blockid = $blockid[0];
-				$this->loadBlock($blockid);
+				//$blockid = explode('.', $blockid);
+				//$blockid = $blockid[0];
+				$this->loadBlock(Constants::GET_PAGES_DIRECTORY() . '/' . $this -> bucketid . '/' . $blockfile);
 			}
 		}
+	}
+
+	private function loadBlock($blockfile)
+	{
+		$io = new FileIO();
+		$serialized = $io->readFile($blockfile);
+		$newblock = unserialize($serialized);
+		$this->addBlock($newblock);
+		
 	}
 	
 	public function addBlock($newblock)
@@ -166,8 +175,6 @@ abstract class Bucket {
 
 
 	public abstract function createBlock($blockid);
-	
-	public abstract function loadBlock($blockid);
 	
 	protected abstract function applyConfig();
 	
