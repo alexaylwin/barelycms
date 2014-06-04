@@ -78,6 +78,11 @@ class FileIO
 		return $res;
 	}
 	
+	public function fileExists($path)
+	{
+		return file_exists($path);
+	}
+	
 }
 
 ?>

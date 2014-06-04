@@ -29,12 +29,39 @@ abstract class Bucket {
 	
 	protected $type;
 	
-	public function __construct($bucketConfig)
+	public function __construct($config)
 	{
-		$this->config = $this->parseConfig($bucketConfig);
-		$this->applyConfig();
-		$this->bucketid = $this->config['bucketid'];
-		$this->type = $this->config['type'];
+
+		$this->bucketid = $config['bucketid'];
+		
+		//If this bucket already exists in storage, then just load it
+		if($this->bucketExists())
+		{
+			$this->config = $this->readConfig($this->getBucketId());
+
+			$this->applyConfig();
+			$this->bucketid = $this->config['bucketid'];
+			$this->type = $this->config['type'];
+			
+		} else {
+			//Otherwise, make a new directory and config file
+			$this->config = $config;
+
+			$this->applyConfig();
+			$this->bucketid = $this->config['bucketid'];
+			$this->type = $this->config['type'];
+			
+			$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->getBucketId();			
+			$res = mkdir($path);
+			if (!$res) 
+			{
+				//error while trying to make the directory
+				return;
+			} else {
+				$this->writeConfig();
+			}
+		}
+		
 		$this->loadBlocks();
 	}
 	
@@ -74,17 +101,15 @@ abstract class Bucket {
 	
 	public function loadBlocks()
 	{
-		$blocks = scandir(Constants::GET_PAGES_DIRECTORY() . '/' . $this -> bucketid);
+		$blocks = scandir(Constants::GET_PAGES_DIRECTORY() . '/' . $this->getBucketId());
 		unset($blocks[0]);
 		unset($blocks[1]);
 		
 		foreach ($blocks as $blockfile)
 		{
-			if($blockfile != '.bacproperties')
+			if($blockfile != '.bucket')
 			{
-				//$blockid = explode('.', $blockid);
-				//$blockid = $blockid[0];
-				$this->loadBlock(Constants::GET_PAGES_DIRECTORY() . '/' . $this -> bucketid . '/' . $blockfile);
+				$this->loadBlock(Constants::GET_PAGES_DIRECTORY() . '/' . $this->getBucketId() . '/' . $blockfile);
 			}
 		}
 	}
@@ -108,7 +133,7 @@ abstract class Bucket {
 			if(isset($this->blocklist[$blockid]))
 			{
 				//delete this block
-				$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->bucketid . "/" . $blockid . ".incl";
+				$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->getBucketId() . "/" . $blockid . ".incl";
 				$io = new FileIO();
 				if(!$io->deleteFile($path))
 				{
@@ -121,19 +146,15 @@ abstract class Bucket {
 			}
 	}
 	
-	public function parseConfig($configString)
+	public function readConfig($configString)
 	{
 		$config;
-		
-		$entries = explode("|", $configString);
-		for($i = 0; $i < sizeof($entries); $i++)
+		$configFileName = Constants::GET_PAGES_DIRECTORY() . '/' . $this->getBucketId() . '/.bucket';
+		$io = new FileIO();
+		if($io->fileExists($configFileName))
 		{
-			$entry = $entries[$i];
-			$kvp = explode(":", $entry);
-			if(!empty($kvp[0]))
-			{
-				$config[$kvp[0]] = rawurldecode($kvp[1]);
-			}			
+			$serializedConfig = $io->readFile($configFileName);
+			$config = unserialize($serializedConfig);
 		}
 		return $config;
 	}
@@ -142,37 +163,43 @@ abstract class Bucket {
 	//written to the configuration
 	public function writeConfig()
 	{
+
 		$properties = $this->getConfigProperties();
 		
 		//Add the id and type, as these will always be written
-		$properties[] = "bucketid";
-		$properties[] = "type";
-		
+		$config['bucketid'] = $this->getBucketId();
+		$config['type'] = $this->getType();
+				
 		//Instantiate an instance of ReflectionClass, on the $this class type
-		$reflectionClass = new ReflectionClass(get_class($this));
-		
-		$writestring = '';
-		$first = true;
-		
+		$reflectionClass = new ReflectionClass(get_class($this));		
 		foreach($properties as $prop)
 		{
 			$val = $reflectionClass->getProperty($prop)->getValue($this);
-			if($first)
-			{
-				$writestring = $prop . ":" . rawurlencode($val);
-			} else {
-				$writestring .= "|" . $prop . ":" . rawurlencode($val);
-			}
+			$config[$prop] = $val;
 		}
-		
+
 		$io = new FileIO();
+		$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->getBucketId() . "/.bucket";
+		$serializedConfig = serialize($config);
+		$io->writeFile($path, $serializedConfig);
 		
-		$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->bucketid . "/.bacproperties";
-		$io->writeFile($path, $writeString);
-		
-		return true;			
+		return true;
+	}
+	
+	/**
+	 * This method checks to see if this bucket already exists in the directory or not.
+	 */
+	private function bucketExists()
+	{
+		$path = Constants::GET_PAGES_DIRECTORY() . "/" . $this->getBucketId() . "/.bucket";
+		$io = new FileIO();
+		return $io->fileExists($path);
 	}
 
+	public function getType()
+	{
+		return $this->type;
+	}
 
 	public abstract function createBlock($blockid);
 	

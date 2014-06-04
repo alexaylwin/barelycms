@@ -16,12 +16,6 @@ abstract class Block
 	protected $blocktype;
 	
 	/**
-	 * Blocks are ultimately linked to a partcular file, which holds the block
-	 * content. This property is the filename that this block represents
-	 */
-	protected $filename;
-	
-	/**
 	 * Bucket id
 	 */
 	protected $bucketid;
@@ -66,16 +60,6 @@ abstract class Block
 	public function setBlockType($new_blocktype)
 	{
 		$this->blocktype = $new_blocktype;
-	}
-	
-	public function getFilename()
-	{
-		return $this->filename;
-	}
-	
-	public function setFilename($new_filename)
-	{
-		$this->filename = $new_filename;
 	}
 	
 	public function saveBlock()

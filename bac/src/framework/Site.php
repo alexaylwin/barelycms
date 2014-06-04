@@ -67,12 +67,14 @@ class Site
 				
 		foreach($buckets as $bucketid)
 		{
-			$bucketconfig = $io->readFile(Constants::GET_PAGES_DIRECTORY() . '/' . $bucketid . '/.bacproperties');
+			//$bucketconfig = $io->readFile(Constants::GET_PAGES_DIRECTORY() . '/' . $bucketid . '/.bacproperties');
 			
 			$bucketFactory = new BucketFactory();
-			$new_bucket = $bucketFactory->build($bucketconfig);
-			
-			$this->bucketlist[$bucketid] = $new_bucket;
+			$new_bucket = $bucketFactory->load($bucketid);
+			if($new_bucket)
+			{
+				$this->bucketlist[$bucketid] = $new_bucket;
+			}
 		}
 	}
 	
@@ -82,36 +84,17 @@ class Site
 	 * 
 	 * //TODO: make this use a bucketfactory and config string
 	 */
-	public function addBucket($bucketid, $liveurl = '')
+	public function addBucket($bucketid)
 	{
-		$io = new FileIO();
+		//$io = new FileIO();
 		if(!isset($this->bucketlist[$bucketid]))
 		{
-		
-			$path = Constants::GET_PAGES_DIRECTORY() . "/" . $bucketid;
-			if (!file_exists($path)) {
-				//It doesn't exist, so create the directory
-				$res = mkdir($path);
-				if (!$res) 
-				{
-					//error while trying to make the directory
-					return false;
-				} else {
-					$config = "bucketid:" . rawurlencode($bucketid) . "|liveurl:" . rawurlencode($liveurl) . "|type:" . rawurlencode("Text");
-					if(!file_exists($path . "/.bacproperties"))
-					{
-						$io->writeFile($path . "/.bacproperties", $config);
-					}
-					$bucketFactory = new BucketFactory();
-					$new_bucket = $bucketFactory->build($config);
-					
-					$this->bucketlist[$bucketid] = $new_bucket;
-					return true;
-				}
-			} elseif (file_exists($path) && !is_dir($path)) {
-				//error, path exists and is not a directory
-				return false;
-			}
+			$config['bucketid'] = $bucketid;
+			$config['type'] = BucketTypes::Text;
+			$bucketFactory = new BucketFactory();
+			$new_bucket = $bucketFactory->build($config);
+			$this->bucketlist[$bucketid] = $new_bucket;
+			return true;			
 			
 		} else {
 			return false;

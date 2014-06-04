@@ -12,6 +12,7 @@ class TextBlock extends Block implements Renderable
 	
 	public function setValue($new_value)
 	{
+		//TODO: right now, the block is only saved after the value is changed - not any other properties.
 		$this->value = $new_value;
 		$this->saveBlock();
 	}
@@ -22,16 +23,7 @@ class TextBlock extends Block implements Renderable
 	 * file that has a container on it.
 	 */
 	public function __construct($bucketid, $blockid)
-	{
-		//$io = new FileIO();
-		
-		//Build the file name from the bucket path (includes the bucket extension)
-		//and the block id.
-		//$filename = Constants::GET_PAGES_DIRECTORY() . '/' . $bucketid . '/' . $blockid . '.incl';
-		//$this->filename = $filename;
-		//$block_value = $io->readFile($filename);
-		//$this->setValue($block_value);
-		
+	{	
 		//Dont use the setters, so that we only call saveBlock once
 		$this->setBlockId($blockid);
 		$this->setBucketId($bucketid);

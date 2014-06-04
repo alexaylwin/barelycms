@@ -33,6 +33,10 @@ class BucketsHandler extends RequestHandler
 		
 	}
 	
+	/**
+	 * This function is to support saving bucket config changes
+	 * via Ajax
+	 */
 	protected function handleAjax()
 	{
 		$data = false;
@@ -40,7 +44,8 @@ class BucketsHandler extends RequestHandler
 		{
 			if(!empty($this->post['pageurl']))
 			{
-				$site = FrameworkController::loadsite();
+				$framework = new FrameworkController();
+				$site = $framework->getSite();
 				$bucket = $site->getBucket($this->post['bucketid']);
 				$bucket->setLiveUrl($this->post['pageurl']);
 				$data['success'] = $bucket->writeConfig();

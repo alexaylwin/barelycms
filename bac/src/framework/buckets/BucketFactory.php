@@ -12,48 +12,46 @@
  */
 class BucketFactory
 {
-	public function build($configString)
+	public function build($config)
 	{
-		$type = $this->getBucketType($configString);
-		if($type == NULL){
-			return;
-		}
 		
+		//We require at least a type be set
+		if(!isset($config['type']) || !isset($config['bucketid'])){
+			return '';	
+		}
+		$type = $config['type'];
 		switch ($type){
 			case "Text":
-				return $this->buildTextBucket($configString);
+				return $this->buildTextBucket($config);
 				break;
 			default:
 				break;
 		}
-		
 	}
 	
-	//TODO: this is copied from Bucket->parseConfig
-	private function getBucketType($configString)
+	public function load($bucketid)
 	{
-		$entries = explode("|", $configString);
-		for($i = 0; $i < sizeof($entries); $i++)
-		{
-			$entry = $entries[$i];
-			$kvp = explode(":", $entry);
-			if(!empty($kvp[0]))
-			{
-				$config[$kvp[0]] = rawurldecode($kvp[1]);
-			}			
-		}
+		$io = new FileIO();
+		$bucketConfigString = $io->readFile(Constants::GET_PAGES_DIRECTORY() . '/' . $bucketid . '/.bucket');
+		$config = unserialize($bucketConfigString);
 		
 		if(isset($config['type']))
 		{
-			return $config['type'];
-		} else {
-			return null;
+			$type = $config['type'];
+			switch ($type){
+				case "Text":
+					return $this->buildTextBucket($config);
+					break;
+				default:
+					break;
+			}		
 		}
 	}
-	
-	private function buildTextBucket($configString)
+
+	private function buildTextBucket($config)
 	{
-		return new TextBucket($configString);
+		//Do the writing in here
+		return new TextBucket($config);
 	}
 }
 
