@@ -66,9 +66,7 @@ class Site
 		unset($buckets[1]);
 				
 		foreach($buckets as $bucketid)
-		{
-			//$bucketconfig = $io->readFile(Constants::GET_PAGES_DIRECTORY() . '/' . $bucketid . '/.bacproperties');
-			
+		{	
 			$bucketFactory = new BucketFactory();
 			$new_bucket = $bucketFactory->load($bucketid);
 			if($new_bucket)
@@ -82,11 +80,10 @@ class Site
 	 * Adds a new bucket with name pageid. This checks first to see if the bucket
 	 * exists. If not, it creates the directory and adds the bucket to this site.
 	 * 
-	 * //TODO: make this use a bucketfactory and config string
+	 * TODO: Change the implementation of this, to require a bucket type as well. 
 	 */
 	public function addBucket($bucketid)
 	{
-		//$io = new FileIO();
 		if(!isset($this->bucketlist[$bucketid]))
 		{
 			$config['bucketid'] = $bucketid;
