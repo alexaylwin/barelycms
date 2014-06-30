@@ -72,10 +72,8 @@ class SetupHandler extends RequestHandler
 	
 		\$username = 'admin';
 		\$password = '$newpass'; 
-	?>
+	
 EOM;
-//					$password = '82e8253d257652f1342651a9c17332f0bde60572';
-//					$text = str_replace($password, $newpass, $text);
 				}
 				$fhandlew = fopen($path, 'w');
 				$res = fwrite($fhandlew, $text);
@@ -133,7 +131,7 @@ EOM;
 		
 			$bucketsArray = explode("|", $sitemap_string);
 			$bucketsdir = Constants::GET_PAGES_DIRECTORY();
-	
+
 			for ($i = 0; $i < count($bucketsArray); $i++) {
 				if (strlen($bucketsArray[$i]) <= 1) {
 					continue;
