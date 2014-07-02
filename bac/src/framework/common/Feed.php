@@ -15,34 +15,36 @@ interface Feed
 	/**
 		Return an array with the sort attribute and direction
 	**/
-	public getElementSortOrder();
+	public function getElementSortOrder();
 	
 	/**
 		Set the sort order attribute and direction (asc or desc)
 	**/
-	public setElementSortOrder($attribte, $direction);
+	public function setElementSortOrder($attribte, $direction);
 	
 	/**
 		Return the elements, in the current sort order, between
 		start and end
 	**/
-	public getElements($start = 0, $end = -1);
+	public function getElements($start = 0, $end = -1);
 	
 	/**
 		Set the number of elements that will be returned on a single
 		page request
 	**/
-	public setElementsPerPage($count);
+	public function setElementsPerPage($count);
 	
 	/**
 		Get the elements that are on the page specified by pageId
 	**/
-	public getPage($pageNumber = 0);
+	public function getPage($pageNumber = 0);
 	
 	/**
 	
 	qet a speciqfic element, based on the current sort order
 	public getElement($elementNumber);
+	 * 
+	 */
 }
 
 ?>

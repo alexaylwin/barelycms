@@ -82,12 +82,12 @@ class Site
 	 * 
 	 * TODO: Change the implementation of this, to require a bucket type as well. 
 	 */
-	public function addBucket($bucketid)
+	public function addBucket($bucketid, $buckettype = BucketTypes::Text)
 	{
 		if(!isset($this->bucketlist[$bucketid]))
 		{
 			$config['bucketid'] = $bucketid;
-			$config['type'] = BucketTypes::Text;
+			$config['type'] = $buckettype;
 			$bucketFactory = new BucketFactory();
 			$new_bucket = $bucketFactory->build($config);
 			$this->bucketlist[$bucketid] = $new_bucket;

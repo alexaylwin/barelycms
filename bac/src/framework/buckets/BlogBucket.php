@@ -19,12 +19,12 @@ class BlogBucket extends Bucket implements Renderable, Feed
 {
 	//The sort order of the entries, defines how
 	//the entries will be output
-	protected $sortOrder
+	public $sortOrder;
 	
 	//This is the header HTML for an entry
-	protected $entryTemplate;
+	public $entryTemplate;
 		
-	protected $elementsPerPage;
+	public $elementsPerPage;
 		
 	//initialize a new block, and add it to the bucket
 	public function createBlock($blockid)
@@ -53,27 +53,27 @@ class BlogBucket extends Bucket implements Renderable, Feed
 		return array(
 			"entryTemplate",
 			"sortOrder"
-		)	
+		);
 	}
 	
 	//Generate the HTML for this blog
-	public render()
+	public function render($renderProperties)
 	{
 		$renderBlocks = $this->getPage(0);
 		$output = '';
-		for($renderBlocks as $block)
+		foreach($renderBlocks as $block)
 		{
 			
 		}
 	}
 	
-	public getElementSortOrder()
+	public function getElementSortOrder()
 	{
 		return $this->sortOrder;
 	}
 	
 	//In a blog, we only allow ordering by date
-	public setElementSortOrder($attribte, $direction)
+	public function setElementSortOrder($attribte, $direction)
 	{
 		return;
 //		$this->sortOrder['attribute'] = $attribute;
@@ -81,34 +81,34 @@ class BlogBucket extends Bucket implements Renderable, Feed
 //		orderElements($this->sortOrder);
 	}
 	
-	public getElements($start = 0, $end = -1)
+	public function getElements($start = 0, $end = -1)
 	{
 		$list = $this->getAllBlocks();
 		return ($end > 0) ? array_slice($list, $start, $end-$start) : array_slice($list, $start);
 	}
 	
-	public setElementsPerPage($count)
+	public function setElementsPerPage($count)
 	{
 		$this->elementsPerPage = $count;
 	}
 	
-	public getPage($pageNumber = 0)
+	public function getPage($pageNumber = 0)
 	{
 		//Return the blocks from page*elementsPerPage -> page+1*ElementsPerPage
 		return getElements($pageNumber * $this->elementsPerPage, ($pageNumber+1)*$this->elementsPerPage);
 	}
 	
-	private orderElements($sortOrder)
+	private function orderElements($sortOrder)
 	{
 		//Implement a bubble sort?
 		$list = $this->getAllBlocks();
-		for($list as $block)
+		foreach($list as $block)
 		{
 			$datelist[$block->getBlockId()] = $block->getEntryDate();
 		}
 		//TODO: simply this to just sort the block list directly - change cmpDates
 		uasort($datelist, cmpDates);
-		for($datelist as $id => $date)
+		foreach($datelist as $id => $date)
 		{
 			$sortedList[] = $this->getBlock($id);
 		}
@@ -116,7 +116,7 @@ class BlogBucket extends Bucket implements Renderable, Feed
 		$this->blocklist = $sortedList;		
 	}
 	
-	function cmpDates($dateX, $dateY)
+	private function cmpDates($dateX, $dateY)
 	{
 		//TODO: Test this method, uses date format
 //		$format = 'd/m/Y';

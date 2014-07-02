@@ -21,14 +21,18 @@ class BucketFactory
 		}
 		$type = $config['type'];
 		switch ($type){
-			case "Text":
+			case BucketTypes::Text:
 				return $this->buildTextBucket($config);
+				break;
+			case BucketTypes::Blog:
+				return $this->buildBlogBucket($config);
 				break;
 			default:
 				break;
 		}
 	}
 	
+	//What is this here for? To remove more responsibility from the classes?
 	public function load($bucketid)
 	{
 		$io = new FileIO();
@@ -39,8 +43,11 @@ class BucketFactory
 		{
 			$type = $config['type'];
 			switch ($type){
-				case "Text":
+				case BucketTypes::Text:
 					return $this->buildTextBucket($config);
+					break;
+				case BucketTypes::Blog:
+					return $this->buildBlogBucket($config);
 					break;
 				default:
 					break;
@@ -52,6 +59,11 @@ class BucketFactory
 	{
 		//Do the writing in here
 		return new TextBucket($config);
+	}
+	
+	private function buildBlogBucket($config)
+	{
+		return new BlogBucket($config);
 	}
 }
 
