@@ -22,11 +22,10 @@ class TextBlock extends Block implements Renderable
 	 * The bucket path should be the absolute file name of the script
 	 * file that has a container on it.
 	 */
-	public function __construct($bucketid, $blockid)
+	public function __construct( $blockid)
 	{	
 		//Dont use the setters, so that we only call saveBlock once
 		$this->setBlockId($blockid);
-		$this->setBucketId($bucketid);
 		$this->setBlockType(BlockTypes::Text);
 		$this->saveBlock();
 	}

@@ -42,7 +42,7 @@ class BlogBucket extends Bucket implements Renderable, Feed
 		
 		if(isset($this->config['entryTemplate']))
 		{
-			$this->entryHeader = $this->config['entryTemplate'];
+			$this->entryTemplate = $this->config['entryTemplate'];
 		}
 
 	}
@@ -56,15 +56,16 @@ class BlogBucket extends Bucket implements Renderable, Feed
 		);
 	}
 	
-	//Generate the HTML for this blog
+	//Generate the HTML for this blog, parsing the entryTemplate
 	public function render($renderProperties)
 	{
 		$renderBlocks = $this->getPage(0);
 		$output = '';
 		foreach($renderBlocks as $block)
 		{
-			
+			$output = $output . '<br /> block:' . $block->render();
 		}
+		return $output;
 	}
 	
 	public function getElementSortOrder()
@@ -80,13 +81,7 @@ class BlogBucket extends Bucket implements Renderable, Feed
 //		$this->sortOrder['direction'] = $direction;
 //		orderElements($this->sortOrder);
 	}
-	
-	public function getElements($start = 0, $end = -1)
-	{
-		$list = $this->getAllBlocks();
-		return ($end > 0) ? array_slice($list, $start, $end-$start) : array_slice($list, $start);
-	}
-	
+		
 	public function setElementsPerPage($count)
 	{
 		$this->elementsPerPage = $count;
@@ -95,8 +90,15 @@ class BlogBucket extends Bucket implements Renderable, Feed
 	public function getPage($pageNumber = 0)
 	{
 		//Return the blocks from page*elementsPerPage -> page+1*ElementsPerPage
-		return getElements($pageNumber * $this->elementsPerPage, ($pageNumber+1)*$this->elementsPerPage);
+		return $this->getElements($pageNumber * $this->elementsPerPage, ($pageNumber+1)*$this->elementsPerPage);
 	}
+	
+	public function getElements($start = 0, $end = -1)
+	{
+		$list = $this->getAllBlocks();
+		return ($end > 0) ? array_slice($list, $start, $end-$start) : array_slice($list, $start);
+	}
+	
 	
 	private function orderElements($sortOrder)
 	{

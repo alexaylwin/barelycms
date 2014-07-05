@@ -13,7 +13,7 @@ class TextBucket extends Bucket
 	{
 		if(!$this->hasBlock($blockid))
 		{
-			$newblock = new TextBlock($this->getBucketId(), $blockid);
+			$newblock = new TextBlock($blockid);
 			$this->addBlock($newblock);
 		}
 	}

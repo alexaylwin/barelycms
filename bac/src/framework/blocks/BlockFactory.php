@@ -17,6 +17,13 @@ class BlockFactory
 
 	}
 	
+	public function buildEntryBlock($configString)
+	{
+		
+	}
+	
+	
+	
 }
 
 

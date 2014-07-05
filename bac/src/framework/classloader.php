@@ -11,6 +11,7 @@
 	include_once 'common/BlockTypes.php';
     include_once 'blocks/Block.php';
 	include_once 'blocks/TextBlock.php';
+	include_once 'blocks/EntryBlock.php';
 	
 	//Load bucket types
 	//include_once 'Bucket.php';

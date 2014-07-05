@@ -16,7 +16,7 @@ abstract class Block
 	protected $blocktype;
 	
 	/**
-	 * Bucket id
+	 * Bucket id of the containing bucket
 	 */
 	protected $bucketid;
 	

@@ -70,20 +70,33 @@ abstract class Bucket {
 		return isset($this->blocklist[$blockid]);
 	}
 	
+	/**
+	 * @return String
+	 */
 	public function getBucketId()
 	{
 		return $this->bucketid;
 	}
 	
+	/**
+	 * @return boolean
+	 */
 	public function hasBlocks(){
 		return ($this->getBlockCount() > 0);
 	}
 	
+	/**
+	 * @return int
+	 */
 	public function getBlockCount()
 	{
 		return (count($this->blocklist));
 	}
 	
+	/**
+	 * Get a block from this bucket
+	 * @return Block the block with id blockid
+	 */
 	public function getBlock($blockid)
 	{	
 		try {
@@ -94,6 +107,11 @@ abstract class Bucket {
 		}
 	}
 	
+	/**
+	 * Get all blocks inside this bucket
+	 * 
+	 * @return Array the list of blocks
+	 */
 	public function getAllBlocks()
 	{
 		return $this->blocklist;
@@ -125,6 +143,7 @@ abstract class Bucket {
 	
 	public function addBlock($newblock)
 	{
+		$newblock->setBucketId($this->getBucketId());
 		$this->blocklist[$newblock->getBlockId()] = $newblock;
 	}
 

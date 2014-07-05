@@ -10,6 +10,9 @@ class Site
 		$this->loadAllBuckets();
 	}
 	
+	/**
+	 * @return boolean
+	 */
 	public function hasBucket($bucketid)
 	{
 		if(isset($this->bucketlist[$bucketid]))
@@ -28,6 +31,8 @@ class Site
 	/**
 	 * This returns the container with the given 
 	 * cotnainer id or null if it doesn't exist
+	 * 
+	 * @return Bucket the bucket or empty if it does not exist
 	 */
 	public function getBucket($bucketid)
 	{
@@ -44,6 +49,9 @@ class Site
 		}
 	}
 	
+	/**
+	 * @return Array the list of buckets
+	 */
 	public function getAllBuckets()
 	{
 		
@@ -81,18 +89,25 @@ class Site
 	 * exists. If not, it creates the directory and adds the bucket to this site.
 	 * 
 	 * TODO: Change the implementation of this, to require a bucket type as well. 
+	 * 
+	 * @return boolean
 	 */
-	public function addBucket($bucketid, $buckettype = BucketTypes::Text)
+	public function addBucket($bucketid, $buckettype = BucketTypes::Text, $config = array())
 	{
+		if(!isset($bucketid))
+		{
+			return false;
+		}
+		
 		if(!isset($this->bucketlist[$bucketid]))
 		{
 			$config['bucketid'] = $bucketid;
 			$config['type'] = $buckettype;
+
 			$bucketFactory = new BucketFactory();
 			$new_bucket = $bucketFactory->build($config);
 			$this->bucketlist[$bucketid] = $new_bucket;
-			return true;			
-			
+			return true;
 		} else {
 			return false;
 		}
@@ -101,6 +116,8 @@ class Site
 	/**
 	 * Deletes the page from this site as well as the directory and any
 	 * containers below it.
+	 * 
+	 * @return boolean
 	 */
 	public function removeBucket($bucketid)
 	{
