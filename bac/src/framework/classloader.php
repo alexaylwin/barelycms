@@ -6,6 +6,7 @@
 	
 	//Load object factories
 	include_once 'buckets/BucketFactory.php';
+	include_once 'blocks/BlockFactory.php';
 
 	//Load block types
 	include_once 'common/BlockTypes.php';

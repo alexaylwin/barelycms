@@ -11,12 +11,19 @@ class TextBucket extends Bucket
 	//This creates a new block from a block id
 	public function createBlock($blockid)
 	{
+		return;
+	}
+/*
+	public function createBlock($blockid)
+	{
 		if(!$this->hasBlock($blockid))
 		{
 			$newblock = new TextBlock($blockid);
+			$newblock->setBucketId($this->getBucketId());
 			$this->addBlock($newblock);
 		}
-	}
+	}*/
+
 	
 	//This is called from the constructor, to apply configuration properties
 	protected function applyConfig()

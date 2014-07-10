@@ -170,7 +170,19 @@ EOM;
 					//make a path
 					//TODO: this needs to be refactored, we aren't creating a new block every time, only loading
 					//blocks that exist.
-					$site->getBucket($bucketname)->createBlock($blockname);
+					$bucket = $site->getBucket($bucketname);
+					if(!$bucket->hasBlock($blockname))
+					{
+						$newblockConfig = Array(
+							"type" => BlockTypes::Text,
+							"blockid" => $blockname,
+							"bucketid" =>$bucketname
+						);
+						$factory = new BlockFactory();
+						$newblock = $factory->build($newblockConfig);
+						$bucket->addBlock($newblock);
+					}
+					
 				}
 			}
 	

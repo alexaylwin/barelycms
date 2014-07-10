@@ -29,7 +29,7 @@ class BlockFactory
 	
 	private function buildTextBlock($config)
 	{
-		$block = new TextBlock($config['blockid']);
+		$block = new TextBlock($config['blockid'], $config['bucketid']);
 		return $block;
 	}
 	

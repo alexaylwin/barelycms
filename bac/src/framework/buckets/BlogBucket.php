@@ -27,10 +27,10 @@ class BlogBucket extends Bucket implements Renderable, Feed
 	public $elementsPerPage;
 		
 	//initialize a new block, and add it to the bucket
-	public function createBlock($entryDate, $author, $subject, $blockid)
+	public function createBlock($blockid)//$entryDate, $author, $subject, $blockid)
 	{
-		$new_block = new EntryBlock($entryDate, $author, $subject, $blockid);
-		$this->addBlock($new_block);
+		//$new_block = new EntryBlock($entryDate, $author, $subject, $blockid);
+		//$this->addBlock($new_block);
 	}
 	
 	//Apply the configuration array to this object's instance variables, as required
