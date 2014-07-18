@@ -11,24 +11,6 @@
  */
 include_once __DIR__ . '/src/framework/classloader.php';
 function load_container($bucketid, $blockid) {
-/*
-	$site = FrameworkController::loadsite();
-	if ($site) {
-		if($site->hasBucket($bucketid))
-		{
-			$bucket = $site -> getBucket($bucketid);
-			if ($bucket) {
-				if($bucket->hasBlock($blockid))
-				{
-					$block = $bucket -> getBlock($blockid);
-					if ($block) {
-						return $block -> getValue();
-					}
-				}
-			}
-		}
-	}
-	*/
 	$elements[$bucketid] = $blockid;
 	$controller = new FrameworkController();
 	$content = $controller->getContent($elements);

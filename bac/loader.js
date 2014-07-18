@@ -53,7 +53,7 @@ function load()
 	        $('*[data-bac-block]').each(function(i) {
 	            bucket = $(this).closest('*[data-bac-bucket]').attr('data-bac-bucket');
 	            block = $(this).attr('data-bac-block');
-	            content = bac_load_content(bucket, block)
+	            content = bac_load_content(bucket, block);
 	            $(this).html(content);
 	        }); 
 			

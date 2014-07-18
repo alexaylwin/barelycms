@@ -17,7 +17,7 @@
 $(document).ready(function()
 {	
 	
-	var editors = [];
+	window.editors = [];
 	
 	//TODO: this function is responsible for displaying the edit overlay
 	//when the user hovers on an element. Currently, the mouseover event
@@ -93,21 +93,31 @@ $(document).ready(function()
 	{	
 		var editorcounter = 0;
 		//For each element with bac-id
-        $('#bac-targetpage').contents().find('*[data-bac-id]').each(function(i) {
-            page = $(this).closest('*[data-bac-page]').attr('data-bac-page');
-            container = $(this).attr('data-bac-id');
-            $(this).attr('contenteditable', 'true');
-            
-            //For each container, put a hidden element over top of it.
-           // $(this).click(editmouseclick);//[this, editorcounter], edit_click);
-           // $(this).mouseenter(editmouseover);
-           // $(this).mouseleave(editmouseout);
-           // apply_overlay($(this));
-            editorcounter++;
-            
-            var e = CKEDITOR.inline(this, {customConfig: 'config_liveedit.js'});
-            var ed = {containerid: container, pageid: page, editorid: e.id};
-            editors.push(ed);
+        $('#bac-targetpage').contents().find('*[data-bac-block]').each(function(i) {
+			//inline editing only works for elements with an ID
+			if(typeof $(this).attr('id') == 'undefined')
+			{
+				var id = $(this).closest('*[data-bac-bucket]').attr('data-bac-bucket') + "-" + $(this).attr('data-bac-block');
+				$(this).attr('id', id)
+			}
+			
+			if(typeof $(this).attr('id') !== 'undefined')
+			{
+				bucket = $(this).closest('*[data-bac-bucket]').attr('data-bac-bucket');
+				block = $(this).attr('data-bac-block');
+				$(this).attr('contenteditable', 'true');
+				
+				//For each container, put a hidden element over top of it.
+				//$(this).click(editmouseclick);//[this, editorcounter], edit_click);
+			   // $(this).mouseenter(editmouseover);
+			   // $(this).mouseleave(editmouseout);
+			   // apply_overlay($(this));
+				editorcounter++;
+				var e = CKEDITOR.inline($(this).get(0), {customConfig: 'config_liveedit.js'});
+				var name = e.name;
+				var ed = {blockid: block, bucketid: bucket, editorid: e.id};
+				editors.push(ed);
+			}
         });
 	}
 	
@@ -125,28 +135,29 @@ $(document).ready(function()
 	            {
 	                modes : { wysiwyg:1, source:1 },
 	                exec : function( editor ) {
-	                	var page = '';
-	                	var container = '';
+	                	var bucket = '';
+	                	var block = '';
 	                	for(i = 0; i < editors.length; i++)
 	                	{
 	                		if(editors[i].editorid == editor.id)
 	                		{
-	                			page = editors[i].pageid;
-	                			container = editors[i].containerid;
+	                			bucket = editors[i].bucketid;
+	                			block = editors[i].blockid;
 	                		}
 	                	}
-	                	
 						$.ajax({
 							type: "POST",
 							url: "liveedit.php",
-							data: {	'containercontent':editor.getData(),
-									'containerid':container,
-									'pageid':page
+							data: {	'blockcontent':editor.getData(),
+									'blockid':block,
+									'bucketid':bucket
 								  }
 						}).done(function(data){
 							if(data == '1')
 							{
-								alert('Container Saved!');
+								alert('Content saved!');
+							} else {
+								alert('There was an error, couldn\'t save!');
 							}
 						});
 	                }
