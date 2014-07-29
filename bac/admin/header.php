@@ -4,6 +4,10 @@
 		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
 		<script src="js/jquery.min.js" type="text/javascript"></script>
 		<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+		
+		<script src="jqueryui/jquery-ui.js"></script>
+		<link href="jqueryui/jquery-ui.css" rel="stylesheet" />
+	
 		<link href="styles/styles.css" rel="stylesheet" media="screen" />
 </head>	
 <body>
