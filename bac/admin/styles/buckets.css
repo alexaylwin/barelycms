@@ -1,0 +1,87 @@
+/**
+ * Make tabs vertical
+ */
+.ui-widget-content
+{
+	background:#3b3b3b;
+}
+.ui-tabs.ui-tabs-vertical {
+    padding: 0;
+}
+.ui-tabs.ui-tabs-vertical .ui-widget-header {
+    border: none;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav {
+    float: left;
+    width: 10em;
+    background: #3b3b3b;
+    border-radius: 4px 0 0 4px;
+    border-right: 1px solid gray;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li {
+    clear: left;
+    width: 100%;
+    margin: 0.2em 0;
+    border: 1px solid gray;
+    border-width: 1px 0 1px 1px;
+    border-radius: 4px 0 0 4px;
+    overflow: hidden;
+    position: relative;
+    right: -2px;
+    z-index: 2;
+}
+
+.ui-tabs .ui-tabs-nav li
+{
+	white-space:normal;
+}
+
+
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li a {
+    display: block;
+    padding: 0.6em 1em;
+    width:100%;
+}
+
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li a.tool  {
+	width:100%;
+	display:inline-block;
+	padding-left: 0.6em;
+	padding-top:1px;
+	padding-bottom:1px;
+	line-height:10px;
+	font-size:10px;
+}
+
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li a:hover {
+    cursor: pointer;
+    border-bottom: 0;
+	color: #838fff;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active {
+    margin-bottom: 0.2em;
+    padding-bottom: 0;
+    border-right: 1px solid #3b3b3b;
+    text-decoration:none;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active
+{
+	background:#3b3b3b;
+	
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-nav li:last-child {
+    margin-bottom: 10px;
+}
+.ui-tabs.ui-tabs-vertical .ui-tabs-panel {
+    float: left;
+    border-left: 1px solid gray;
+    border-radius: 0;
+    position: relative;
+    left: -1px;
+}
+
+.blocklist
+{
+	text-decoration:none;
+}

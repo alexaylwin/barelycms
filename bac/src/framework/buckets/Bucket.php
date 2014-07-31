@@ -143,8 +143,15 @@ abstract class Bucket {
 	
 	public function addBlock($newblock)
 	{
-		$newblock->setBucketId($this->getBucketId());
-		$this->blocklist[$newblock->getBlockId()] = $newblock;
+		if(!$this->hasBlock($newblock->getBlockId()))
+		{
+			$newblock->setBucketId($this->getBucketId());
+			$this->blocklist[$newblock->getBlockId()] = $newblock;
+			$newblock->saveBlock();
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 
 	public function removeBlock($blockid)

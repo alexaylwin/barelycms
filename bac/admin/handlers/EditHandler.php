@@ -54,16 +54,18 @@ class EditHandler extends RequestHandler
 			
 			$blockid = $this->post['block'];
 			$bucketid = $this->post['bucket'];
+			
 			$framework = new FrameworkController();
 			$site = $framework->getSite();
 			$bucket = $site -> getBucket($bucketid);
 			$block = $bucket -> getBlock($blockid);
-			$block -> setValue($this->post['block_content']);
-			$text = $block -> getValue();
-			$ret['postSuccess'] = true;
+			
+			$block->setValue($this->post['block_content']);
+			$block->saveBlock();
+			$ret['postSuccess'] = 1;
 			return $ret;
 		} else {
-			$ret['postSuccess'] = false;
+			$ret['postSuccess'] = 0;
 			return $ret;
 		}
 	}

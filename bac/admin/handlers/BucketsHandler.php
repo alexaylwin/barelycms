@@ -41,13 +41,15 @@ class BucketsHandler extends RequestHandler
 	{
 		$data = false;
 		$data['success'] = 0;
-		if(isset($this->post['pageurl']) && isset($this->post['bucketid']))
+		
+		$framework = new FrameworkController();
+		$site = $framework->getSite();
+				
+		if(isset($this->post['pageurl']) && isset($this->post['propertiesBucketId']))
 		{
-			if(!empty($this->post['pageurl']))
+			if(!empty($this->post['pageurl'])  && $site->hasBucket($this->post['propertiesBucketId']))
 			{
-				$framework = new FrameworkController();
-				$site = $framework->getSite();
-				$bucket = $site->getBucket($this->post['bucketid']);
+				$bucket = $site->getBucket($this->post['propertiesBucketId']);
 				$bucket->setLiveUrl($this->post['pageurl']);
 				$data['success'] = $bucket->writeConfig();
 				$data['liveUrl'] = $bucket->getLiveUrl();
@@ -55,26 +57,36 @@ class BucketsHandler extends RequestHandler
 			}
 		}
 		
-		if(isset($this->post['newblockid']) && isset($this->post['bucketid']))
+		if(isset($this->post['newblockid']) && isset($this->post['addBlockBucketId']))
 		{
-			if(!empty($this->post['newblockid']))
+			if(!empty($this->post['newblockid']) && $site->hasBucket($this->post['addBlockBucketId']))
 			{
-				$framework = new FrameworkController();
-				$site = $framework->getSite();
-				if($site->hasBucket($this->post['bucketid']))
+				$bucket = $site->getBucket($this->post['addBlockBucketId']);
+				$newblockConfig = Array(
+					"type" => BlockTypes::Text,
+					"blockid" => $this->post['newblockid'],
+					"bucketid" => $bucket->getBucketId()
+				);
+				$factory = new BlockFactory();
+				$newblock = $factory->build($newblockConfig);
+				$data['success'] = $bucket->addBlock($newblock);;
+		}
+		}
+		
+		if(isset($this->post['deleteBlock']) && isset($this->post['deleteBlockBlockId']) && isset($this->post['deleteBlockBucketId']))
+		{
+			if(!empty($this->post['deleteBlockBlockId'])  && $site->hasBucket($this->post['deleteBlockBucketId']))
+			{
+				$bucket = $site->getBucket($this->post['deleteBlockBucketId']);
+				if($bucket->hasBlock($this->post['deleteBlockBlockId']))
 				{
-					$bucket = $site->getBucket($this->post['bucketid']);
-					$newblockConfig = Array(
-						"type" => BlockTypes::Text,
-						"blockid" => $this->post['newblockid'],
-						"bucketid" => $bucket->getBucketId()
-					);
-					$factory = new BlockFactory();
-					$newblock = $factory->build($newblockConfig);
-					$bucket->addBlock($newblock);
-					$data['success'] = 1;
+					if($bucket->removeBlock($this->post['deleteBlockBlockId']))
+					{
+						$data['success'] = 1;
+					} else {
+						$data['success'] = 0;
+					}
 				}
-				
 			}
 		}
 		

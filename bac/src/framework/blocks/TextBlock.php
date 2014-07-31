@@ -14,7 +14,7 @@ class TextBlock extends Block implements Renderable
 	{
 		//TODO: right now, the block is only saved after the value is changed - not any other properties.
 		$this->value = $new_value;
-		$this->saveBlock();
+		//$this->saveBlock();
 	}
 	
 	/**
@@ -28,7 +28,7 @@ class TextBlock extends Block implements Renderable
 		$this->setBlockId($blockid);
 		$this->setBlockType(BlockTypes::Text);
 		$this->setBucketId($bucketid);
-		$this->saveBlock();
+		//$this->saveBlock();
 	}
 	
 	public function render($renderProperties)
