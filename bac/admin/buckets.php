@@ -53,7 +53,7 @@
 				$i++;
 			}
 			$blockListHtml .= '</ul>';
-			//$blockListHtml .= '<a href="#">Add Block</a>';
+			$blockListHtml .= '<a href="javascript:addBlockModal(\''.$bucket->getBucketId().'\');">Add Block</a>';
 			$blockListHtml .= '</div>';
 			$blockListHtmlArray[] = $blockListHtml;
 		}
@@ -70,16 +70,30 @@ include 'header.php';
 	function bucketPropertiesModal(bucketid, pageurl)
 	{
 		$('#bucketPropertiesModal').modal();
-		$('#bucketname').text(bucketid);
-		$('#bucketid').val(bucketid);
-		$('#pageurl').val(pageurl);
-		$("#modal-message").css("display", "none");
+		$('#bucketPropertiesModal > #bucketname').text(bucketid);
+		$('#bucketPropertiesModal > #bucketid').val(bucketid);
+		$('#bucketPropertiesModal > #pageurl').val(pageurl);
+		$("#bucketPropertiesModal > #modal-message").css("display", "none");
 		$(document).keypress(function(e){
   			if (e.which == 13){
-   		    	$("#save").click();
+   		    	$("#bucketPropertiesModal > #save").click();
     		}
 		});
 	}
+	
+	function addBlockModal(bucketid)
+	{
+		$('#addBlockModal').modal();
+		$('#newBlockProperties > #bucketname').text(bucketid);
+		$('#newBlockProperties > #bucketid').val(bucketid);
+		$("#bucketPropertiesModal > #modal-message").css("display", "none");
+		$(document).keypress(function(e){
+  			if (e.which == 13){
+   		    	$("#bucketPropertiesModal > #addBlock").click();
+    		}
+		});
+	}
+
 $(document).ready(function(){
 	$("#save").click(function(){
 		var formdata = $("#bucketproperties").serialize();
@@ -87,21 +101,43 @@ $(document).ready(function(){
 				formdata, 
 				function(data)
 				{
-					var result = JSON.parse(data)
+					var result = JSON.parse(data);
 					if(result.success == 1)
 					{
 						$($("a[href='#"+result.bucketId+"']").siblings()[3]).attr('href', "liveedit.php?page=" + result.liveUrl);
-						$("#modal-message").css("display", "block");
-						$("#modal-message-body").html("Properties saved");
+						$("#bucketPropertiesModal > #modal-message").css("display", "block");
+						$("#bucketPropertiesModal > #modal-message-body").html("Properties saved");
 					} else {
-						$("#modal-message").removeClass("alert-success");
-						$("#modal-message").addClass("alert-error");
-						$("#modal-message-body").html("Properties could not be saved");
-						$("#modal-message").css("display", "block");
+						$("#bucketPropertiesModal > #modal-message").removeClass("alert-success");
+						$("#bucketPropertiesModal > #modal-message").addClass("alert-error");
+						$("#bucketPropertiesModal > #modal-message-body").html("Properties could not be saved");
+						$("#bucketPropertiesModal > #modal-message").css("display", "block");
 					}
 				}
 		);
 		
+	});
+	
+	$("#addBlock").click(function(){
+		var formdata = $('#newBlockProperties').serialize();
+		$.post('buckets.php?a=1',
+			formdata,
+			function(data)
+			{
+				var result = JSON.parse(data);
+				if(result.success == 1)
+				{
+					$("#newBlockProperties > .modal-message > #modal-message").css("display", "block");
+					$("#newBlockProperties > .modal-message > #modal-message-body").html("Block Added");
+				} else {
+					$("#newBlockProperties > .modal-message > #modal-message").removeClass("alert-success");
+					$("#newBlockProperties > .modal-message > #modal-message").addClass("alert-error");
+					$("#newBlockProperties > .modal-message > #modal-message-body").html("Block could not be added");
+					$("#newBlockProperties > .modal-message > #modal-message").css("display", "block");
+
+				}
+			}
+		);
 	});
 	
 	$('#tabs')
@@ -246,6 +282,7 @@ $(document).ready(function(){
 	To add a bucket or a block, go to the <a href="setup.php">setup page</a> to edit your sitemap.
 </p>
 
+<!-- Bucket Properties modal window -->
 <div id="bucketPropertiesModal" class="modal hide fade">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -271,6 +308,35 @@ $(document).ready(function(){
 		<a href="#" class="btn btn-primary" id="save">Save</a>
 	</div>
 </div>
+
+<!-- Add Block modal window-->
+<div id="addBlockModal" class="modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+		&times;
+		</button>
+		<h3>Add Block</h3>
+	</div>
+	<div class="modal-body">
+		<div id="modal-message" class="alert alert-success" style="display:none;">
+			<span id="modal-message-body"></span>
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+		</div>
+		<p>
+			<form id="newBlockProperties">
+				Bucket Name: <span id="bucketname"></span><br />
+				Block Type: Text<br />
+				<span class="control-label">Block name:</span> <input type="text" id="newblockid" name="newblockid" />
+				<input type="hidden" id="bucketid" name="bucketid"/>
+			</form>
+		</p>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" id="cancel" data-dismiss="modal" aria-hidden="true">Close</a>
+		<a href="#" class="btn btn-primary" id="addBlock">Add Block</a>
+	</div>
+</div>
+
 <?php
 include 'footer.php';
 ?>

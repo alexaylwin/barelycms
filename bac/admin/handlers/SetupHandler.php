@@ -167,7 +167,6 @@ EOM;
 						$blockarray[$bucketname][$blockname] = true;
 					}
 	
-					//make a path
 					//TODO: this needs to be refactored, we aren't creating a new block every time, only loading
 					//blocks that exist.
 					$bucket = $site->getBucket($bucketname);

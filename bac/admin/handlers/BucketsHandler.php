@@ -40,6 +40,7 @@ class BucketsHandler extends RequestHandler
 	protected function handleAjax()
 	{
 		$data = false;
+		$data['success'] = 0;
 		if(isset($this->post['pageurl']) && isset($this->post['bucketid']))
 		{
 			if(!empty($this->post['pageurl']))
@@ -53,6 +54,30 @@ class BucketsHandler extends RequestHandler
 				$data['bucketId'] = $bucket->getBucketId();
 			}
 		}
+		
+		if(isset($this->post['newblockid']) && isset($this->post['bucketid']))
+		{
+			if(!empty($this->post['newblockid']))
+			{
+				$framework = new FrameworkController();
+				$site = $framework->getSite();
+				if($site->hasBucket($this->post['bucketid']))
+				{
+					$bucket = $site->getBucket($this->post['bucketid']);
+					$newblockConfig = Array(
+						"type" => BlockTypes::Text,
+						"blockid" => $this->post['newblockid'],
+						"bucketid" => $bucket->getBucketId()
+					);
+					$factory = new BlockFactory();
+					$newblock = $factory->build($newblockConfig);
+					$bucket->addBlock($newblock);
+					$data['success'] = 1;
+				}
+				
+			}
+		}
+		
 		$ret['ajax'] = true;
 		$ret['data'] = $data;
 		return $ret;
