@@ -7,7 +7,7 @@ abstract class BlockTypes {
 	const Entry = 'Entry';
 	const Image  = 'Image';
 	
-	    private static $constCache = NULL;
+	private static $constCache = NULL;
 
     private static function getConstants() {
         if (self::$constCache === NULL) {

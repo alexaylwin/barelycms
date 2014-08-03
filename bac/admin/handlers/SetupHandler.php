@@ -11,7 +11,7 @@ class SetupHandler extends RequestHandler
 		//Check to see if this is the first run,
 		//if cred exists, then we have run before
 		$ret['sitemap'] = $this->build_sitemap_string();
-		if($this->auth_exists())
+		if($this->adminExists())
 		{
 			$ret['notfirst'] = 'true';
 		} else {
@@ -19,18 +19,7 @@ class SetupHandler extends RequestHandler
 		}
 		return $ret;
 	}
-	
-	private function auth_exists()
-	{
-		$path = Constants::GET_CONFIG_DIRECTORY() . '/cred.php';
-		if (file_exists($path)) {
-			return true; 
-		} else {
-			return false;
-		}
 		
-	}
-	
 	protected function handlePost()
 	{
 		/**
@@ -40,7 +29,7 @@ class SetupHandler extends RequestHandler
 		$ret['settingsSaved'] = 'true';
 		$passwordDefined = true;
 		
-		if($this->auth_exists())
+		if($this->adminExists())
 		{
 			$firstTime = false;
 			$ret['redirectToLogin'] = 'false';
@@ -48,36 +37,28 @@ class SetupHandler extends RequestHandler
 			$firstTime = true;
 			$ret['redirectToLogin'] = 'true';
 		}
-		if (isset($this->post['password']) && !empty($this->post['password'])) {
-			if (isset($this->post['passwordConfirm']) && ($this->post['password'] == $this->post['passwordConfirm'])) {
-				$newpass = sha1($this->post['password']);
+//HANDLE ADMIN ACCOUNT
+		if (isset($this->post['adminPassword']) && !empty($this->post['adminPassword'])) {
+			if (isset($this->post['adminPasswordConfirm']) && ($this->post['adminPassword'] == $this->post['adminPasswordConfirm'])) {
+				$newpass = sha1($this->post['adminPassword']);
 				$newuser = 'admin';
-	
-				//TODO: rewrite to use FileIO
-				//change the password
-				$path = Constants::GET_CONFIG_DIRECTORY() . '/cred.php';
-				if ($this->auth_exists()) {
-					include_once ($path);
-	
-					$filelength = filesize($path);
-					$fhandler = fopen($path, 'r');
-					$text = fread($fhandler, $filelength);
-					$text = str_replace($password, $newpass, $text);
-				} else {
-				//If no auth exists previously we need to create a whole new file
-				//this case creates a username and dummy password, which is immediately
-				//replaced by the user's defined password.
-				$text = <<<EOM
-	<?php
-	
-		\$username = 'admin';
-		\$password = '$newpass'; 
-	
-EOM;
-				}
-				$fhandlew = fopen($path, 'w');
-				$res = fwrite($fhandlew, $text);
-				if (!$res) {
+				$usertype = UserTypes::Admin;
+				$pagePermissions;
+				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'buckets', 
+					PagePermissions::c_actionPermissions => array(
+						'all' => ActionPermissions::Allowed
+				)));
+				
+				$pagePermissions['buckets'] = $pagePermission;
+				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
+					PagePermissions::c_actionPermissions => array(
+						'all' => ActionPermissions::Allowed
+				)));
+				
+				$pagePermissions['setup'] = $pagePermission;
+
+				$userCreated = $this->createUser($newuser, $newpass, $usertype, $pagePermissions);
+				if (!$userCreated) {
 					$ret['message'] = "Settings could not be saved";
 					$ret['settingsSaved'] = 'false';
 					$ret['redirectToLogin'] = 'false';
@@ -85,7 +66,7 @@ EOM;
 				}
 			} else {
 				//return 'error, passwords don't match' message
-					$ret['message'] = "Passwords do not match";
+					$ret['message'] = "Admin passwords do not match";
 					$ret['settingsSaved'] = 'false';
 					$ret['redirectToLogin'] = 'false';
 					$passwordDefined = false;
@@ -99,8 +80,57 @@ EOM;
 				$ret['redirectToLogin'] = 'false';
 				$passwordDefined = false;
 			}
+
 		}
-	
+		
+//HANDLE AUTHOR ACCOUNT
+		if (isset($this->post['authorPassword']) && !empty($this->post['authorPassword'])) {
+			if (isset($this->post['authorPasswordConfirm']) && ($this->post['authorPasswordConfirm'] == $this->post['authorPasswordConfirm'])) {
+				$newpass = sha1($this->post['authorPassword']);
+				$newuser = 'author';
+				$usertype = UserTypes::Author;
+				$pagePermissions;
+				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'buckets', 
+					PagePermissions::c_actionPermissions => array(
+						'createBucket' => ActionPermissions::Denied,
+						'deleteBucket' => ActionPermissions::Denied,
+						'createBlock' => ActionPermissions::Denied,
+						'deleteBlock' => ActionPermissions::Denied,
+						'createBlogBlock' => ActionPermissions::Allowed,
+						'deleteBlogBlock' => ActionPermissions::Allowed,
+						'editBlock' => ActionPermissions::Allowed
+					)));
+				$pagePermissions['buckets'] = $pagePermission;
+				
+				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
+					PagePermissions::c_actionPermissions => array(
+						'createBucket' => ActionPermissions::Denied,
+						'deleteBucket' => ActionPermissions::Denied,
+						'createBlock' => ActionPermissions::Denied,
+						'deleteBlock' => ActionPermissions::Denied,
+						'changeAdminPassword' => ActionPermissions::Denied,
+						'changeAuthorPassword' => ActionPermissions::Allowed
+					)));
+				
+				$pagePermissions['setup'] = $pagePermissions;
+				
+				$userCreated = $this->createUser($newuser, $newpass, $usertype, $pagePermissions);
+				
+				if (!$userCreated) {
+					$ret['message'] = "Settings could not be saved";
+					$ret['settingsSaved'] = 'false';
+					$ret['redirectToLogin'] = 'false';
+					$passwordDefined = false;
+				}
+			} else {
+				//return 'error, passwords don't match' message
+					$ret['message'] = "Admin passwords do not match";
+					$ret['settingsSaved'] = 'false';
+					$ret['redirectToLogin'] = 'false';
+					$passwordDefined = false;
+			}
+		}
+
 		/*
 		 * This section creates the directories and files for the buckets
 		 */
@@ -259,6 +289,37 @@ EOM;
 	 */
 	private function parse_sitemap_string($sitemap)
 	{
+		
+	}
+	
+	private function adminExists()
+	{
+		$io = new FileIO();
+		$path = Constants::GET_USERS_DIRECTORY() . '/' . 'admin.usr';
+		if ($io->fileExists($path)) {
+			return true; 
+		} else {
+			return false;
+		}
+		
+	}
+	
+	private function createUser($username, $password, $usertype, $pagePermissions)
+	{
+		$io = new FileIO();
+		$newuser = new User($username, $usertype);
+		$newuser->setPassword($password);
+		if(!empty($pagePermissions)) 
+		{
+			foreach($pagePermissions as $page => $perm)
+			{
+				$newuser->addPagePermission($page, $perm);
+			}
+		}
+		$filename = Constants::GET_USERS_DIRECTORY() . '/' . $username . '.usr';
+		$serialized = serialize($newuser);
+		
+		return $io->writeFile($filename, $serialized);
 		
 	}
 	

@@ -24,8 +24,9 @@
 					<li><a href="setup.php">Setup</a></li>
 					<li><a href="help.php">Help</a></li>
    				</ul>
-   				<div id="logout" class="pull-right">
-					<a href="Http://<?php echo $_SERVER['HTTP_HOST']?>"><i class="icon-off invisible"></i> <?php echo $_SERVER['HTTP_HOST']?> <br /></a>
+   				<div id="logout" class="pull-right text-left">
+					Domain:<a href="http://<?php echo $_SERVER['HTTP_HOST']?>"><?php echo $_SERVER['HTTP_HOST']?></a><br />
+					Logged in as: <?php echo $_SESSION['UID']; ?><br />
 					<a href="logout.php"><i class="icon-off icon-white"></i> Logout</a>
    				</div>
    			</div>

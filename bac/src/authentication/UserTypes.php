@@ -1,11 +1,9 @@
-<?php
-/**
- * An enum class to hold block types
- */
-abstract class BucketTypes {
-	const Text = 'Text';
-	const Blog = 'Blog';
-	const Binary = 'Binary';
+<?
+abstract class UserTypes
+{
+	const Admin = "2";
+	const Author = "1";
+	const Undefined = "-1";
 	
     private static $constCache = NULL;
 

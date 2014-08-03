@@ -1,11 +1,10 @@
 <?php
-/**
- * An enum class to hold block types
- */
-abstract class BucketTypes {
-	const Text = 'Text';
-	const Blog = 'Blog';
-	const Binary = 'Binary';
+
+abstract class ActionPermissions
+{
+	const Allowed = "1";
+	const Denied = "0";
+	const Undefined = "-1";
 	
     private static $constCache = NULL;
 
@@ -33,6 +32,8 @@ abstract class BucketTypes {
         $values = array_values(self::getConstants());
         return in_array($value, $values, $strict = true);
     }
+	
 }
+
 
 ?>

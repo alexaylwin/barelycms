@@ -8,6 +8,7 @@ class FileIO
 	}
 	
 	/**
+	 * This function returns the value of a file
 	 * Only pass in absolute file paths
 	 */
 	public function readFile($path)
@@ -34,6 +35,29 @@ class FileIO
 		return $text;
 	}
 	
+	/**
+	 * This function returns all the files (NOT folders) inside
+	 * a directory.
+	 */
+	public function getDirectoryFiles($path)
+	{
+		$returnFiles = array();
+		$files = scandir($path);
+		foreach($files as $file)
+		{
+			if(!is_dir($path . $file))
+			{
+				$returnFiles[] = $file;
+			}
+		}
+		
+		return $returnFiles;
+	}
+	
+	/**
+	 * This function writes a file. 
+	 * Only pass in absolute paths
+	 */
 	public function writeFile($path, $data)
 	{
 		if($path == NULL || $path == '')
@@ -49,12 +73,20 @@ class FileIO
 		return $res;
 	}
 	
+	/**
+	 * This function deletes a file.
+	 * Only pass in absolute paths.
+	 */
 	public function deleteFile($path)
 	{
 		$res = unlink($path);
 		return $res;		
 	}
 	
+	/**
+	 * This function deletes an entire directory.
+	 * Only pass in absolute paths.
+	 */
 	public function deleteDirectory($path, $force)
 	{
 		if($force)
@@ -78,6 +110,10 @@ class FileIO
 		return $res;
 	}
 	
+	/**
+	 * This function checks to see if a file exists.
+	 * Only pass in absolute paths.
+	 */
 	public function fileExists($path)
 	{
 		return file_exists($path);

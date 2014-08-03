@@ -2,20 +2,14 @@ setup:
 	- the whole UI
 		- bucket properties
 		- auto focus for adding blocks/buckets
-	- admin password match verification
 	
 editor (ckeditor):
 	
 loader.js
-	- allow for bucket/block data attribute to be on the same element, ie:
-		<div data-bac-bucket="index" data-bac-block="something"></div>
-		
 	- allow configuration to determine loader behaviour (i.e. async, overwrite behaviour)
 
 Admin header - make responsive to window width
 
 Live Edit:
 	CKEditor load time
-	BAC overlay/toolbar
 	if no live url defined, don't allow user to edit
-	ajax update pages page

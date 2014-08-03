@@ -20,14 +20,18 @@
 ?>
 <?php
 include_once ('../src/util.php');
-if(auth_exists())
-{
-	include 'auth.php';
-}
+//if(auth_exists())
+//{
+//	include 'auth.php';
+//}
 require __DIR__ . '/handlers/SetupHandler.php';
 $requestHandler = new SetupHandler();
 
 $data = $requestHandler->handleRequest($_POST, $_GET);
+if($data['notfirst'] == 'true')
+{
+	include 'auth.php';
+}
 
 if(isset($data['redirectToLogin']) && $data['redirectToLogin'] == 'true')
 {
@@ -120,7 +124,8 @@ if($data['notfirst'] == 'true')
 					</p>
 					
 					<form method="post" class="form-horizontal" id="setupform">
-						<h6>Admin Password</h6>
+<!-- ADMIN PASSWORD -->
+						<h6>Admin Account</h6>
 						<p>
 							Define the administrative password that you'll use to
 							access the BAC admin panel.
@@ -132,17 +137,44 @@ if($data['notfirst'] == 'true')
 							</div>
 						</div>
 						<div class="control-group">
-							<label class="control-label" for="password">Password</label>
+							<label class="control-label" for="adminPassword">Password</label>
 							<div class="controls">
-								<input type="password" name="password" id="password">
+								<input type="password" name="adminPassword" id="adminPassword">
 							</div>
 						</div>
 						<div class="control-group">
-							<label class="control-label" for="passwordConfirm">Confirm password</label>
+							<label class="control-label" for="adminPasswordConfirm">Confirm password</label>
 							<div class="controls">
-								<input type="password" name="passwordConfirm" id="passwordConfirm">
+								<input type="password" name="adminPasswordConfirm" id="adminPasswordConfirm">
 							</div>
 						</div>
+						
+<!-- AUTHOR PASSWORD -->						
+						<h6>Author Account</h6>
+						<p>
+							The author account is a user who is able to alter content and add blog posts,
+							but cannot add or delete buckets or blocks themselves.
+						</p>
+						<div class="control-group">
+							<label class="control-label" for"username">Username</label>
+							<div class="controls">
+								<p style="display:inline-block; margin-bottom:0; margin-top: 1px;vertical-align:middle;font-size:14px;height:20px;line-height:20px;padding:4px 6px;"><strong>author</strong></p>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="authorPassword">Password</label>
+							<div class="controls">
+								<input type="password" name="authorPassword" id="authorPassword">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="authorPasswordConfirm">Confirm password</label>
+							<div class="controls">
+								<input type="password" name="authorPasswordConfirm" id="authorPasswordConfirm">
+							</div>
+						</div>
+
+<!-- SITEMAP -->				
 						<h6>Sitemap</h6>
 						<p>
 							BAC works by letting you include content containers dynamically within a page. This

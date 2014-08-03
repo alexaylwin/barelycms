@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once ('../src/util.php');
+require_once __DIR__. '/../src/framework/classloader.php';
 
 /*
  * this is the login form, it provides a secure way to access the application. it relies on the
@@ -9,27 +10,64 @@ include_once ('../src/util.php');
 $message = '';
 if (!isset($_SESSION['UID'])) {
 	//If the form is submitted, then check the username and password
-	if (isset($_POST['loginp']) && isset($_POST['loginu'])) {
-		$u = $_POST['loginu'];
-		$p = $_POST['loginp'];
-		$p = sha1($p);
-		//need to check if this exists first
-		if(file_exists('../admin/config/cred.php'))
-		{
-			include_once ('../admin/config/cred.php');
-
-			//this would be some hash function
-			if ($p == $password && $u == $username) {
-				session_start();
-				$_SESSION['UID'] = $_POST['loginu'];
-				header("Location: " . get_absolute_uri('index.php'));
+	if($_SERVER['REQUEST_METHOD'] === 'POST')
+	{	
+		if (isset($_POST['loginp']) && isset($_POST['loginu'])) {
+			$u = $_POST['loginu'];
+			$p = $_POST['loginp'];
+			$p = sha1($p);
+			//Unserialize all our users to check for a user with this name
+			$io = new FileIO();
+			$users = array();
+			$userFiles = $io->getDirectoryFiles(Constants::GET_USERS_DIRECTORY());
+			$cuser = new User('dummy1', 'dummy2');
+			$userFound = false;
+			foreach($userFiles as $userFile)
+			{
+				$val = $io->readFile(Constants::GET_USERS_DIRECTORY() . '/' . $userFile);
+				$cuser = unserialize($val);
+				if($cuser->getUsername() == $u)
+				{
+					$userFound = true;
+					break;
+				}
+			}
+			if($userFound)
+			{
+				if($cuser->getPassword() == $p)
+				{
+					session_start();
+					$_SESSION['UID'] = $cuser->getUsername();
+					$_SESSION['USER'] = $cuser;
+					header("Location: " . get_absolute_uri('index.php'));
+					
+				} else {
+					$message = "Please try again";
+				}
 			} else {
 				$message = "Please try again";
 			}
+			
+			
+			// if(file_exists('../admin/config/cred.php'))
+			// {
+				// include_once ('../admin/config/cred.php');
+	// 
+				// //this would be some hash function
+				// if ($p == $password && $u == $username) {
+					// session_start();
+					// $_SESSION['UID'] = $_POST['loginu'];
+					// header("Location: " . get_absolute_uri('index.php'));
+				// } else {
+					// $message = "Please try again";
+				// }
+			// } else {
+				// $message = "Please try again";
+			// }
+	
 		} else {
 			$message = "Please try again";
 		}
-
 	}
 } else {
 	//they're logged in, why are they back at the login page?

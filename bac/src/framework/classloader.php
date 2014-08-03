@@ -29,4 +29,10 @@
 	
 	//Load utility functions
 	include_once 'Constants.php';
+	
+	//User and permission classes
+	include_once __DIR__ . '/../authentication/ActionPermissions.php';
+	include_once __DIR__ . '/../authentication/PagePermissions.php';
+	include_once __DIR__ . '/../authentication/User.php';
+	include_once __DIR__ . '/../authentication/UserTypes.php';
 ?>
