@@ -50,7 +50,13 @@ class User
 		{
 			return $this->pagePermissions[$page];
 		} else {
-			return false;
+			$emptyperm = new PagePermissions(array(
+				PagePermissions::c_pagename => $page,
+				PagePermissions::c_actionPermissions => array(
+					'all' => ActionPermissions::Undefined
+					)
+			));
+			return $emptyperm;
 		}
 	}
 	

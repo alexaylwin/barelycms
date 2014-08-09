@@ -43,18 +43,17 @@ class SetupHandler extends RequestHandler
 				$newpass = sha1($this->post['adminPassword']);
 				$newuser = 'admin';
 				$usertype = UserTypes::Admin;
-				$pagePermissions;
+				$pagePermissions = array();
 				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'buckets', 
 					PagePermissions::c_actionPermissions => array(
 						'all' => ActionPermissions::Allowed
 				)));
-				
 				$pagePermissions['buckets'] = $pagePermission;
+				
 				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
 					PagePermissions::c_actionPermissions => array(
 						'all' => ActionPermissions::Allowed
 				)));
-				
 				$pagePermissions['setup'] = $pagePermission;
 
 				$userCreated = $this->createUser($newuser, $newpass, $usertype, $pagePermissions);
@@ -112,7 +111,7 @@ class SetupHandler extends RequestHandler
 						'changeAuthorPassword' => ActionPermissions::Allowed
 					)));
 				
-				$pagePermissions['setup'] = $pagePermissions;
+				$pagePermissions['setup'] = $pagePermission;
 				
 				$userCreated = $this->createUser($newuser, $newpass, $usertype, $pagePermissions);
 				

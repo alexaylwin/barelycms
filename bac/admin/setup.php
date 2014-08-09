@@ -63,6 +63,7 @@ if(isset($data['settingsSaved']))
 
 if($data['notfirst'] == 'true')
 {
+	$BAC_TITLE_TEXT = "BarelyACMS - Setup";
 	include 'header.php';
 } else {
 	
@@ -74,6 +75,7 @@ if($data['notfirst'] == 'true')
 		<script src="js/jquery.min.js" type="text/javascript"></script>
 		<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 		<link href="styles/styles.css" rel="stylesheet" media="screen" />
+		<title>BarelyACMS - Setup</title>
 </head>	
 <body>
 	<div class="container-fluid">
@@ -125,6 +127,10 @@ if($data['notfirst'] == 'true')
 					
 					<form method="post" class="form-horizontal" id="setupform">
 <!-- ADMIN PASSWORD -->
+					<?php
+					if($data['notfirst'] != 'true' || $GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('changeAdminPassword') > 0)
+					{
+					?>
 						<h6>Admin Account</h6>
 						<p>
 							Define the administrative password that you'll use to
@@ -148,8 +154,16 @@ if($data['notfirst'] == 'true')
 								<input type="password" name="adminPasswordConfirm" id="adminPasswordConfirm">
 							</div>
 						</div>
+					<?
+					}
+					?>
 						
-<!-- AUTHOR PASSWORD -->						
+<!-- AUTHOR PASSWORD -->
+					<?php
+					if($data['notfirst'] != 'true' || $GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('changeAuthorPassword') > 0)
+					{
+					?>
+						
 						<h6>Author Account</h6>
 						<p>
 							The author account is a user who is able to alter content and add blog posts,
@@ -173,8 +187,15 @@ if($data['notfirst'] == 'true')
 								<input type="password" name="authorPasswordConfirm" id="authorPasswordConfirm">
 							</div>
 						</div>
-
-<!-- SITEMAP -->				
+					<?
+					}
+					?>
+<!-- SITEMAP -->	
+					<?php
+					if($data['notfirst'] != 'true' || ($GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('deleteBlock') > 0 && $GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('deleteBucket') > 0) )
+					{
+					?>
+		
 						<h6>Sitemap</h6>
 						<p>
 							BAC works by letting you include content containers dynamically within a page. This
@@ -183,10 +204,13 @@ if($data['notfirst'] == 'true')
 							framework of the site (even if its just an index page!).
 						</p>
 						<ul id="controllist" class="unstyled"></ul>
-						<input name="sitemap" id="sitemap" type="hidden" value="<?php echo $data['sitemap']; ?>"
-/>
-<input name="submitted" type="hidden" value="1" />
-<br />
+						<input name="sitemap" id="sitemap" type="hidden" value="<?php echo $data['sitemap']; ?>"/>
+					<?
+					}
+					?>
+						<input name="submitted" type="hidden" value="1" />
+						<br />
+
 
 <?php
 if($data['notfirst'] == 'true')
