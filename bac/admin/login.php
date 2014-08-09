@@ -8,7 +8,7 @@ require_once __DIR__. '/../src/framework/classloader.php';
  * cred.php file, which holds a hashed version of the password.
  */
 $message = '';
-if (!isset($_SESSION['UID'])) {
+if (!isset($_SESSION['UID']) || !isset($_SESSION['USER'])) {
 	//If the form is submitted, then check the username and password
 	if($_SERVER['REQUEST_METHOD'] === 'POST')
 	{	
@@ -36,7 +36,6 @@ if (!isset($_SESSION['UID'])) {
 			{
 				if($cuser->getPassword() == $p)
 				{
-					session_start();
 					$_SESSION['UID'] = $cuser->getUsername();
 					$_SESSION['USER'] = $cuser;
 					header("Location: " . get_absolute_uri('index.php'));

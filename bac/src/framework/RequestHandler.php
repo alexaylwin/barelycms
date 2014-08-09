@@ -8,13 +8,14 @@ abstract class RequestHandler
 {
 	var $post;
 	var $get;
+	var $BAC_PAGE_PERMISSIONS;
 
 	abstract protected function handleGet();
 	abstract protected function handlePost();
 	abstract protected function handleAjax();
 	
 	public function handleRequest($post, $get)
-	{
+	{		
 		$this->post = $post;
 		$this->get = $get;
 		if($_SERVER['REQUEST_METHOD'] === 'POST' && (!empty($post['a']) || !empty($get['a'])))

@@ -19,6 +19,7 @@
 ?>
 
 <?php
+$BAC_TITLE_TEXT = "BarelyACMS - Error";
 include 'header.php';
 ?>
 <p>An error has occured: <?php echo $message;?> </p>

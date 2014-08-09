@@ -50,16 +50,24 @@
 			
 			foreach($blocklist as $block)
 			{
-				$blockListHtml .= '<li>' .
-								'<a href="edit.php?block=' . $block->getBlockId() . '&bucket=' . $bucket->getBucketId() . '"> ' . $block->getBlockId() . ' <i class="icon-edit icon-white"></i></a>&nbsp;' . 
-								'&nbsp;<a href="javascript:deleteBlock(\''.$block->getBlockId() .'\', \'' .$bucket->getBucketId().'\')">[X]</a>';
+				$blockListHtml .= '<li>';
+				$blockListHtml .= '<a href="edit.php?block=' . $block->getBlockId() . '&bucket=' . $bucket->getBucketId() . '"> ' . $block->getBlockId() . ' <i class="icon-edit icon-white"></i></a>&nbsp;';
+				
+				if($GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('deleteBlock') > 0)
+				{	
+					$blockListHtml .= '&nbsp;<a href="javascript:deleteBlock(\''.$block->getBlockId() .'\', \'' .$bucket->getBucketId().'\')">[X]</a>';
+				}
+				
 				$blockListHtml .= '</li>';
 				
 				$i++;
 			}
 		}
 		$blockListHtml .= '</ul>';
-		$blockListHtml .= '<a href="javascript:addBlockModal(\''.$bucket->getBucketId().'\');">Add Block</a>';
+		if($GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('createBlock') > 0)
+		{
+			$blockListHtml .= '<a href="javascript:addBlockModal(\''.$bucket->getBucketId().'\');">Add Block</a>';
+		}
 		$blockListHtml .= '</div>';
 		$blockListHtmlArray[] = $blockListHtml;
 		
@@ -71,6 +79,7 @@
 ?>
 
 <?php
+$BAC_TITLE_TEXT = "BarelyACMS - Buckets";
 include 'header.php';
 ?>
 <link rel="stylesheet" href="styles/buckets.css" />
@@ -98,7 +107,7 @@ include 'header.php';
 		$("#addBlockModal > .modal-body > .modal-message").css("display", "none");
 		$(document).keypress(function(e){
   			if (e.which == 13){
-   		    	$("#bucketPropertiesModal > #addBlock").click();
+   		    	$("#addBlockModal > #addBlock").click();
     		}
 		});
 	}
@@ -112,7 +121,7 @@ include 'header.php';
 		$('#deleteBlockProperties > #deleteBlockBlockId').val(blockid);
 		$(document).keypress(function(e){
   			if (e.which == 13){
-   		    	$("#deleteBlockProperties > #deleteBlock").click();
+   		    	$("#deleteBlockModal > #deleteBlock").click();
     		}
 		});
 	}
@@ -121,7 +130,6 @@ include 'header.php';
 $(document).ready(function(){
 	$("#saveProperties").click(function(){
 		var formdata = $("#bucketProperties").serialize();
-		console.log(formdata);
 		$.post("buckets.php?a=1", 
 				formdata, 
 				function(data)
@@ -179,10 +187,20 @@ $(document).ready(function(){
 				formdata,
 				function(data)
 				{
-					var bucketid = $('#deleteBlockProperties > #deleteBlockBucketId').val();
-					var blockid = $('#deleteBlockProperties > #deleteBlockBlockId').val();
-					$('#'+bucketid + ' > .blocklist').find(':contains("'+blockid+'")').remove();
-					$("#deleteBlockModal").modal('hide');
+					console.log(data);
+					var result = JSON.parse(data);
+					if(result.success == 1)
+					{
+						var bucketid = $('#deleteBlockProperties > #deleteBlockBucketId').val();
+						var blockid = $('#deleteBlockProperties > #deleteBlockBlockId').val();
+						$('#'+bucketid + ' > .blocklist').find(':contains("'+blockid+'")').remove();
+						$("#deleteBlockModal").modal('hide');
+					} else {
+						$("#deleteBlockModal > .modal-body > .modal-message").removeClass("alert-success");
+						$("#deleteBlockModal > .modal-body > .modal-message").addClass("alert-error");
+						$("#deleteBlockModal > .modal-body > .modal-message > .modal-message-body").html("Block could not be deleted");
+						$("#deleteBlockModal > .modal-body > .modal-message").css("display", "block");
+					}
 				}
 		);
 
@@ -206,36 +224,6 @@ $(document).ready(function(){
 			echo $blockHtml;	
 		}
     ?>
-
-	<!--
-    <ul>
-        <li>
-            <a href="#a">Tab A</a>
-        </li>
-        <li>
-            <a href="#b">Tab B</a>
-        </li>
-        <li>
-            <a href="#c">Tab C</a>
-        </li>
-        <li>
-            <a href="#d">Tab D</a>
-        </li>
-    </ul>
-  
-    <div id="a">
-        Content of A
-    </div>
-    <div id="b">
-        Content of B
-    </div>
-    <div id="c">
-        Content of C
-    </div>
-    <div id="d">
-        Content of D
-    </div>
-     -->
 </div>
 
 <p>

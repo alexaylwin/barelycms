@@ -45,7 +45,7 @@ class FileIO
 		$files = scandir($path);
 		foreach($files as $file)
 		{
-			if(!is_dir($path . $file))
+			if(!is_dir($path . $file) && $file != '.gitignore')
 			{
 				$returnFiles[] = $file;
 			}

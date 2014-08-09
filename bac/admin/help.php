@@ -4,6 +4,7 @@ include '../src/framework/classloader.php';
 ?>
 
 <?php
+$BAC_TITLE_TEXT = "BarelyACMS - Help";
 include 'header.php'
 ?>
 <p>

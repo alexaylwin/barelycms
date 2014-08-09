@@ -57,7 +57,6 @@ abstract class Constants
 				$ret = $ret . $f . '/';
 			}
 		}
-		
 		return $ret;
 	}
 }

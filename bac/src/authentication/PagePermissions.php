@@ -59,6 +59,8 @@ class PagePermissions
 		if(isset($this->actionPermissions[$action]))
 		{
 			return $this->actionPermissions[$action];
+		} elseif (isset($this->actionPermissions['all'])) {
+			return $this->actionPermissions['all'];
 		} else {
 			return ActionPermissions::Undefined;
 		}

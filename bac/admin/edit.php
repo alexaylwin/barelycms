@@ -41,6 +41,7 @@ EOM;
 ?>
 
 <?php
+$BAC_TITLE_TEXT = "BarelyACMS - Edit Block";
 include 'header.php';
 ?>
 <script src="ckeditor/ckeditor.js" type="text/javascript"></script>

@@ -1,6 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+		<?php
+			if(isset($BAC_TITLE_TEXT))
+			{
+				echo '<title>' . $BAC_TITLE_TEXT . '</title>';
+			} else {
+				echo '<title>BarelyACMS</title>';
+			}
+		?>
 		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
 		<script src="js/jquery.min.js" type="text/javascript"></script>
 		<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
