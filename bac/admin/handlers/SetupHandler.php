@@ -43,20 +43,24 @@ class SetupHandler extends RequestHandler
 				$newpass = sha1($this->post['adminPassword']);
 				$newuser = 'admin';
 				$usertype = UserTypes::Admin;
-				$pagePermissions = array();
-				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'buckets', 
-					PagePermissions::c_actionPermissions => array(
-						'all' => ActionPermissions::Allowed
-				)));
-				$pagePermissions['buckets'] = $pagePermission;
 				
-				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
+				//Create default permissions
+				$pagePermissions = array();
+				$bucketsPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'buckets', 
 					PagePermissions::c_actionPermissions => array(
 						'all' => ActionPermissions::Allowed
 				)));
-				$pagePermissions['setup'] = $pagePermission;
+				$pagePermissions['buckets'] = $bucketsPermissions;
+				
+				$setupPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
+					PagePermissions::c_actionPermissions => array(
+						'all' => ActionPermissions::Allowed
+				)));
+				$pagePermissions['setup'] = $setupPermissions;
 
+				//create new user
 				$userCreated = $this->createUser($newuser, $newpass, $usertype, $pagePermissions);
+				
 				if (!$userCreated) {
 					$ret['message'] = "Settings could not be saved";
 					$ret['settingsSaved'] = 'false';
@@ -88,8 +92,10 @@ class SetupHandler extends RequestHandler
 				$newpass = sha1($this->post['authorPassword']);
 				$newuser = 'author';
 				$usertype = UserTypes::Author;
-				$pagePermissions;
-				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'buckets', 
+				
+				//Create default permissions
+				$pagePermissions = array();
+				$bucketsPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'buckets', 
 					PagePermissions::c_actionPermissions => array(
 						'createBucket' => ActionPermissions::Denied,
 						'deleteBucket' => ActionPermissions::Denied,
@@ -99,9 +105,9 @@ class SetupHandler extends RequestHandler
 						'deleteBlogBlock' => ActionPermissions::Allowed,
 						'editBlock' => ActionPermissions::Allowed
 					)));
-				$pagePermissions['buckets'] = $pagePermission;
+				$pagePermissions['buckets'] = $bucketsPermissions;
 				
-				$pagePermission = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
+				$setupPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
 					PagePermissions::c_actionPermissions => array(
 						'createBucket' => ActionPermissions::Denied,
 						'deleteBucket' => ActionPermissions::Denied,
@@ -111,8 +117,9 @@ class SetupHandler extends RequestHandler
 						'changeAuthorPassword' => ActionPermissions::Allowed
 					)));
 				
-				$pagePermissions['setup'] = $pagePermission;
+				$pagePermissions['setup'] = $setupPermissions;
 				
+				//Create new user
 				$userCreated = $this->createUser($newuser, $newpass, $usertype, $pagePermissions);
 				
 				if (!$userCreated) {
