@@ -227,7 +227,7 @@ $(document).ready(function(){
 </div>
 
 <p>
-	To add a bucket or a block, go to the <a href="setup.php">setup page</a> to edit your sitemap.
+	You can also manage your blocks and buckets from the <a href="settings.php">Settings</a> page.
 </p>
 
 <!-- Bucket Properties modal window -->

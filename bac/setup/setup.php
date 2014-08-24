@@ -1,6 +1,8 @@
 <?php
-//TODO: rewrite this to use a request handler
-/**
+/*
+ * This script contains the logic and UI for initializing a new instance of
+ * BarelyACMS. It will be deleted or disabled after the initialization is complete.
+ * 
  * This is the setup script for the first install. As of 1.0, it only has two
  * user configurable options - admin password and creating the sitemap.
  *
@@ -16,29 +18,22 @@
  * 		installation domain, and automatically generate content files
  * 		at an ajax request, if the file does not exist.
  */
-
 ?>
+
 <?php
+
+//Handle a post here, returning data to the rest of the page in a $data array
 include_once ('../src/util.php');
-//if(auth_exists())
-//{
-//	include 'auth.php';
-//}
-require __DIR__ . '/handlers/SetupHandler.php';
+require 'SetupHandler.php';
+
 $requestHandler = new SetupHandler();
-
 $data = $requestHandler->handleRequest($_POST, $_GET);
-if($data['notfirst'] == 'true')
-{
-	include 'auth.php';
-}
 
-if(isset($data['redirectToLogin']) && $data['redirectToLogin'] == 'true')
+if(isset($data['redirectToLogin']) && $data['redirectToLogin'] == true)
 {
-	header("Location: " . get_absolute_uri("login.php"));
+	header("Location: " . get_bac_uri("/admin/login.php"));
 	die();
 }
-
 $displaymessage = "";
 if(!isset($data['message'])){$data['message'] = "";}
 if($data['message'])
@@ -52,29 +47,21 @@ if($data['message'])
 $messageclass = 'alert-success';
 if(isset($data['settingsSaved']))
 {
-	if($data['settingsSaved'] == 'true')
+	if(!$data['settingsSaved'])
 	{
-		$messageclass = "alert-success";
-	} else {
 		$messageclass = "alert-error";
 	}
 }
 
 
-if($data['notfirst'] == 'true')
-{
-	$BAC_TITLE_TEXT = "BarelyACMS - Setup";
-	include 'header.php';
-} else {
-	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
-		<script src="js/jquery.min.js" type="text/javascript"></script>
-		<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-		<link href="styles/styles.css" rel="stylesheet" media="screen" />
+		<link href="../admin/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+		<script src="../admin/js/jquery.min.js" type="text/javascript"></script>
+		<script src="../admin/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+		<link href="../admin/styles/styles.css" rel="stylesheet" media="screen" />
 		<title>BarelyACMS - Setup</title>
 </head>	
 <body>
@@ -92,15 +79,8 @@ if($data['notfirst'] == 'true')
 		<div class="row-fluid">
 			<div class="span10 offset1">
 				<div id="content">					
-<?php
-}
-?>
-
-	<script type="text/javascript" src="js/setupform.js"></script>	
-					<?php
-					if($data['notfirst'] == 'false')
-					{
-					?>
+				
+				<script type="text/javascript" src="setupform.js"></script>	
 					<p>
 						<h3>Welcome to BarelyACMS!</h3>
 							BAC is a new way of thinking about content management systems.
@@ -109,15 +89,12 @@ if($data['notfirst'] == 'true')
 						It doesn't help you create themes, layouts or even new pages. It won't do CSS for you, 
 						it won't provide plugins to help you set up an email list or twitter feed. <br /> <br />
 						
-						What it will do, is <strong>promise to not get in the way</strong>. It isn't designed to be
+						What it will do is <strong>promise to not get in the way</strong>. It isn't designed to be
 						a website building solution, but simply a way for users to manage the content on their website.
 						BAC lets you, the web designer, focus on design your website hassle free and create the
 						content later.						
 					</p>
 					<br />
-					<?php
-					}
-					?>
 					<p>
 						<h4>Setup</h4>
 						<div class="alert <?php echo $messageclass; ?>" style="display:<?php echo $displaymessage; ?>;
@@ -127,10 +104,6 @@ if($data['notfirst'] == 'true')
 					
 					<form method="post" class="form-horizontal" id="setupform">
 <!-- ADMIN PASSWORD -->
-					<?php
-					if($data['notfirst'] != 'true' || $GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('changeAdminPassword') > 0)
-					{
-					?>
 						<h6>Admin Account</h6>
 						<p>
 							Define the administrative password that you'll use to
@@ -154,16 +127,8 @@ if($data['notfirst'] == 'true')
 								<input type="password" name="adminPasswordConfirm" id="adminPasswordConfirm">
 							</div>
 						</div>
-					<?
-					}
-					?>
-						
-<!-- AUTHOR PASSWORD -->
-					<?php
-					if($data['notfirst'] != 'true' || $GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('changeAuthorPassword') > 0)
-					{
-					?>
-						
+											
+<!-- AUTHOR PASSWORD -->						
 						<h6>Author Account</h6>
 						<p>
 							The author account is a user who is able to alter content and add blog posts,
@@ -187,14 +152,7 @@ if($data['notfirst'] == 'true')
 								<input type="password" name="authorPasswordConfirm" id="authorPasswordConfirm">
 							</div>
 						</div>
-					<?
-					}
-					?>
 <!-- SITEMAP -->	
-					<?php
-					if($data['notfirst'] != 'true' || ($GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('deleteBlock') > 0 && $GLOBALS['BAC_PAGE_PERMISSIONS']->checkAction('deleteBucket') > 0) )
-					{
-					?>
 		
 						<h6>Sitemap</h6>
 						<p>
@@ -204,26 +162,10 @@ if($data['notfirst'] == 'true')
 							framework of the site (even if its just an index page!).
 						</p>
 						<ul id="controllist" class="unstyled"></ul>
-						<input name="sitemap" id="sitemap" type="hidden" value="<?php echo $data['sitemap']; ?>"/>
-					<?
-					}
-					?>
+						<input name="sitemap" id="sitemap" type="hidden" value=""/>
 						<input name="submitted" type="hidden" value="1" />
 						<br />
 
-
-<?php
-if($data['notfirst'] == 'true')
-{
-?>
-<button class="btn btn-custom" id="save" type="submit">
-Save Configuration
-</button>
-<?php
-}
-else
-{
-?>
 
 <button class="btn btn-custom" id="save" type="button" onclick="javascript:$('#savemodal').modal();">
 Save Configuration
@@ -255,9 +197,5 @@ Save Configuration
 </div>
 
 <?php
-}
+include '../admin/footer.php';
 ?>
-<?php
-include 'footer.php';
-?>
-

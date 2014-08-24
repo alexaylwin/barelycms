@@ -46,24 +46,7 @@ if (!isset($_SESSION['UID']) || !isset($_SESSION['USER'])) {
 			} else {
 				$message = "Please try again";
 			}
-			
-			
-			// if(file_exists('../admin/config/cred.php'))
-			// {
-				// include_once ('../admin/config/cred.php');
-	// 
-				// //this would be some hash function
-				// if ($p == $password && $u == $username) {
-					// session_start();
-					// $_SESSION['UID'] = $_POST['loginu'];
-					// header("Location: " . get_absolute_uri('index.php'));
-				// } else {
-					// $message = "Please try again";
-				// }
-			// } else {
-				// $message = "Please try again";
-			// }
-	
+				
 		} else {
 			$message = "Please try again";
 		}

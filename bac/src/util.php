@@ -33,4 +33,14 @@ function auth_exists()
 		return false;
 	}
 }
+
+function get_bac_uri($target)
+{
+	$host  = $_SERVER['HTTP_HOST'];
+	$path = dirname(__FILE__);
+	$path = dirname($path);
+	//$path = substr( __FILE__, strlen( $_SERVER[ 'DOCUMENT_ROOT' ] ) );
+	$path = substr($path, strlen( $_SERVER[ 'DOCUMENT_ROOT' ] ) );
+	return "http://$host/$path$target";
+}
 ?>

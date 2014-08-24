@@ -20,7 +20,7 @@ Administrative tasks:
 		<a href="buckets.php">View buckets</a>
 	</li>
 	<li>
-		<a href="setup.php">Change administrative settings or edit site map</a>
+		<a href="settings.php">Change administrative settings or edit site map</a>
 	</li>
 	<li>
 		<a href="logout.php">Log out</a>

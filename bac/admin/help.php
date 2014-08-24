@@ -41,7 +41,7 @@ include 'header.php'
 				<div class="accordion-inner">
 					<p>
 					BarelyACMS doesn't create website pages for you. Instead, it lets you create virtual pages called buckets to put blocks in.
-					These buckets are defined on the <a href="setup.php">setup page</a>, in the sitemap section. A block is how BAC organizes your content. 
+					These buckets are defined on the <a href="settings.php">Settings page</a>, in the sitemap section. A block is how BAC organizes your content. 
 					You can think of a block as one 'piece' of content, that you can include anywhere on your website. 
 					For example, if you have a bucket 'Contact Us' then you might have the blocks 'Address and Phone Number', 'About', 'Map' and so on.
 					</p>
@@ -58,7 +58,7 @@ include 'header.php'
 			<div id="help1" class="accordion-body collapse">
 				<div class="accordion-inner">
 					To edit a block, go to the <a href="buckets.php">Buckets page</a> and select a block to edit. You can update and save the block
-					using the WYSIWYG editor (or HTML). If you want to define a new bucket or a new block, go to the <a href="setup.php">setup page</a> and edit
+					using the WYSIWYG editor (or HTML). If you want to define a new bucket or a new block, go to the <a href="settings.php">settings page</a> and edit
 					your site map.
 					<br /><br />
 					You can also use the live editor to edit a block on your real website page. Go to the <a href="buckets.php">Buckets page</a> and
@@ -73,7 +73,7 @@ include 'header.php'
 			</div>
 			<div id="help2" class="accordion-body collapse">
 				<div class="accordion-inner">
-					You can create a new bucket by going to the <a href="setup.php">setup page</a> and using the sitemap.
+					You can create a new bucket by going to the <a href="settings.php">settings page</a> and using the sitemap.
 				</div>
 			</div>
 		</div>

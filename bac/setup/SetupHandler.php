@@ -1,42 +1,43 @@
 <?php
-require_once __DIR__. '/../../src/framework/classloader.php';
-
-/**
- * Pages code behind file. This script is for the Page view. 
- */
+require_once __DIR__. '/../src/framework/classloader.php';
 class SetupHandler extends RequestHandler
 {
 	protected function handleGet()
 	{
-		//Check to see if this is the first run,
-		//if cred exists, then we have run before
-		$ret['sitemap'] = $this->build_sitemap_string();
+		$ret = array();		
 		if($this->adminExists())
 		{
-			$ret['notfirst'] = 'true';
-		} else {
-			$ret['notfirst'] = 'false';
+			$ret['redirectToLogin'] = true;
+		}
+		if($this->contentExists())
+		{
+			$ret['message'] = <<<EOM
+			Warning: There was content found in this BAC installation. Using this form
+			may erase some or all of your existing data, or break the BAC installation
+			completely. 
+			<br />
+			Please log in to the administrator account, and use the settings
+			page to change BAC settings.
+EOM;
 		}
 		return $ret;
 	}
 		
 	protected function handlePost()
 	{
+		if($this->adminExists())
+		{
+			$ret['redirectToLogin'] = true;
+			return;
+		}
+		
 		/**
 		 * This section updates the administration password to the user supplied value
 		 */
 		$ret['message'] = 'Settings saved';
-		$ret['settingsSaved'] = 'true';
+		$ret['settingsSaved'] = false;
 		$passwordDefined = true;
 		
-		if($this->adminExists())
-		{
-			$firstTime = false;
-			$ret['redirectToLogin'] = 'false';
-		} else {
-			$firstTime = true;
-			$ret['redirectToLogin'] = 'true';
-		}
 //HANDLE ADMIN ACCOUNT
 		if (isset($this->post['adminPassword']) && !empty($this->post['adminPassword'])) {
 			if (isset($this->post['adminPasswordConfirm']) && ($this->post['adminPassword'] == $this->post['adminPasswordConfirm'])) {
@@ -52,11 +53,11 @@ class SetupHandler extends RequestHandler
 				)));
 				$pagePermissions['buckets'] = $bucketsPermissions;
 				
-				$setupPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
+				$setupPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'settings', 
 					PagePermissions::c_actionPermissions => array(
 						'all' => ActionPermissions::Allowed
 				)));
-				$pagePermissions['setup'] = $setupPermissions;
+				$pagePermissions['settings'] = $setupPermissions;
 
 				//create new user
 				$userCreated = $this->createUser($newuser, $newpass, $usertype, $pagePermissions);
@@ -69,21 +70,17 @@ class SetupHandler extends RequestHandler
 				}
 			} else {
 				//return 'error, passwords don't match' message
-					$ret['message'] = "Admin passwords do not match";
-					$ret['settingsSaved'] = 'false';
-					$ret['redirectToLogin'] = 'false';
-					$passwordDefined = false;
-			}
-		} else {
-			//Error, user didn't define a password
-			if($firstTime)
-			{
-				$ret['message'] = "A password must be specified";
+				$ret['message'] = "Admin passwords do not match";
 				$ret['settingsSaved'] = 'false';
 				$ret['redirectToLogin'] = 'false';
 				$passwordDefined = false;
 			}
-
+		} else {
+			//Error, user didn't define a password
+			$ret['message'] = "A password must be specified";
+			$ret['settingsSaved'] = false;
+			$ret['redirectToLogin'] = false;
+			$passwordDefined = false;
 		}
 		
 //HANDLE AUTHOR ACCOUNT
@@ -94,6 +91,9 @@ class SetupHandler extends RequestHandler
 				$usertype = UserTypes::Author;
 				
 				//Create default permissions
+				//TODO: Why are we resetting permissions on a password change?
+				//This should only happen if it is a new user (i.e. the user doesn't
+				//exist). Change this when permissions are modifiable.
 				$pagePermissions = array();
 				$bucketsPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'buckets', 
 					PagePermissions::c_actionPermissions => array(
@@ -107,7 +107,7 @@ class SetupHandler extends RequestHandler
 					)));
 				$pagePermissions['buckets'] = $bucketsPermissions;
 				
-				$setupPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'setup', 
+				$setupPermissions = new PagePermissions(array(PagePermissions::c_pagename => 'settings', 
 					PagePermissions::c_actionPermissions => array(
 						'createBucket' => ActionPermissions::Denied,
 						'deleteBucket' => ActionPermissions::Denied,
@@ -117,7 +117,7 @@ class SetupHandler extends RequestHandler
 						'changeAuthorPassword' => ActionPermissions::Allowed
 					)));
 				
-				$pagePermissions['setup'] = $setupPermissions;
+				$pagePermissions['settings'] = $setupPermissions;
 				
 				//Create new user
 				$userCreated = $this->createUser($newuser, $newpass, $usertype, $pagePermissions);
@@ -130,10 +130,10 @@ class SetupHandler extends RequestHandler
 				}
 			} else {
 				//return 'error, passwords don't match' message
-					$ret['message'] = "Admin passwords do not match";
-					$ret['settingsSaved'] = 'false';
-					$ret['redirectToLogin'] = 'false';
-					$passwordDefined = false;
+				$ret['message'] = "Author passwords do not match";
+				$ret['settingsSaved'] = false;
+				$ret['redirectToLogin'] = false;
+				$passwordDefined = false;
 			}
 		}
 
@@ -248,48 +248,7 @@ class SetupHandler extends RequestHandler
 	protected function handleAjax()
 	{
 	}
-	
-	private function build_sitemap_string() {
-		$sitemapstring = "";
-	
-		$framework = new FrameworkController();
-		$site = $framework->getSite();
-		if (!$site)
-			return;
-	
-		$bucketlist = $site -> getAllBuckets();
-		if (!$bucketlist)
-			return;
-	
-		$maxblocks = 0;
-		$firstbucket = true;
-		foreach ($bucketlist as $bucket) {
-			if ($firstbucket) {
-				$sitemapstring = $sitemapstring . $bucket -> getBucketId() . ":";
-			} else {
-				$sitemapstring = $sitemapstring . '|' . $bucket -> getBucketId() . ":";
-			}
-	
-			$firstbucket = false;
-			$firstblock = true;
-	
-			$blocklist = $bucket -> getAllBlocks();
-			if ($blocklist) {
-				foreach ($blocklist as $block) {
-					if ($firstblock) {
-						$sitemapstring = $sitemapstring . $block -> getBlockId();
-					} else {
-						$sitemapstring = $sitemapstring . ',' . $block -> getBlockId();
-					}
-					$firstblock = false;
-	
-				}
-			}
-		}
-	
-		return $sitemapstring;
-	}
-	
+		
 	/**
 	 * This function parses a sitemap string into an array of bucket and block ids
 	 */
@@ -307,7 +266,19 @@ class SetupHandler extends RequestHandler
 		} else {
 			return false;
 		}
-		
+	}
+	
+	private function contentExists()
+	{
+		$framework = new FrameworkController();
+		$site = $framework->getSite();
+		$buckets = $site->getAllBuckets();
+		if(!empty($buckets))
+		{
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	private function createUser($username, $password, $usertype, $pagePermissions)
@@ -330,6 +301,5 @@ class SetupHandler extends RequestHandler
 	}
 	
 }
-		
+
 ?>
-	

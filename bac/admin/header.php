@@ -29,7 +29,7 @@
    				<ul class="nav">
 					<li><a href="index.php">Home</a></li>
 					<li><a href="buckets.php">Buckets</a></li>
-					<li><a href="setup.php">Setup</a></li>
+					<li><a href="settings.php">Settings</a></li>
 					<li><a href="help.php">Help</a></li>
    				</ul>
    				<div id="logout" class="pull-right text-left">
