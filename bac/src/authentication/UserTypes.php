@@ -1,4 +1,4 @@
-<?
+<?php
 abstract class UserTypes
 {
 	const Admin = "2";

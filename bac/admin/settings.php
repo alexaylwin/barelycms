@@ -84,7 +84,7 @@ include 'header.php';
 								<input type="password" name="adminPasswordConfirm" id="adminPasswordConfirm">
 							</div>
 						</div>
-					<?
+					<?php
 					}
 					?>
 						
@@ -117,7 +117,7 @@ include 'header.php';
 								<input type="password" name="authorPasswordConfirm" id="authorPasswordConfirm">
 							</div>
 						</div>
-					<?
+					<?php
 					}
 					?>
 <!-- SITEMAP -->	
@@ -135,7 +135,7 @@ include 'header.php';
 						</p>
 						<ul id="controllist" class="unstyled"></ul>
 						<input name="sitemap" id="sitemap" type="hidden" value="<?php echo $data['sitemap']; ?>"/>
-					<?
+					<?php
 					}
 					?>
 						<input name="submitted" type="hidden" value="1" />
