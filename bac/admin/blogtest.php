@@ -6,19 +6,19 @@
 		$framework = new FrameworkController();
 		$site = $framework->getSite();
 		//$result = $site->addBucket('testBlogBucket', BucketTypes::Blog);
-		$config['entryTemplate'] = "<h1>Title</h1><br /><div style=\"border:1px solid red;\">[entry]</div>";
+		$config['entryTemplate'] = "<h1>Title</h1><br /><div style=\"border:1px solid red;\">By:[author]<br />[entry]<br />Date:[date]</div>";
 		$config['sortOrder'] = "entryDate";
 		$result = $site->addBucket('testBlogBucket', BucketTypes::Blog, $config);
 		
 		$blogBucket = $site->getBucket('testBlogBucket');
 		
-		$entry1 = new EntryBlock(date("Y/m/d"), "Alex", "Test", "entry1");
+		$entry1 = new EntryBlock(DateTime::createFromFormat("Y/m/d", "2014/01/01"), "Alex", "Test", "entry1");
 		$entry1->setValue("my awesome blog post 1");
 	
-		$entry2 = new EntryBlock(date("Y/m/d"), "Alex", "Test", "entry2");
-		$entry2->setValue("my awesome blog post 2");
+		$entry2 = new EntryBlock(DateTime::createFromFormat("Y/m/d", "2014/05/01"), "Alex", "Test", "entry2");
+		$entry2->setValue("my awesome blog post 2", "2014/05/01");
 		
-		$entry3 = new EntryBlock(date("Y/m/d"), "Alex", "Test", "entry3");
+		$entry3 = new EntryBlock(DateTime::createFromFormat("Y/m/d", "2014/03/01"), "Alex", "Test", "entry3");
 		$entry3->setValue("my awesome blog post 3");
 		
 		$blogBucket->addBlock($entry1);
@@ -29,7 +29,7 @@
 		$entrytemplate = '';
 		$blocklist = '';
 		
-		$value = $blogBucket->render('');
+		$value = $blogBucket->render();
 		
 ?>
 

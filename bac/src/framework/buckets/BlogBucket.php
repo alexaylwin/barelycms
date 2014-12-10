@@ -27,6 +27,7 @@ class BlogBucket extends Bucket implements Renderable, Feed
 	public $elementsPerPage;
 		
 	//initialize a new block, and add it to the bucket
+	//TODO: do we need a createBlock? What are block factories for?
 	public function createBlock($blockid)//$entryDate, $author, $subject, $blockid)
 	{
 		//$new_block = new EntryBlock($entryDate, $author, $subject, $blockid);
@@ -45,6 +46,13 @@ class BlogBucket extends Bucket implements Renderable, Feed
 		{
 			$this->entryTemplate = $this->config['entryTemplate'];
 		}
+		
+		if(isset($this->config['elementsPerPage']))
+		{
+			$this->elementsPerPage = $this->config['elementsPerPage'];
+		} else {
+			$this->elementsPerPage = 10;
+		}
 
 	}
 	
@@ -58,15 +66,39 @@ class BlogBucket extends Bucket implements Renderable, Feed
 	}
 	
 	//Generate the HTML for this blog, parsing the entryTemplate
-	public function render($renderProperties)
+	//TODO: this only renders the first page, and needs to apply the template
+	public function render($renderProperties = '')
 	{
 		$renderBlocks = $this->getPage(0);
 		$output = '';
 		foreach($renderBlocks as $block)
 		{
-			$output = $output . '<br /> block:' . $block->render();
+			$output = $output . $this->renderEntry($block);
 		}
 		return $output;
+	}
+	
+	private function renderEntry($entryBlock)
+	{
+		$output = $this->getEntryTemplate();
+		$blockval = $entryBlock->render();
+		//Replace the [entry] magic variable
+		$output = str_replace('[entry]', $blockval, $output);
+		
+		//Replace the [author] magic variable
+		$output = str_replace('[author]', $entryBlock->getAuthor(), $output);
+		
+		//Replace the [date] magic variable
+		$output = str_replace('[date]', $entryBlock->getEntryDate()->format('Y-m-d'), $output);
+		
+		$output = $output . '<br />';
+		return $output;
+		
+	}
+	
+	public function getEntryTemplate()
+	{
+		return $this->entryTemplate;
 	}
 	
 	public function getElementSortOrder()
@@ -75,7 +107,7 @@ class BlogBucket extends Bucket implements Renderable, Feed
 	}
 	
 	//In a blog, we only allow ordering by date
-	public function setElementSortOrder($attribte, $direction)
+	public function setElementSortOrder($attribute, $direction)
 	{
 		return;
 //		$this->sortOrder['attribute'] = $attribute;
@@ -109,7 +141,7 @@ class BlogBucket extends Bucket implements Renderable, Feed
 		{
 			$datelist[$block->getBlockId()] = $block->getEntryDate();
 		}
-		//TODO: simply this to just sort the block list directly - change cmpDates
+		//TODO: simplify this to just sort the block list directly - change cmpDates
 		uasort($datelist, cmpDates);
 		foreach($datelist as $id => $date)
 		{
