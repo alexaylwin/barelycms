@@ -1,8 +1,8 @@
 		$(document).ready(function() {
 
 			var parentdiv = $("#controllist");
-			var addbucket = '<li class="bucketrow new"><div class="control-group"><div class="controls" style="margin-left: 0px;"><div class="input-append"><input class="newbucketbox input-medium" type="text"> <button class="btn newbucket" type="button">Add Bucket</button></div></div></div></li>';
-			var addblock = '<li class="blockrow new"><div class="control-group"><div class="controls" style="margin-left: 0px;"><div class="input-append"><input class="newblockbox input-medium" type="text"><button class="btn newblock" type="button">Add Block</button></div></div></div></li>';
+			var addbucket = '<li class="bucketrow new"><div class="control-group"><div class="controls" style="margin-left: 0px;"><div class="input-append"><input class="newbucketbox form-control" type="text"> <button class="btn newbucket" type="button">Add Bucket</button></div></div></div></li>';
+			var addblock = '<li class="blockrow new"><div class="control-group"><div class="controls" style="margin-left: 0px;"><div class="input-append"><input class="newblockbox form-control" type="text"><button class="btn newblock" type="button">Add Block</button></div></div></div></li>';
 			var deletebutton = '<button class="btn btn-mini btn-danger delete" type="button">X</button>';
 			var row = '<li></li>';
 			var sitemap = $("#sitemap").val();//"page1:container1,container2|page2:container3,container4";

@@ -1,0 +1,54 @@
+.main-content {
+    border-left: 1px solid black;
+}
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+footer div {
+    margin-top: 10px;
+}
+
+
+#controllist {
+	margin: 0px;
+	padding-left: 8px;
+	font-size: 1.21em;
+    list-style: none;
+}
+
+#controllist li {
+	padding-bottom: 4px;
+}
+
+.blockrow {
+	padding-left: 25px;
+}
+
+.bucketrow {
+
+}
+
+.delete {
+	font-weight: bold;
+	margin-left: 4px;
+}
+
+.modal-body
+{
+	color: #222222;
+	
+}

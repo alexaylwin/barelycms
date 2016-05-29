@@ -52,6 +52,7 @@ include 'header.php';
 	});
 
 </script>
+<div class="col-xs-10">
 <h4>Edit Block - <?php echo $data['bucketid']; ?> - <?php echo $data['blockid']; ?></h4>
 <div class="alert <?php echo $messageclass?>" style="display:<?php echo $displaymessage; ?>;">
 	<?php echo $message; ?>
@@ -69,6 +70,7 @@ include 'header.php';
 		<a href="buckets.php"><button id="back" class="btn" type="button">Back</button></a>
 	</div>
 </form>
+</div>
 <?php
 include 'footer.php';
 ?>

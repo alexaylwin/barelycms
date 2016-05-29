@@ -22,9 +22,10 @@
 $BAC_TITLE_TEXT = "BarelyACMS - Error";
 include 'header.php';
 ?>
+<div class="col-xs-10">
 <p>An error has occured: <?php echo $message;?> </p>
 <p><a href='<?php echo $backpage;?>'> Please click here to return to the previous page, and try your request again. </a></p>
-
+</div>
 <?php
 include 'footer.php';
 ?>

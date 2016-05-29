@@ -7,6 +7,7 @@ include '../src/framework/classloader.php';
 $BAC_TITLE_TEXT = "BarelyACMS - Help";
 include 'header.php'
 ?>
+<div class="col-xs-10">
 <p>
 	<h4>BarelyACMS Support</h4>
 	<p>
@@ -89,6 +90,7 @@ include 'header.php'
 		</div>
 	</div>
 </p>
+</div>
 <?php
 include 'footer.php'
 ?>
